@@ -84,7 +84,7 @@ class DcmExec;
 //class DcmFork;
 
 #include "DcmElemType.h"
-#include "DcmCompositeType.h"
 #include "DcmErrorType.h"
+#include "DcmCompositeType.h"
 //#include "DcmForkType.h"
 #endif

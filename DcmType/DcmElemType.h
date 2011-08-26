@@ -27,7 +27,7 @@ class DcmNone : public DcmElem {
     string repr();
 };
 
-const DcmNone *dcmNone = new DcmNone;
+DcmNone *dcmNone = new DcmNone;
 
 class DcmInt : public DcmElem {
     public:
@@ -59,7 +59,7 @@ class DcmChar : public DcmElem {
 class DcmBool : public DcmElem {
     public:
         bool val;
-        DcmBool(DcmChar& toCopy);
+        DcmBool(DcmBool& toCopy);
         DcmBool(bool newVal);
         TypeVal type();
         string repr();

@@ -22,12 +22,11 @@ class DcmArray : public DcmType {
         TypeVal type();
         string repr();
         int length();
-        DcmType *operator[] (int index);
+        DcmType *operator[] (int index) throw (DcmBoundsError*);
 };
 
 class DcmNamespace : public DcmType, public Namespace {
     public:
-        DcmNamespace(DcmNamespace& toCopy);
         TypeVal type();
         string repr();
 };
@@ -36,8 +35,10 @@ class DcmClass : public DcmNamespace {
     private:
         DcmClass *dcmBase;
     public:
+        DcmClass();
         DcmClass(DcmClass& toCopy);
         DcmClass(DcmClass *baseClass);
+        ~DcmClass();
         TypeVal type();
         string repr();
 };
