@@ -1,0 +1,101 @@
+COPYRIGHT © 2010 Zachary Weaver 
+Until I may choose to release it at a later date.
+
+How to guide for dcm:
+
+Chapter 0: Introduction
+
+dcm 
+
+Chapter 1: Basic syntax
+
+dcm is a stack based language inspired by the dc unix utility, but with much more power.  It is an interpretted scripting language designed to be embedded.  Performance has yet to be measured, but is considered and will improve as the project ages.
+
+The language supports integer, float, boolean, character and string literals as well as symbol literals which we'll get into later on.  They are always push onto the main stack, and follow the usual conventions.  Note dcm is case sensitive.  Literals are space and mostly new line delimited.
+
+Integers
+42 0x4A 9_089 
+
+Floats
+9.8 150.8 67.
+
+Booleans
+true false
+
+Characters
+'a '' '\ '\n '\27 ' 
+
+Strings
+"Hello, I'm a string"  "I can contain\nmany \"characters\"" "I can even
+span lines"
+Note that Strings and Characters can be written with the literal non-printing character, save for EOF, but this is discouraged.
+
+Symbols
+,stack1 ,a ,var ,x1 ,%75u8 ,
+
+Dcm provides named stacks with which one can use to store values.   Understanding named stacks in dcm is key to understanding the language.  There are five core operations that can be done to named stacks, peeking, setting, pushing, popping, swapping, and checking if empty.  This is done by preceding the name of the stack by one of the following symbols, except for peeking, which takes no symbol.
+
+peek  |  stack
+set   | &stack
+push  | $stack
+pop   | @stack
+swap  | ~stack
+empty | ?stack
+
+When dcm starts, a preamble, or certain library values are loaded into namespace.  Most of these are primitive functions or primfuns.  Primfuns are supplied mostly from the c++ backend and perform specific actions.  A primfun is executed as soon as it enters the stack.  The easiest examples are the arithmetic operators + - * / %.  They pop off two values and push on the result of the operation.
+
+However, it may be desired to suspend an action until a later time.  To do this, one place the string inside square brackets [].  dcm will parse it, but then push an executable string, or exec, onto the stack without executing any of the values.  It can then be treated as a value until it is run again with the primfun x (more accurately stored in x, but we will abbreviate as so for the remainder of the guide).
+
+
+Chapter 2: Types
+
+There are 8 core classes of types:
+Elementary
+Primitive function (primfun)
+Array
+Executable string (exec)
+Class
+Extension
+Fork
+Error
+
+Elementary types all relate to some literal discussed above
+
+Chapter 3: Builtins
+
+Builtins provide functionality that is either imposible or extremely difficult to implement in language.
+
+dup < * -- * * >
+This is actually amazingly easy to implement oneself (,dup [$a a @a] def), but it's used so often it comes as a builtin.  It creates a new reference to the top object on the stack.
+
+r < a b -- b a >
+This is also easly to implement (,r [$a $b @a @b] def), but is often used as well.  it reverses the top too items on the stack.
+
+clone < * -- * >
+Clone takes an object, and does a shallow copy of it.  Note it does delete the old item so ensure you have it stored somewhere or use (,copy [dup clone] def) from the standard prelude.
+
+repr < * -- string >
+Repr returns a string representation of an object.
+
+swap < , , -- >
+Swaps the named stack with the main stack.  
+
+clear < *.. -- >
+Clears main stack.  
+
+empty? < , -- bool >
+Returns whether stack has any values on it.
+
+del < * -- >
+Deletes an object off the stack
+
+len < () -- n >
+Takes an array and returns its size.  Note that it drops the reference to the array.
+
+map < (a) < a -- b > -- (b) >
+Takes an exec and then an array and modifies each element of the array.
+
+fold < (a) < b a -- b > -- b >
+Folds left over the data
+
+:

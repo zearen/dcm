@@ -1,0 +1,8 @@
+Finish writing and testing Tree.h
+Move Plugin to a separate file
+Start to flesh out DcmType.h more
+!Important! Write DcmType
+Write default plugin
+Write interpretter
+  More will be added here
+Write interface

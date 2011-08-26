@@ -1,0 +1,93 @@
+[
+    d 1 <
+    [
+        0 =
+        [ 1 + ]
+        ["negative fac" error] 
+      if x
+    ]
+    [
+      d 1 - 
+      fac x
+    ] 
+  if x
+  *
+] $fac
+
+,empty [
+    ~a ?a $a ~a 
+] primfun
+
+,clear [
+  $a
+    [a ?]
+    [a @ del]
+  while
+] primfun
+
+,upcopy [
+    d _ r . r $
+] primfun
+
+,upcopyall [
+    _ [upcopy] foreach
+] primfun
+
+[ target 10 r .doDamage 10 r .doPoison ]
+
+[ target .pl 2 / r .doDamage ]
+
+[ ,curDamage [ 2 * ] withDo target curDamage .doDamage ]
+
+,withDo [d $a ~ a r x @a ~ ] primfun
+
+: {
+    ,; [d 0 = ["zero div" error] [$q $p me] if x] primfun
+    ,print [p print "/" print q print me] primfun
+    ,* [.p @p * $p .q @q * $q del me] primfun
+    ,+ [.p q * r .q @p * r .q @q * $q del + $p me] primfun
+} $rational
+
+,// [ rational ; ] primfun
+
+3  4 // 1  2 // .+ 4  1 // .* .print
+
+# How to define an array consructor in dcm
+
+,( [ 0 dup $delim ] def
+
+,) [
+    [ @delim ] 
+    [ "No delimiter defined, missing '(' ?" error ] catch
+    : {
+        $delim
+        0  $len
+        [dup delim is not]
+        [
+            @len 1 + $len
+            [ $elems ]
+            [ "No delimiter found, corruption?" error ] catch
+        ]
+        while
+        del
+        # We've gotten everything
+        
+        len array
+        @len $i
+        [i 0 >]
+        [
+            @i 1 - $i
+            dup i @elems (=)
+        ]
+        while
+        # We've filled the array
+    } del
+] def
+
+( 5 6 "hi" 'w ) print
+
+# We store delimiters on a stack ;D
+
+( ( 1 0 ) 
+  ( 0 1 ) )
+  $identity

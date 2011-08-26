@@ -1,0 +1,69 @@
+# A dcm implementation of queues as a singly linked list
+
+: {
+
+class {
+    ,; [me]
+    ,? [false] def
+} $Nil
+
+,nil [Nil ;] def
+Error inherit {
+    "queue underflow" $msg
+} $UnderflowError
+
+,underflowError [UnderflowError] def
+
+class {
+    ,; upcopy #[nil d* d* $head $tail $val] def
+    ,push [
+        me
+        ?tail
+        [ @tail { : { $val } dup $next } $tail ]
+        [ : { $val } dup $tail $head ]
+        if x
+    ] def
+    ,pop [
+        me
+        ?head
+        [ @head {
+            $val
+            ?next
+            [ @next _ { $head } ]
+            [ @tail del ]
+            if x
+        ]
+        [ underflowError ]
+        if x
+    ] def
+    ,empty [
+        me
+        ?head
+    ] def
+} $Queue
+
+
+*//*
+
+so
+obj .att 
+<=>
+obj { att } del
+
+,. [ swap { ^ } del ]
+*/
+
+template <class T>
+class Queue {
+    private:
+        struct Q {
+            T val;
+            Q* next;
+        }
+        Q *_head, *_tail;
+    public:
+        Queue() {_q=0;}
+        push(T val) {
+            
+        
+

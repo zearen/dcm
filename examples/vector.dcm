@@ -1,0 +1,25 @@
+# vector.dcm
+
+# tricks
+
+( 1 2 3 'a 'b 'c )v # -> makes vector
+
+class inherit {
+    
+    ,; [
+        1 $size
+        0 $len
+        0 array $arr
+    ] def
+    
+    ,() [
+        dup len <
+        [arr ()]
+        [
+            len 1 - 
+            r boundsError
+        ]
+        if x
+    ]
+    
+    

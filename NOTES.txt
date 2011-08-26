@@ -1,0 +1,20 @@
+Scope:  It needs to try sys scope first!
+
+Solve performance problem -- aliasing.
+
+Use heap to store symbols? Time or Space?
+
+Namespaces vs. Classes
+classes have an individual reference namespace regardless whether they're aliased or not where namespacescarry all they're info with them.  Classes may still hve local data.
+
+Inheritance: 
+    To increase effeciency, one can up copy references from a base class.  This is done in whatever the constructor is called.  Following the standard of these docs, an example may be
+baseclass {
+    ,; [upcopyall "Do stuff" $var me] primfun
+    # ...
+}
+    One can still manually set which values to convert using
+baseclass {
+    ,; [,val upcopy "Do stuff" $var me] primfun
+    # ...
+}
