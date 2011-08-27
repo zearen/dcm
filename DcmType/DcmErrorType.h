@@ -42,13 +42,14 @@ class DcmBoundsError : public DcmError {
 
 class DcmStackError : public DcmError {
     protected:
-        DcmSymbol dcmStack;
-        TypeVal sender;
+        DcmSymbol* dcmStack;
+        TypeVal senderType;
     public:
         DcmStackError(DcmStackError& toCopy);
-        DcmStackError(DcmSymbol sym, TypeVal sentFrom);
-        TypeVal senderType();
-        DcmSymbol getSymbol();
+        DcmStackError(DcmSymbol* sym, TypeVal sentFrom);
+        ~DcmStackError();
+        TypeVal sender();
+        DcmSymbol *getSymbol();
         TypeVal type();
         string repr();
 }; 
@@ -56,11 +57,11 @@ class DcmStackError : public DcmError {
 // Inherit this for custom errors
 class DcmCustomError : public DcmError {
     protected:
-        string customMsg;
+        string msg;
+        virtual TypeVal subtype();
     public:
         DcmCustomError(DcmCustomError& toCopy);
         DcmCustomError(string& message);
         TypeVal type();  // Do not override!
-        virtual TypeVal subtype();
         string repr();
 };
