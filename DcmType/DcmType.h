@@ -38,16 +38,21 @@ ___________ _______________ ___
 typedef unsigned char* TypeVal;
 
 class DcmType {
-    private:
+    protected:
         unsigned short refs;
     public:
         DcmType();
         DcmType(DcmType &toCopy);
-        bool isType(TypeVal otherType);
+        virtual ~DcmType(){}
         void addRef();
+        friend void del(DcmType *dcm);
+        
+        bool isType(TypeVal otherType);
         virtual TypeVal type() =0;
         virtual string repr() =0;
 };
+
+void del(DcmType *dcm);
 
 typedef stack<DcmType*> DcmStack;
 typedef unordered_map<string, DcmStack> Namespace;

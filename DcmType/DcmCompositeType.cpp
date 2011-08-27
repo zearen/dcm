@@ -30,8 +30,9 @@
     }
     
     DcmArray::~DcmArray() {
-        for (int i = 0; i < len; i++)
-            delete vals[i];
+        for (int i = 0; i < len; i++) {
+            del(vals[i]);
+        }
         delete[] vals;
     }
     
@@ -51,8 +52,9 @@
     }
     
     DcmType *DcmArray::operator[] (int index) throw (DcmBoundsError*) {
-        if (index < 0 || index >= len)
+        if (index < 0 || index >= len) {
             throw new DcmBoundsError(len - 1, index);
+        }
         return vals[index];
     }
 // };
@@ -84,7 +86,7 @@
     }
     
     DcmClass::~DcmClass() {
-        delete dcmBase;
+        del(dcmBase);
     }
     
     TypeVal DcmClass::type() {
@@ -95,5 +97,79 @@
     string DcmClass::repr() {
         return "Class @ TBI";
     }
+// };
 
+// DcmPrimFun {
+    DcmPrimFun::DcmPrimFun() {
+        cb = NULL;
+    }
+    
+    DcmPrimFun::DcmPrimFun(DcmPrimFun& toCopy) {
+        cb = toCopy.cb;
+    }
+    
+    DcmPrimFun::DcmPrimFun(Callback *action) {
+        cb = action;
+    }
+    
+    Callback *DcmPrimFun::run(DcmStack& stk) {
+        return cb->run(stk);
+    }
+    
+    TypeVal DcmPrimFun::type() {
+        static unsigned char typeVal[] = {PRIMFUN};
+        return typeVal;
+    }
+    
+    string DcmPrimFun::repr() {
+        return "PrimFun @ TBI";
+    }
+// };
+
+// DcmExec {
+    DcmExec::DcmExec() {
+        source = "";
+    }
+    
+    DcmExec::DcmExec(DcmExec& toCopy) {
+        source = toCopy.source;
+        
+        instructions = toCopy.instructions;
+        vector<DcmType*>::iterator iter = instructions.begin();
+        for (; iter != instructions.end(); iter++) {
+            (*iter)->addRef();
+        }
+    }
+    
+    DcmExec::~DcmExec() {
+        if (!refs) {
+            for (vector<DcmType*>::iterator iter = 
+                 instructions.begin();
+                 iter != instructions.end();
+                 iter++) {
+                del(*iter);
+            }
+        }
+    }
+    
+    void DcmExec::append(DcmType *instruction) {
+        instructions.push_back(instruction);
+    }
+    
+    void DcmExec::append(string bit) {
+        source += bit;
+    }
+    
+    DcmType *DcmExec::operator[](int i) {
+        return instructions[i];
+    }
+    
+    TypeVal DcmExec::type() {
+        static unsigned char typeVal[] = {EXEC};
+        return typeVal;
+    }
+    
+    string DcmExec::repr() {
+        return source;
+    }
 // };

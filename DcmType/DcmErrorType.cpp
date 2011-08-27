@@ -1,0 +1,7 @@
+/*
+    Zachary Weaver
+    
+    DcmErrorType.cpp
+*/
+
+

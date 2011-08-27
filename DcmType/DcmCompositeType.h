@@ -43,13 +43,13 @@ class DcmClass : public DcmNamespace {
         string repr();
 };
 
-class DcmPrimFun : public DcmType {
+class DcmPrimFun : public DcmType, public Callback {
     private:
         Callback *cb;
     public:
+        DcmPrimFun();
         DcmPrimFun(DcmPrimFun& toCopy);
         DcmPrimFun(Callback *action);
-        DcmPrimFun();
         Callback *run(DcmStack& stk);
         TypeVal type();
         string repr();
@@ -58,10 +58,14 @@ class DcmPrimFun : public DcmType {
 class DcmExec : public DcmType {
     private:
         vector<DcmType*> instructions;
+        string source;
     public:
-        DcmExec(DcmExec& toCopy);
         DcmExec();
+        DcmExec(string sourceStr);
+        DcmExec(DcmExec& toCopy);
+        ~DcmExec();
         void append(DcmType* instruction);
+        void append(string bit);
         DcmType *operator[](int i);
         TypeVal type();
         string repr();

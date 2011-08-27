@@ -14,6 +14,20 @@ DcmType::DcmType(DcmType &toCopy) {
     refs = 1;
 }
 
+void DcmType::addRef() {
+    refs++;
+}
+
+void del(DcmType *dcm) {
+    dcm->refs--;
+    if (dcm->refs) {
+        dcm = NULL;
+    }
+    else {
+        delete dcm;
+    }
+}
+
 bool DcmType::isType(TypeVal otherType) {
     bool same = true;
     unsigned char* myPos = type(), *itsPos = otherType;
@@ -26,8 +40,4 @@ bool DcmType::isType(TypeVal otherType) {
         itsPos++;
     }
     return same;
-}
-
-void DcmType::addRef() {
-    refs++;
 }

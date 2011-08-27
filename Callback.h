@@ -13,7 +13,6 @@
 using namespace std;
 
 class Callback {
-    private:
     protected:
         // peek and pop can return stack empty error
         // It is ill advised to override these
@@ -23,6 +22,7 @@ class Callback {
         stack<Namespace*> *scope;
     public:
         string name;
+        Callback();
         Callback(stack<Namespace*> *vars);
         // If run returns a callback, the interpretter executes it
         // Used primarily for tail call optimization by x
@@ -42,6 +42,5 @@ class ExecCallback : public Callback {
         ExecCallback(stack<Namespace*> *vars, DcmExec *exec);
         ~ExecCallback();
         Callback *run(DcmStack& stk);
-        void operator delete(void *p);
 };
 #endif
