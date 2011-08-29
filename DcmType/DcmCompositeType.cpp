@@ -108,8 +108,15 @@
         cb = toCopy.cb;
     }
     
-    DcmPrimFun::DcmPrimFun(Callback *action) {
+    DcmPrimFun::DcmPrimFun(Callback *action, bool responsible= false) {
         cb = action;
+        resp = responsible;
+    }
+    
+    DcmPrimFun::~DcmPrimFun() {
+        if (!refs && resp) {
+            delete cb;
+        }
     }
     
     Callback *DcmPrimFun::run(DcmStack& stk) {

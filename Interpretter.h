@@ -6,6 +6,7 @@
 
 #include <string>
 #include <vector>
+#include <stack>
 
 #include "Type/DcmType.h"
 #include "Plugin.h"
@@ -23,11 +24,23 @@ class InterpretterError : public exception {
 };
 
 class Interpretter {
+    private:
+        // Sub-parsers
+        void peek(string stkName);
+        void pop(string stkName);
+        void push(string stkName);
+        void swap(string stkName);
+        void empty(string stkName);
+        void attrib(string attr);
+        void literal(string lit);
     protected:
-        stack<Namespace, slist> scope;
+        // This namespace is search first
+        unordered_map<string, cb*> heaven;
+        // Then we decend through scope
+        stack<Namespace> scope;
         DcmStack mainStack;
         // If an exec wraps a line
-        stack<vector<DcmType*>, slist> cont;
+        stack<DcmExec*> cont;
         // If a string wraps a line
         string strCont;
     public:
@@ -35,13 +48,9 @@ class Interpretter {
         Interpretter(vector<Plugin>);
         ~Interpretter();
         
-        void execute(string commands);
-        void execute(DcmExec commands);
         void addPlugin(Plugin);
         
-        static DcmExec Parse(string str);
-    private:
-        // We may not need these
-        DcmType parse(string item);
-        vector<string>tokenize(string line)
+        void execute(string commands);
+        
+        static DcmExec *Parse(string str);
 };

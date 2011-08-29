@@ -46,10 +46,14 @@ class DcmClass : public DcmNamespace {
 class DcmPrimFun : public DcmType, public Callback {
     private:
         Callback *cb;
+        bool resp;
     public:
         DcmPrimFun();
         DcmPrimFun(DcmPrimFun& toCopy);
-        DcmPrimFun(Callback *action);
+        // By setting responsible, you tie the life of callback 
+        //+ to the primfun
+        DcmPrimFun(Callback *action, bool responsible=false);
+        ~DcmPrimFun();
         Callback *run(DcmStack& stk);
         TypeVal type();
         string repr();
