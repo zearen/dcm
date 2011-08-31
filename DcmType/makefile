@@ -15,4 +15,4 @@ DcmErrorType.o: DcmType.h DcmErrorType.h DcmErrorType.cpp
 	g++ $(FLAGS) -c DcmErrorType.cpp
 
 DcmCompositeType.o: DcmType.h DcmCompositeType.h DcmCompositeType.cpp
-	g++ -c DcmCompositeType.cpp
+	g++ $(FLAGS) -c DcmCompositeType.cpp
