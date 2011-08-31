@@ -39,12 +39,12 @@ class DcmClass : public DcmNamespace {
         DcmClass(DcmClass& toCopy);
         DcmClass(DcmClass *baseClass);
         ~DcmClass();
-        DcmType *peek(string& sym)
+        DcmType *peek(string& sym);
         TypeVal type();
         string repr();
 };
 
-class DcmPrimFun : public DcmType, public Callback {
+class DcmPrimFun : public DcmType {
     private:
         Callback *cb;
         bool resp;
@@ -60,18 +60,15 @@ class DcmPrimFun : public DcmType, public Callback {
         string repr();
 };
 
-class DcmExec : public DcmType {
+class DcmExec : public DcmType, public vector<DcmType*> {
     private:
-        vector<DcmType*> instructions;
         string source;
     public:
         DcmExec();
-        DcmExec(string sourceStr);
+        DcmExec(string& sourceStr);
         DcmExec(DcmExec& toCopy);
         ~DcmExec();
-        void append(DcmType* instruction);
-        void append(string bit);
-        DcmType *operator[](int i);
+        void append(string& bit);
         TypeVal type();
         string repr();
 };

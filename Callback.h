@@ -8,11 +8,13 @@
 
 #include <stack>
 
+class Callback;
+
 #include "DcmType/DcmType.h"
 
 using namespace std;
 
-DcmType *peek(string& sym, stack<Namespace*> *scope);
+DcmType *raw_peek(string& sym, stack<Namespace*> *scope);
 
 class Callback {
     protected:
@@ -35,8 +37,7 @@ class SimpleCallback : public Callback {
     private:
         void (*cb)(DcmStack&);
     public:
-        SimpleCallback(stack<Namespace*> *vars,
-          void (*callback)(DcmStack&));
+        SimpleCallback(stack<Namespace*> *vars, void (*callback)(DcmStack&));
         Callback *run(DcmStack& stk);
 };
 

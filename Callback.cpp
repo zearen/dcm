@@ -4,28 +4,36 @@
     Callback.cpp
 */
 
+#include <typeinfo>
 
 #include "Callback.h"
 
 static unsigned char type[] = {0};
 
-DcmType *peek(string& sym, stack<Namespace*> *scope) {
+DcmType *raw_peek(string& sym, stack<Namespace*> *scope) {
     Namespace *ns;
     DcmType *ret;
+    DcmStack *stk;
     DcmClass *dcmClass;
     if (scope->empty()) {
         return NULL;
     }
     else {
-        ns = scope->pop();
-        if (dcmClass = dynamic_cast<*DcmClass>(ns)) {
+        ns = scope->top();
+        scope->pop();
+        // This needs optimized.  Add &s ?
+        if (typeid(dcmClass) == typeid(ns)) {
+            dcmClass = static_cast<DcmClass*>(ns);
             ret = dcmClass->peek(sym);
         }
-        else if {
-            ret = (*ns)[sym];
-        }
-        else if (ret.empty()) {
-            ret = peek(sym, scope);
+        else {
+            stk = &(*ns)[sym];
+            if (stk->empty()) {
+                ret = raw_peek(sym, scope);
+            }
+            else {
+                ret = stk->top();
+            }
         }
         scope->push(ns);
         return ret;
@@ -43,22 +51,25 @@ DcmType *peek(string& sym, stack<Namespace*> *scope) {
     
     DcmType *Callback::peek(string& sym) throw (DcmStackError*) {
         DcmType *ret=NULL;
-        if (ret = peek(sym, scope)) {
+        if (ret = raw_peek(sym, scope)) {
             return ret;
         }
         else {
-            throw new DcmStackError(sym, type);
+            throw new DcmStackError(new DcmSymbol(sym), type);
         }
     }
     
     DcmType *Callback::pop(string& sym) throw (DcmStackError*) {
         DcmStack *stk;
-        stk = &(*scope->top())[sym]
+        DcmType *ret;
+        stk = &(*scope->top())[sym];
         if (stk->empty()) {
-            throw new DcmStackError(sym, type);
+            throw new DcmStackError(new DcmSymbol(sym), type);
         }
         else {
-            return stk->pop();
+            ret = stk->top();
+            stk->pop();
+            return ret;
         }
     }
     
@@ -67,4 +78,30 @@ DcmType *peek(string& sym, stack<Namespace*> *scope) {
     }
 // };
 
+// SimpleCallback {
+    SimpleCallback::SimpleCallback(stack<Namespace*> *vars, void (*callback)(DcmStack&)) {
+        cb = callback
+        scope = vars;
+    }
+    
+    Callback *SimpleCallback::run(DcmStack& stk) {
+        (*cb)(stk);
+        return NULL;
+    }
+// }
 
+// ExecCallback {
+    ExecCallback::ExecCallback(stack<Namespace*> *vars, DcmExec *exec) {
+        scope = vars;
+        dcmRun = exec;
+        dcmRun->addRef();
+    }
+    
+    ExecCallback::~ExecCallback() {
+        del(dcmRun);
+    }
+    
+    Callback *ExecCallback::run(DcmStack& stk) {
+        //if (dcmRun
+        //TODO: Fnish me, you may need to revamp DcmExec.
+    }

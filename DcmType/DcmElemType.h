@@ -16,7 +16,6 @@
 #define BOOL    4
 #define STRING  5
 #define SYMBOL  6
-//#define ALIAS   6
 #define EXTEN   8
 
 class DcmElem : public DcmType {
@@ -81,21 +80,6 @@ class DcmSymbol : public DcmElem {
         TypeVal type();
         string repr();
 };
-
-/*
-class DcmAlias : public DcmElem {
-    private:
-        DcmType *ptr;
-    public:
-        DcmAlias(DcmAlias& toCopy);
-        DcmAlias(DcmType *ref);
-        ~DcmAlias();
-        DcmType operator*();
-        TypeVal type();
-        string repr();
-};
-*/
-
 
 // Inherit this for custom primitives
 class DcmExtension : public DcmType {

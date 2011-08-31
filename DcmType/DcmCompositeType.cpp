@@ -4,6 +4,8 @@
     DcmCompositeType.h
 */
 
+#include <algorithm>
+
 #include "DcmType.h"
 
 // DcmArray {
@@ -66,7 +68,7 @@
     }
     
     string DcmNamespace::repr() {
-        return "Namespace @ TBI";
+        return "Namespace @ " + to_string((long)this);
     }
 // };
 
@@ -89,13 +91,29 @@
         del(dcmBase);
     }
     
+    DcmType *DcmClass::peek(string& sym) {
+        DcmStack *stk;
+        stk = &(*this)[sym];
+        if (!stk->empty()) {
+            return stk->top();
+        }
+        else {
+            if (dcmBase) {
+                return dcmBase->peek(sym);
+            }
+            else {
+                return NULL;
+            }
+        }
+    }
+    
     TypeVal DcmClass::type() {
         static unsigned char typeVal[] = {CLASS};
         return typeVal;
     }
     
     string DcmClass::repr() {
-        return "Class @ TBI";
+        return "Class @ " + to_string((long)this);
     }
 // };
 
@@ -108,7 +126,7 @@
         cb = toCopy.cb;
     }
     
-    DcmPrimFun::DcmPrimFun(Callback *action, bool responsible= false) {
+    DcmPrimFun::DcmPrimFun(Callback *action, bool responsible) {
         cb = action;
         resp = responsible;
     }
@@ -129,7 +147,7 @@
     }
     
     string DcmPrimFun::repr() {
-        return "PrimFun @ TBI";
+        return "PrimFun @ " + to_string((long)this);
     }
 // };
 
@@ -138,37 +156,22 @@
         source = "";
     }
     
-    DcmExec::DcmExec(DcmExec& toCopy) {
+    DcmExec::DcmExec(DcmExec& toCopy) : vector<DcmType*>(toCopy) {
         source = toCopy.source;
-        
-        instructions = toCopy.instructions;
-        vector<DcmType*>::iterator iter = instructions.begin();
-        for (; iter != instructions.end(); iter++) {
-            (*iter)->addRef();
-        }
+    }
+    
+    DcmExec::DcmExec(string& sourceStr) {
+        source = sourceStr;
     }
     
     DcmExec::~DcmExec() {
-        if (!refs) {
-            for (vector<DcmType*>::iterator iter = 
-                 instructions.begin();
-                 iter != instructions.end();
-                 iter++) {
-                del(*iter);
-            }
+        for (DcmType *e : *this) {
+            del(e);
         }
     }
     
-    void DcmExec::append(DcmType *instruction) {
-        instructions.push_back(instruction);
-    }
-    
-    void DcmExec::append(string bit) {
+    void DcmExec::append(string& bit) {
         source += bit;
-    }
-    
-    DcmType *DcmExec::operator[](int i) {
-        return instructions[i];
     }
     
     TypeVal DcmExec::type() {
