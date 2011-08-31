@@ -12,6 +12,8 @@
 
 using namespace std;
 
+DcmType *peek(string& sym, stack<Namespace*> *scope);
+
 class Callback {
     protected:
         // peek and pop can return stack empty error

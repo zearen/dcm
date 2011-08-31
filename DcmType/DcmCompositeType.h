@@ -39,6 +39,7 @@ class DcmClass : public DcmNamespace {
         DcmClass(DcmClass& toCopy);
         DcmClass(DcmClass *baseClass);
         ~DcmClass();
+        DcmType *peek(string& sym)
         TypeVal type();
         string repr();
 };
