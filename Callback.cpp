@@ -4,27 +4,26 @@
     Callback.cpp
 */
 
-#include <typeinfo>
-
 #include "Callback.h"
 
 static unsigned char type[] = {0};
 
 DcmType *raw_peek(string& sym, stack<Namespace*> *scope) {
     Namespace *ns;
-    DcmType *ret;
+    DcmType *ret = NULL;
     DcmStack *stk;
-    DcmClass *dcmClass;
     if (scope->empty()) {
         return NULL;
     }
     else {
         ns = scope->top();
         scope->pop();
-        // This needs optimized.  Add &s ?
-        if (typeid(dcmClass) == typeid(ns)) {
-            dcmClass = static_cast<DcmClass*>(ns);
-            ret = dcmClass->peek(sym);
+        // if is a DcmClass ...
+        if (ns->id() == 'c') {
+            ret = static_cast<DcmClass*>(ns)->peek(sym);
+            if (!ret) {
+                ret = raw_peek(sym, scope);
+            }
         }
         else {
             stk = &(*ns)[sym];

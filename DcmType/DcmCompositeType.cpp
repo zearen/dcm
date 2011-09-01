@@ -62,6 +62,10 @@
 // };
 
 // DcmNamespace {
+    char DcmNamespace::id() {
+        return 'n'; // dcmNamespace
+    }
+    
     TypeVal DcmNamespace::type() {
         static unsigned char typeVal[] = {NAMESPACE};
         return typeVal;
@@ -73,6 +77,10 @@
 // };
 
 // DcmClass {
+    char DcmClass::id() {
+        return 'c'; // dcmClass
+    }
+    
     DcmClass::DcmClass() : DcmNamespace() {
         dcmBase = NULL;
     }

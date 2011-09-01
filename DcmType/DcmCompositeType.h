@@ -27,6 +27,7 @@ class DcmArray : public DcmType {
 
 class DcmNamespace : public DcmType, public Namespace {
     public:
+        char id();
         TypeVal type();
         string repr();
 };
@@ -35,6 +36,7 @@ class DcmClass : public DcmNamespace {
     private:
         DcmClass *dcmBase;
     public:
+        char id();
         DcmClass();
         DcmClass(DcmClass& toCopy);
         DcmClass(DcmClass *baseClass);

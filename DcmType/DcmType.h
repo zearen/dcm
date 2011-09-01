@@ -55,7 +55,10 @@ class DcmType {
 void del(DcmType *dcm);
 
 typedef stack<DcmType*> DcmStack;
-typedef unordered_map<string, DcmStack> Namespace;
+class Namespace : public unordered_map<string, DcmStack> {
+    public
+        virtual char id();
+};
 
 //string reprType(TypeVal type);
 
