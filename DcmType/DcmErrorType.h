@@ -12,6 +12,7 @@
 
 class DcmError : public DcmType {
     public:
+        DcmType *copy();
         TypeVal type();
         string repr();
 };
@@ -22,6 +23,7 @@ class DcmTypeError : public DcmError {
     public:
         DcmTypeError(DcmTypeError& toCopy);
         DcmTypeError(TypeVal expected, TypeVal received);
+        DcmType *copy();
         TypeVal expected();
         TypeVal received();
         TypeVal type();
@@ -34,6 +36,7 @@ class DcmBoundsError : public DcmError {
     public:
         DcmBoundsError(DcmBoundsError& toCopy);
         DcmBoundsError(int topBound, int given);
+        DcmType *copy();
         int topBound();
         int given();
         TypeVal type();
@@ -48,6 +51,7 @@ class DcmStackError : public DcmError {
         DcmStackError(DcmStackError& toCopy);
         DcmStackError(DcmSymbol* sym, TypeVal sentFrom);
         ~DcmStackError();
+        DcmType *copy();
         TypeVal sender();
         DcmSymbol *getSymbol();
         TypeVal type();
@@ -62,6 +66,7 @@ class DcmCustomError : public DcmError {
     public:
         DcmCustomError(DcmCustomError& toCopy);
         DcmCustomError(string& message);
+        DcmType *copy();
         TypeVal type();  // Do not override!
         string repr();
 };

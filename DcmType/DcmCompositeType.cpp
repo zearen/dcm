@@ -38,6 +38,10 @@
         delete[] vals;
     }
     
+    DcmType *DcmArray::copy() {
+        return new DcmArray(*this);
+    }
+    
     TypeVal DcmArray::type() {
         static unsigned char typeVal[] = {ARRAY};
         return typeVal;
@@ -64,6 +68,10 @@
 // DcmNamespace {
     char DcmNamespace::id() {
         return 'n'; // dcmNamespace
+    }
+    
+    DcmType *DcmNamespace::copy() {
+        return new DcmNamespace(*this);
     }
     
     TypeVal DcmNamespace::type() {
@@ -97,6 +105,10 @@
     
     DcmClass::~DcmClass() {
         del(dcmBase);
+    }
+    
+    DcmType *DcmClass::copy() {
+        return new DcmClass(*this);
     }
     
     DcmType *DcmClass::peek(string& sym) {
@@ -145,6 +157,10 @@
         }
     }
     
+    DcmType *DcmPrimFun::copy() {
+        return new DcmPrimFun(*this);
+    }
+    
     Callback *DcmPrimFun::run(DcmStack& stk) {
         return cb->run(stk);
     }
@@ -176,6 +192,10 @@
         for (DcmType *e : *this) {
             del(e);
         }
+    }
+    
+    DcmType *DcmExec::copy() {
+        return new DcmExec(*this);
     }
     
     void DcmExec::append(string& bit) {

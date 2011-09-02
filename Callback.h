@@ -11,10 +11,13 @@
 class Callback;
 
 #include "DcmType/DcmType.h"
+//#include "Interpretter.h"
+
+typedef stack<Namespace*> Scope;
 
 using namespace std;
 
-DcmType *raw_peek(string& sym, stack<Namespace*> *scope);
+DcmType *raw_peek(string& sym, Scope *scope);
 
 class Callback {
     protected:
@@ -23,11 +26,12 @@ class Callback {
         DcmType *peek(string& sym) throw (DcmStackError*);
         DcmType *pop(string& sym) throw (DcmStackError*);
         void push(string& sym, DcmType *item);
-        stack<Namespace*> *scope;
+        Scope *scope;
+        unordered_map<string, Callback*> heaven;
     public:
         string name;
         Callback();
-        Callback(stack<Namespace*> *vars);
+        //void connect(Interpreter *interpretter);
         // If run returns a callback, the interpretter executes it
         // Used primarily for tail call optimization by x
         virtual Callback *run(DcmStack& stk) =0;
@@ -37,7 +41,7 @@ class SimpleCallback : public Callback {
     private:
         void (*cb)(DcmStack&);
     public:
-        SimpleCallback(stack<Namespace*> *vars, void (*callback)(DcmStack&));
+        SimpleCallback(void (*callback)(DcmStack&));
         Callback *run(DcmStack& stk);
 };
 
@@ -45,7 +49,7 @@ class ExecCallback : public Callback {
     private:
         DcmExec *dcmRun;
     public:
-        ExecCallback(stack<Namespace*> *vars, DcmExec *exec);
+        ExecCallback(DcmExec *exec);
         ~ExecCallback();
         Callback *run(DcmStack& stk);
 };

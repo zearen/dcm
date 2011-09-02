@@ -44,7 +44,9 @@ class DcmType {
         DcmType();
         DcmType(DcmType &toCopy);
         virtual ~DcmType(){}
+        
         void addRef();
+        virtual DcmType *copy() =0;
         friend void del(DcmType *dcm);
         
         bool isType(TypeVal otherType);
@@ -55,9 +57,12 @@ class DcmType {
 void del(DcmType *dcm);
 
 typedef stack<DcmType*> DcmStack;
+
 class Namespace : public unordered_map<string, DcmStack> {
     public:
         virtual char id();
+        
+        virtual ~Namespace(){}
 };
 
 //string reprType(TypeVal type);

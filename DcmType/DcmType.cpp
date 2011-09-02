@@ -43,5 +43,5 @@ bool DcmType::isType(TypeVal otherType) {
 }
 
 char Namespace::id() {
-    return 'b' // Baseclass
+    return 'b'; // Baseclass
 }

@@ -4,11 +4,13 @@
     Interpretter.h
 */
 
+#ifndef _INTERPRETTER_H
+#define _INTERPRETTER_H
+
 #include <string>
 #include <vector>
-#include <stack>
 
-#include "Type/DcmType.h"
+#include "DcmType/DcmType.h"
 #include "Plugin.h"
 
 using namespace std;
@@ -33,14 +35,15 @@ class Interpretter {
         void empty(string stkName);
         void attrib(string attr);
         void literal(string lit);
+        vector<Plugin>
     protected:
         // This namespace is search first
         unordered_map<string, cb*> heaven;
         // Then we decend through scope
-        stack<Namespace> scope;
+        Stack<Namespace> scope;
         DcmStack mainStack;
         // If an exec wraps a line
-        stack<DcmExec*> cont;
+        Stack<DcmExec*> cont;
         // If a string wraps a line
         string strCont;
     public:
@@ -54,3 +57,4 @@ class Interpretter {
         
         static DcmExec *Parse(string str);
 };
+#endif

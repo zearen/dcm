@@ -22,8 +22,10 @@ class DcmElem : public DcmType {
 };
 
 class DcmNone : public DcmElem {
-    TypeVal type();
-    string repr();
+    public:
+        DcmType *copy();
+        TypeVal type();
+        string repr();
 };
 
 DcmNone *dcmNone = new DcmNone;
@@ -33,6 +35,7 @@ class DcmInt : public DcmElem {
         int val;
         DcmInt(DcmInt& toCopy);
         DcmInt(int newVal);
+        DcmType *copy();
         TypeVal type();
         string repr();
 };
@@ -42,6 +45,7 @@ class DcmFloat : public DcmElem {
         double val;
         DcmFloat(DcmFloat& toCopy);
         DcmFloat(double newVal);
+        DcmType *copy();
         TypeVal type();
         string repr();
 };
@@ -51,6 +55,7 @@ class DcmChar : public DcmElem {
         char val;
         DcmChar(DcmChar& toCopy);
         DcmChar(char newVal);
+        DcmType *copy();
         TypeVal type();
         string repr();
 };
@@ -60,12 +65,14 @@ class DcmBool : public DcmElem {
         bool val;
         DcmBool(DcmBool& toCopy);
         DcmBool(bool newVal);
+        DcmType *copy();
         TypeVal type();
         string repr();
 };
 
 class DcmString : public DcmElem, public string {
     public:
+        DcmType *copy();
         TypeVal type();
         string repr();
 };
@@ -76,6 +83,7 @@ class DcmSymbol : public DcmElem {
     public:
         DcmSymbol(DcmSymbol& toCopy);
         DcmSymbol(string name);
+        DcmType *copy();
         string get();
         TypeVal type();
         string repr();

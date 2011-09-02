@@ -7,6 +7,10 @@
 #include "DcmType.h"
 
 // DcmNone {
+    DcmType *DcmNone::copy() {
+        return new DcmNone(*this);
+    }
+
     TypeVal DcmNone::type() {
         static unsigned char typeVal[] = {ELEM | (NONE << 1)};
         return typeVal;
@@ -26,6 +30,10 @@
         val = newVal;
     }
     
+    DcmType *DcmInt::copy() {
+        return new DcmInt(*this);
+    }
+
     TypeVal DcmInt::type() {
         static unsigned char typeVal[] = {ELEM | (INT << 1)};
         return typeVal;
@@ -45,6 +53,10 @@
         val = newVal;
     }
     
+    DcmType *DcmFloat::copy() {
+        return new DcmFloat(*this);
+    }
+
     TypeVal DcmFloat::type() {
         static unsigned char typeVal[] = {ELEM | (FLOAT << 1)};
         return typeVal;
@@ -64,6 +76,10 @@
         val = newVal;
     }
     
+    DcmType *DcmChar::copy() {
+        return new DcmChar(*this);
+    }
+
     TypeVal DcmChar::type() {
         static unsigned char typeVal[] = {ELEM | (CHAR << 1)};
         return typeVal;
@@ -83,6 +99,10 @@
         val = newVal;
     }
     
+    DcmType *DcmBool::copy() {
+        return new DcmBool(*this);
+    }
+
     TypeVal DcmBool::type() {
         static unsigned char typeVal[] = {ELEM | (BOOL << 1)};
         return typeVal;
@@ -97,6 +117,10 @@
 // };
 
 // DcmString {
+    DcmType *DcmString::copy() {
+        return new DcmString(*this);
+    }
+
     TypeVal DcmString::type() {
         static unsigned char typeVal[] = {ELEM | (STRING << 1)};
         return typeVal;
@@ -114,6 +138,10 @@
     
     DcmSymbol::DcmSymbol(string name) {
         symbol = name;
+    }
+    
+    DcmType *DcmSymbol::copy() {
+        return new DcmSymbol(*this);
     }
     
     string DcmSymbol::get() {

@@ -7,6 +7,10 @@
 #include "DcmType.h"
 
 // DcmError {
+    DcmType *DcmError::copy() {
+        return new DcmError(*this);
+    }
+    
     TypeVal DcmError::type() {
         static unsigned char typeVal[] = {UNKNOWN_E};
         return typeVal;
@@ -26,6 +30,10 @@
     DcmTypeError::DcmTypeError(TypeVal expected, TypeVal received) {
         exp = expected;
         got = received;
+    }
+    
+    DcmType *DcmTypeError::copy() {
+        return new DcmTypeError(*this);
     }
     
     TypeVal DcmTypeError::expected() {
@@ -55,6 +63,10 @@
     DcmBoundsError::DcmBoundsError(int topBound, int given) {
         top = topBound;
         giv = given;
+    }
+    
+    DcmType *DcmBoundsError::copy() {
+        return new DcmBoundsError(*this);
     }
     
     int DcmBoundsError::topBound() {
@@ -90,6 +102,10 @@
         }
     }
     
+    DcmType *DcmStackError::copy() {
+        return new DcmStackError(*this);
+    }
+    
     TypeVal DcmStackError::sender() {
         return senderType;
     }
@@ -115,6 +131,10 @@
     
     DcmCustomError::DcmCustomError(string& message) {
         msg = message;
+    }
+    
+    DcmType *DcmCustomError::copy() {
+        return new DcmCustomError(*this);
     }
     
     TypeVal DcmCustomError::subtype() {

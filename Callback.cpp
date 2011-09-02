@@ -8,7 +8,7 @@
 
 static unsigned char type[] = {0};
 
-DcmType *raw_peek(string& sym, stack<Namespace*> *scope) {
+DcmType *raw_peek(string& sym, Scope *scope) {
     Namespace *ns;
     DcmType *ret = NULL;
     DcmStack *stk;
@@ -44,7 +44,7 @@ DcmType *raw_peek(string& sym, stack<Namespace*> *scope) {
         scope = NULL;
     }
     
-    Callback::Callback(stack<Namespace*> *vars){
+    void Callback::connect(Scope *vars) {
         scope = vars;
     }
     
@@ -78,20 +78,18 @@ DcmType *raw_peek(string& sym, stack<Namespace*> *scope) {
 // };
 
 // SimpleCallback {
-    SimpleCallback::SimpleCallback(stack<Namespace*> *vars, void (*callback)(DcmStack&)) {
-        cb = callback
-        scope = vars;
+    SimpleCallback::SimpleCallback(void (*callback)(DcmStack&)) {
+        cb = callback;
     }
     
     Callback *SimpleCallback::run(DcmStack& stk) {
         (*cb)(stk);
         return NULL;
     }
-// }
+// };
 
 // ExecCallback {
-    ExecCallback::ExecCallback(stack<Namespace*> *vars, DcmExec *exec) {
-        scope = vars;
+    ExecCallback::ExecCallback(DcmExec *exec) {
         dcmRun = exec;
         dcmRun->addRef();
     }
@@ -101,6 +99,19 @@ DcmType *raw_peek(string& sym, stack<Namespace*> *scope) {
     }
     
     Callback *ExecCallback::run(DcmStack& stk) {
-        //if (dcmRun
-        //TODO: Fnish me, you may need to revamp DcmExec.
+        if (dcmRun->size() == 0) {
+            return NULL
+        }
+        auto end = dcmRun->rbegin();
+        DcmType *dcm;
+        for (auto i = dcmRun->begin();  i != end; i++) {
+            dcm = *i;
+            if (dcm->type() = PRIMFUN) {
+            }
+            else {
+                dcm->addRef();
+                stk.push(dcm);
+            }
+        }
     }
+// };
