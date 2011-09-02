@@ -11,17 +11,16 @@
 #include <vector>
 
 #include "DcmType/DcmType.h"
-#include "Plugin.h"
+//#include "Plugin.h"
 
 using namespace std;
-using namespace DcmType;
-
 class InterpretterError : public exception {
     private:
         string msg;
     public:
         InterpretterError();
         InterpretterError(string& message);
+        ~InterpretterError() throw ();
         const char* what();
 };
 
@@ -35,23 +34,24 @@ class Interpretter {
         void empty(string stkName);
         void attrib(string attr);
         void literal(string lit);
-        vector<Plugin>
+//        vector<Plugin>
     protected:
-        // This namespace is search first
-        unordered_map<string, cb*> heaven;
-        // Then we decend through scope
-        Stack<Namespace> scope;
-        DcmStack mainStack;
         // If an exec wraps a line
-        Stack<DcmExec*> cont;
+        stack<DcmExec*> cont;
         // If a string wraps a line
         string strCont;
     public:
+        // This namespace is search first
+        unordered_map<string, Callback*> heaven;
+        // Then we decend through scope
+        stack<Namespace*> scope;
+        DcmStack mainStack;
+        
         Interpretter();
-        Interpretter(vector<Plugin>);
+//        Interpretter(vector<Plugin>);
         ~Interpretter();
         
-        void addPlugin(Plugin);
+//        void addPlugin(Plugin);
         
         void execute(string commands);
         

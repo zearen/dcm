@@ -40,15 +40,8 @@ DcmType *raw_peek(string& sym, Scope *scope) {
 }
 
 // Callback {
-    Callback::Callback() {
-        scope = NULL;
-    }
-    
-    void Callback::connect(Scope *vars) {
-        scope = vars;
-    }
-    
-    DcmType *Callback::peek(string& sym) throw (DcmStackError*) {
+    DcmType *Callback::Peek(Scope *scope, string& sym) 
+      throw (DcmStackError*) {
         DcmType *ret=NULL;
         if (ret = raw_peek(sym, scope)) {
             return ret;
@@ -58,7 +51,8 @@ DcmType *raw_peek(string& sym, Scope *scope) {
         }
     }
     
-    DcmType *Callback::pop(string& sym) throw (DcmStackError*) {
+    DcmType *Callback::Pop(Scope *scope, string& sym) 
+      throw (DcmStackError*) {
         DcmStack *stk;
         DcmType *ret;
         stk = &(*scope->top())[sym];
@@ -72,7 +66,7 @@ DcmType *raw_peek(string& sym, Scope *scope) {
         }
     }
     
-    void Callback::push(string& sym, DcmType *item){
+    void Callback::Push(Scope *scope, string& sym, DcmType *item){
         (*scope->top())[sym].push(item);
     }
 // };
@@ -82,8 +76,8 @@ DcmType *raw_peek(string& sym, Scope *scope) {
         cb = callback;
     }
     
-    Callback *SimpleCallback::run(DcmStack& stk) {
-        (*cb)(stk);
+    Callback *SimpleCallback::run(Interpretter *interpretter) {
+        (*cb)(interpretter->mainStack);
         return NULL;
     }
 // };
@@ -98,20 +92,27 @@ DcmType *raw_peek(string& sym, Scope *scope) {
         del(dcmRun);
     }
     
-    Callback *ExecCallback::run(DcmStack& stk) {
+    Callback *ExecCallback::run(Interpretter *interpretter) {
         if (dcmRun->size() == 0) {
-            return NULL
+            return NULL;
         }
-        auto end = dcmRun->rbegin();
+        auto end = dcmRun->end();
+        end--;
         DcmType *dcm;
         for (auto i = dcmRun->begin();  i != end; i++) {
             dcm = *i;
-            if (dcm->type() = PRIMFUN) {
+            if (*dcm->type() = PRIMFUN) {
+                static_cast<DcmPrimFun*>(dcm)->run(interpretter);
             }
             else {
-                dcm->addRef();
-                stk.push(dcm);
+                interpretter->mainStack.push(dcm->copy());
             }
+        }
+        if (*(*end)->type() = PRIMFUN) {
+            return static_cast<DcmPrimFun*>(*end)->callback();
+        }
+        else {
+            return NULL;
         }
     }
 // };

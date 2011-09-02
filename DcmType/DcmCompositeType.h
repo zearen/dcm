@@ -61,7 +61,8 @@ class DcmPrimFun : public DcmType {
         DcmPrimFun(Callback *action, bool responsible=false);
         ~DcmPrimFun();
         DcmType *copy();
-        Callback *run(DcmStack& stk);
+        Callback *run(Interpretter *interpretter);
+        Callback *callback();
         TypeVal type();
         string repr();
 };

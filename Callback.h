@@ -9,9 +9,10 @@
 #include <stack>
 
 class Callback;
+class Interpretter;
 
 #include "DcmType/DcmType.h"
-//#include "Interpretter.h"
+#include "Interpretter.h"
 
 typedef stack<Namespace*> Scope;
 
@@ -23,18 +24,17 @@ class Callback {
     protected:
         // peek and pop can return stack empty error
         // It is ill advised to override these
-        DcmType *peek(string& sym) throw (DcmStackError*);
-        DcmType *pop(string& sym) throw (DcmStackError*);
-        void push(string& sym, DcmType *item);
-        Scope *scope;
-        unordered_map<string, Callback*> heaven;
+        static DcmType *Peek(Scope *scope, string& sym)
+          throw (DcmStackError*);
+        static DcmType *Pop(Scope *scope, string& sym)
+          throw (DcmStackError*);
+        static void Push(Scope *scope, string& sym, DcmType *item);
     public:
         string name;
-        Callback();
         //void connect(Interpreter *interpretter);
         // If run returns a callback, the interpretter executes it
         // Used primarily for tail call optimization by x
-        virtual Callback *run(DcmStack& stk) =0;
+        virtual Callback *run(Interpretter *interpretter) =0;
 };
 
 class SimpleCallback : public Callback {
@@ -43,6 +43,7 @@ class SimpleCallback : public Callback {
     public:
         SimpleCallback(void (*callback)(DcmStack&));
         Callback *run(DcmStack& stk);
+        Callback *run(Interpretter *interpretter);
 };
 
 class ExecCallback : public Callback {
@@ -51,6 +52,6 @@ class ExecCallback : public Callback {
     public:
         ExecCallback(DcmExec *exec);
         ~ExecCallback();
-        Callback *run(DcmStack& stk);
+        Callback *run(Interpretter *interpretter);
 };
 #endif

@@ -1,7 +1,7 @@
 /*
     Zachary Weaver
     27/07/2011
-    DcmCompositeType.h
+    DcmCompositeType.cpp
 */
 
 #include <algorithm>
@@ -161,8 +161,12 @@
         return new DcmPrimFun(*this);
     }
     
-    Callback *DcmPrimFun::run(DcmStack& stk) {
-        return cb->run(stk);
+    Callback *DcmPrimFun::run(Interpretter* interpretter) {
+        return cb->run(interpretter);
+    }
+    
+    Callback *DcmPrimFun::callback() {
+        return cb;
     }
     
     TypeVal DcmPrimFun::type() {
