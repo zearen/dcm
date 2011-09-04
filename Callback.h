@@ -31,7 +31,6 @@ class Callback {
         static void Push(Scope *scope, string& sym, DcmType *item);
     public:
         string name;
-        //void connect(Interpreter *interpretter);
         // If run returns a callback, the interpretter executes it
         // Used primarily for tail call optimization by x
         virtual Callback *run(Interpretter *interpretter) =0;

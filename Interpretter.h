@@ -11,7 +11,7 @@
 #include <vector>
 
 #include "DcmType/DcmType.h"
-//#include "Plugin.h"
+#include "Plugin.h"
 
 using namespace std;
 class InterpretterError : public exception {
@@ -27,14 +27,16 @@ class InterpretterError : public exception {
 class Interpretter {
     private:
         // Sub-parsers
-        void peek(string stkName);
-        void pop(string stkName);
-        void push(string stkName);
-        void swap(string stkName);
-        void empty(string stkName);
-        void attrib(string attr);
-        void literal(string lit);
-//        vector<Plugin>
+        void peek(string& stkName, int& i);
+        void pop(string& stkName, int& i);
+        void push(string& stkName, int& i);
+        void swap(string& stkName, int& i);
+        void empty(string& stkName, int& i);
+        void attrib(string& attr, int& i);
+        void exec(string& execStr, int& i);
+        void str(string& strng, int& i);
+        void ch(string& c, int& i);
+        void number(string& num, int& i);
     protected:
         // If an exec wraps a line
         stack<DcmExec*> cont;
@@ -44,17 +46,17 @@ class Interpretter {
         // This namespace is search first
         unordered_map<string, Callback*> heaven;
         // Then we decend through scope
-        stack<Namespace*> scope;
+        Scope scope;
         DcmStack mainStack;
         
         Interpretter();
-//        Interpretter(vector<Plugin>);
+        Interpretter(vector<Plugin> plugins);
         ~Interpretter();
         
-//        void addPlugin(Plugin);
+        void addPlugin(Plugin& plugin);
         
         void execute(string commands);
         
-        static DcmExec *Parse(string str);
+        static DcmExec *Parse(string& str);
 };
 #endif
