@@ -34,10 +34,10 @@ class Interpretter {
         void empty(string& stkName, int& i);
         void attrib(string& attr, int& i);
         void exec(string& execStr, int& i);
-        void sym(string& symName, int& i);
-        void str(string& strng, int& i);
-        void ch(string& c, int& i);
-        void number(string& num, int& i);
+        static DcmSymbol *sym(string& symName, int& i);
+        static DcmString *str(string& strng, int& i);
+        static DcmChar *ch(string& c, int& i);
+        static DcmElem *number(string& num, int& i);
     protected:
         // If an exec wraps a line
         stack<DcmExec*> cont;
@@ -45,7 +45,7 @@ class Interpretter {
         string strCont;
     public:
         // This namespace is search first
-        unordered_map<string, Callback*> heaven;
+        Namespace heaven;
         // Then we decend through scope
         Scope scope;
         DcmStack mainStack;

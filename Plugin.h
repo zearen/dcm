@@ -18,7 +18,7 @@ class Plugin;
 
 class Plugin {
     public:
-        void link(unordered_map<string, Callback*>& heaven);
+        void link(Namespace& heaven);
 };
 
 class VectorPlugin : public Plugin {
@@ -27,7 +27,7 @@ class VectorPlugin : public Plugin {
 	public:
 		VectorPlugin();
 		VectorPlugin(vector<Callback*>& callbacks);
-        void link(unordered_map<string, Callback*>& heaven);
+        void link(Namespace& heaven);
 };
 		
 #endif

@@ -61,11 +61,14 @@ void Interpretter::addPlugin(Plugin& plugin) {
 // Utility functions for parsing:
 
 bool isEndChar(char c) {
-    if (c == ' ' || c == '\t' || c == '.') {
-        return true;
-    }
-    else {
-        return false;
+    switch (c) {
+        case ' ':
+        case '\t':
+        case '[':
+        case '.':
+            return true;
+        default:
+            return false;
     }
 }
 
@@ -94,7 +97,7 @@ void Interpretter::execute(string commands) {
     }
     while (i < commands.size()) {
         if (commands[i] == '-' || (commands[i] <= '9' && commands[i] >= '0')) {
-            number(commands, i);
+            mainStack.push(number(commands, i));
         }
         else switch (commands[i]) {
             case '$':
@@ -116,12 +119,13 @@ void Interpretter::execute(string commands) {
                 exec(commands, ++i);
                 break;
             case ',':
-                sym(commands, i);
+                mainStack.push(sym(commands, i));
+                break;
             case '\"':
-                str(commands, i);
+                mainStack.push(str(commands, i));
                 break;
             case '\'':
-                ch(commands, i);
+                mainStack.push(ch(commands, i));
                 break;
             default:
                 peek(commands, i);
@@ -142,10 +146,13 @@ void Interpretter::peek(string& stkName, int& i) {
     start = ++i;
     end = findEnd(stkName, i);
     name = stkName.substr(start, end);
-    if (heaven[name]) {
-        heaven[name]->run(this);
+    // This will grow heaven quick, optimize
+    if (heaven[name].empty()) {
+        dcm = raw_peek(name, &scope);
     }
-    dcm = raw_peek(name, &scope);
+    else {
+        dcm = heaven[name].top();
+    }
     if (dcm) {
         if (*dcm->type() = PRIMFUN) {
             Callback *cb = static_cast<DcmPrimFun*>(dcm)->run(this);
@@ -292,21 +299,21 @@ void Interpretter::exec(string& execStr, int& i) {
     findEnd(execStr, i);
 }
 
-void Interpretter::sym(string& symName, int& i) {
+DcmSymbol *Interpretter::sym(string& symName, int& i) {
     string name;
     int start, end;
     start = ++i;
     end = findEnd(symName, i);
     name = symName.substr(start, end);
-    mainStack.push(new DcmSymbol(name));
+    return new DcmSymbol(name);
 }
 
-void Interpretter::str(string& strng, int& i) {
+DcmString *Interpretter::str(string& strng, int& i) {
 }
 
-void Interpretter::ch(string& c, int& i) {
+DcmChar *Interpretter::ch(string& c, int& i) {
 }
 
-void Interpretter::number(string& num, int& i) {
+DcmElem *Interpretter::number(string& num, int& i) {
 }
 

@@ -6,7 +6,7 @@
 
 #include "Plugin.h"
 
-void Plugin::link(unordered_map<string, Callback*>& heaven){}
+void Plugin::link(Namespace& heaven){}
 
 VectorPlugin::VectorPlugin(){}
 
@@ -14,8 +14,8 @@ VectorPlugin::VectorPlugin(vector<Callback*>& callbacks) {
 	cbs = callbacks;
 }
 
-void VectorPlugin::link(unordered_map<string, Callback*>& heaven) {
+void VectorPlugin::link(Namespace& heaven) {
 	for (Callback *cb : cbs) {
-		heaven[cb->name] = cb;
+		heaven[cb->name].push(new DcmPrimFun(cb));
 	}
 }
