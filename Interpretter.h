@@ -34,6 +34,7 @@ class Interpretter {
         void empty(string& stkName, int& i);
         void attrib(string& attr, int& i);
         void exec(string& execStr, int& i);
+        void sym(string& symName, int& i);
         void str(string& strng, int& i);
         void ch(string& c, int& i);
         void number(string& num, int& i);

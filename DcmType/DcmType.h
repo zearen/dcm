@@ -65,6 +65,8 @@ class Namespace : public unordered_map<string, DcmStack> {
         virtual ~Namespace(){}
 };
 
+typedef stack<Namespace*> Scope;
+
 //string reprType(TypeVal type);
 
 //BEGIN Error types

@@ -10,7 +10,7 @@ void Plugin::link(unordered_map<string, Callback*>& heaven){}
 
 VectorPlugin::VectorPlugin(){}
 
-VectorPlugin::VectorPlugin(vector<Callback>& callbacks) {
+VectorPlugin::VectorPlugin(vector<Callback*>& callbacks) {
 	cbs = callbacks;
 }
 

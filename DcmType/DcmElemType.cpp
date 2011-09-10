@@ -19,6 +19,8 @@
     string DcmNone::repr() {
         return "None";
     }
+    
+    DcmNone *dcmNone = new DcmNone();
 // };
 
 // DcmInt {

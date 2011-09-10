@@ -10,6 +10,8 @@
 #include <vector>
 #include <unordered_map>
 
+class Plugin;
+
 #include "Callback.h"
 
 // class for easier embedding

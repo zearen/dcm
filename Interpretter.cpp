@@ -93,7 +93,7 @@ void Interpretter::execute(string commands) {
         exec(commands, i);
     }
     while (i < commands.size()) {
-        if (commands[i] <= '9' && commands[i] >= '0') {
+        if (commands[i] == '-' || (commands[i] <= '9' && commands[i] >= '0')) {
             number(commands, i);
         }
         else switch (commands[i]) {
@@ -115,6 +115,8 @@ void Interpretter::execute(string commands) {
             case '[':
                 exec(commands, ++i);
                 break;
+            case ',':
+                sym(commands, i);
             case '\"':
                 str(commands, i);
                 break;
@@ -288,6 +290,15 @@ void Interpretter::exec(string& execStr, int& i) {
         dcmExec->append(source);
     }
     findEnd(execStr, i);
+}
+
+void Interpretter::sym(string& symName, int& i) {
+    string name;
+    int start, end;
+    start = ++i;
+    end = findEnd(symName, i);
+    name = symName.substr(start, end);
+    mainStack.push(new DcmSymbol(name));
 }
 
 void Interpretter::str(string& strng, int& i) {

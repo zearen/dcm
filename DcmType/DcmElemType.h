@@ -28,7 +28,7 @@ class DcmNone : public DcmElem {
         string repr();
 };
 
-DcmNone *dcmNone = new DcmNone;
+extern DcmNone *dcmNone;
 
 class DcmInt : public DcmElem {
     public:

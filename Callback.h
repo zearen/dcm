@@ -14,8 +14,6 @@ class Interpretter;
 #include "DcmType/DcmType.h"
 #include "Interpretter.h"
 
-typedef stack<Namespace*> Scope;
-
 using namespace std;
 
 DcmType *raw_peek(string& sym, Scope *scope);

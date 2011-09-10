@@ -1,4 +1,4 @@
-FLAGS=--std=c++0x
+FLAGS= --std=c++0x -fPIC
 
 OBJ=DcmType.o DcmElemType.o DcmErrorType.o DcmCompositeType.o
 
@@ -16,3 +16,7 @@ DcmErrorType.o: DcmType.h DcmErrorType.h DcmErrorType.cpp
 
 DcmCompositeType.o: DcmType.h DcmCompositeType.h DcmCompositeType.cpp
 	g++ $(FLAGS) -c DcmCompositeType.cpp
+
+.PHONY: clean
+clean:
+	rm *.o

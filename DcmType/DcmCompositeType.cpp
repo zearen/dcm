@@ -28,6 +28,7 @@
         for (int i = 0; i < len; i++) {
             dcmNone->addRef();
             vals[i] = dcmNone;
+//            vals[i] = new DcmNone();
         }
     }
     
