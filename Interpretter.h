@@ -19,7 +19,7 @@ class InterpretterError : public exception {
         string msg;
     public:
         InterpretterError();
-        InterpretterError(string& message);
+        InterpretterError(string message);
         ~InterpretterError() throw ();
         const char* what();
 };
@@ -35,7 +35,7 @@ class Interpretter {
         void attrib(string& attr, int& i);
         void exec(string& execStr, int& i);
         static DcmSymbol *sym(string& symName, int& i);
-        static DcmString *str(string& strng, int& i);
+        void str(string& strng, int& i);
         static DcmChar *ch(string& c, int& i);
         static DcmElem *number(string& num, int& i);
     protected:
@@ -56,8 +56,8 @@ class Interpretter {
         
         void addPlugin(Plugin& plugin);
         
-        void execute(string commands);
+        void execute(string commands)throw (DcmError*);
         
-        static DcmExec *Parse(string& str);
+//        static DcmExec *Parse(string& str);
 };
 #endif

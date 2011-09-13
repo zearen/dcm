@@ -72,6 +72,8 @@ class DcmBool : public DcmElem {
 
 class DcmString : public DcmElem, public string {
     public:
+        DcmString();
+        DcmString(string& toCopy);
         DcmType *copy();
         TypeVal type();
         string repr();

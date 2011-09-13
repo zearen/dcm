@@ -10,7 +10,7 @@
 
 InterpretterError::InterpretterError(){}
 
-InterpretterError::InterpretterError(string& message) {
+InterpretterError::InterpretterError(string message) {
     msg = message;
 }
 
@@ -60,12 +60,14 @@ void Interpretter::addPlugin(Plugin& plugin) {
 
 // Utility functions for parsing:
 
-bool isEndChar(char c) {
+int isEndChar(char c) {
     switch (c) {
         case ' ':
         case '\t':
-        case '[':
         case '.':
+        case '[':
+        case ']':
+        case '#':
             return true;
         default:
             return false;
@@ -80,26 +82,44 @@ int findEnd (string& str, int& i) {
     if (i >= str.size()) {
         return ret;
     }
-    if (str[i] == '.') {
-        return ret;
+    switch (str[i]) {
+        // We do this check twice, optimize?
+        case '.':
+        case '[':
+        case ']':
+        case '#':
+            return ret;
     }
     while (i < str.size() && (str[i] == ' ' || str[i] == '\t')) i++;
     return ret;
 }
 
-void Interpretter::execute(string commands) {
+void Interpretter::execute(string commands) throw (DcmError*){
     int i = 0;
-    findEnd(commands, i);
     if (!cont.empty()) {
-        string lf = "\n";
+        static string lf = "\n";
         cont.top()->append(lf);
         exec(commands, i);
     }
+    if (strCont != "") {
+        strCont += '\n';
+        str(commands, i);
+        if (i < commands.size()) {
+            i++;
+            mainStack.push(new DcmString(strCont));
+            strCont = "";
+        }
+    }
+    findEnd(commands, i);
     while (i < commands.size()) {
-        if (commands[i] == '-' || (commands[i] <= '9' && commands[i] >= '0')) {
+        if (commands[i] <= '9' && commands[i] >= '0') {
             mainStack.push(number(commands, i));
         }
         else switch (commands[i]) {
+            case '#':
+                return;
+            case ']':
+                throw InterpretterError("Unexpected ]");
             case '$':
                 push(commands, i);
                 break;
@@ -118,23 +138,26 @@ void Interpretter::execute(string commands) {
             case '[':
                 exec(commands, ++i);
                 break;
+            case '\"':
+                str(commands, ++i);
+                if (i < commands.size()) {
+                    mainStack.push(new DcmString(strCont));
+                    strCont = "";
+                    i++;
+                }
+                break;
             case ',':
                 mainStack.push(sym(commands, i));
-                break;
-            case '\"':
-                mainStack.push(str(commands, i));
                 break;
             case '\'':
                 mainStack.push(ch(commands, i));
                 break;
+            case '^':
+                peek(commands, ++i);
             default:
                 peek(commands, i);
         }
     }
-}
-
-DcmExec *Interpretter::Parse(string& str) {
-    
 }
 
 // Sub-parsers
@@ -269,34 +292,69 @@ void Interpretter::attrib(string& attr, int& i) {
     scope.pop();
 }
 
-void Interpretter::exec(string& execStr, int& i) {
-    DcmExec *dcmExec;
-    string source;
-    int start = i;
-    if (start >= execStr.size()) {
-        cont.push(new DcmExec());
+int parseNum(string& num, int& i) {
+    int ret = 0;
+    while (i < num.size() && '9' >= num[i] && '0' <= num[i]) {
+        ret = ret * 10 + (num[i] - '0');
     }
-    while (i < execStr.size() && execStr[i] != ']') i++;
-    source = execStr.substr(start, i - 1);
-    if (i >= execStr.size()) {
-        cont.push(Parse(source));
-        cont.top()->append(source);
+    return ret;
+}
+
+char hex2val(char ch) {
+    if ('9' >= ch && '1' <= ch) {
+        return ch - '0';
+    }
+    else if ('a' <= ch && ch <= 'f') {
+        return ch - 87; // -87 = -'a' + 10
+    }
+    else if ('A' <= ch && ch <= 'F') {
+        return ch - 55; // -55 = - 'A'
     }
     else {
-        if (cont.empty()) {
-            dcmExec = Parse(source);
+        return 0;
+    }
+}
+
+int parseHex(string& hex, int& i) {
+    int ret = 0;
+    char val;
+    for(;i < hex.size(); i++) {
+        val = hex2val(hex[i]);
+        if (val) {
+            ret = (ret << 4) + val;
+        }
+        else if (hex[i] == '0') {
+                ret <<= 4;
         }
         else {
-            dcmExec = cont.top();
-            cont.pop();
-            for (DcmType *dcm : *Parse(source)) {
-                dcmExec->push_back(dcm);
-            }
+            return ret;
         }
-        mainStack.push(dcmExec);
-        dcmExec->append(source);
     }
-    findEnd(execStr, i);
+    return ret;
+}
+
+char parseSpecialChar(string& chstr, int& i) {
+    if (i >= chstr.size()) {
+        return '\n';
+    }
+    if ('9' >= chstr[i] && chstr[i] <= '0') {
+        return (char) parseNum(chstr, i);
+    }
+    switch (chstr[i]) {
+        case 'n':
+            return '\n';
+        case 'r':
+            return '\r';
+        case 't':
+            return '\t';
+        case 'x':
+            return (char) parseHex(chstr, ++i);
+        case 'a':
+            return '\a';
+        defualt:
+            i++;
+            return chstr[i-1];
+    }
 }
 
 DcmSymbol *Interpretter::sym(string& symName, int& i) {
@@ -308,12 +366,60 @@ DcmSymbol *Interpretter::sym(string& symName, int& i) {
     return new DcmSymbol(name);
 }
 
-DcmString *Interpretter::str(string& strng, int& i) {
+void Interpretter::str(string& strng, int& i) {
+    int end = i;
+    for (;end < strng.size() && strng[end] != '\"'; end++) {
+        if (strng[end] == '\\') {
+            strCont += parseSpecialChar(strng, ++i);
+        }
+        else {
+            strCont += strng[end];
+        }
+    }
 }
 
 DcmChar *Interpretter::ch(string& c, int& i) {
+    i++;
+    if (i < c.size()) {
+        return new DcmChar('\n');
+    }
+    else if (c[i] == '\\') {
+        i++;
+        return new DcmChar(parseSpecialChar(c, i));
+    }
+    else {
+        i++;
+        return new DcmChar(c[i-1]);
+    }
 }
 
 DcmElem *Interpretter::number(string& num, int& i) {
+    int ret=0;
+    if (num[i] == '0') {
+        i++;
+        if (num[i] == 'x') {
+            ret = parseHex(num, ++i);
+        }
+        else {
+            ret = parseNum(num, i);
+        }
+    }
+    if (i >= num.size()) {
+        return new DcmInt(ret);
+    }
+    if (num[i] == '.') {
+        // Parse as float
+        double fret = ret;
+        double multiplier = 1;
+        i++;
+        for(; i < num.size() && '9' >= num[i] && '0' <= num[i]; i++) {
+            multiplier /= 10;
+            fret += (num[i] - '0') * multiplier;
+        }
+        return new DcmFloat(fret);
+    }
+    else {
+        return new DcmInt(ret);
+    }
 }
 

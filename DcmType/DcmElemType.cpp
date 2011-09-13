@@ -119,6 +119,11 @@
 // };
 
 // DcmString {
+    DcmString::DcmString() {}
+    
+    DcmString::DcmString(string& toCopy) : string(toCopy) {
+    }
+    
     DcmType *DcmString::copy() {
         return new DcmString(*this);
     }
