@@ -1,29 +1,27 @@
 # A dcm implementation of queues as a singly linked list
+# Plugins: prelude
+
+,Queues guard
 
 : {
 
-class {
-    ,; [me]
-    ,? [false] def
-} $Nil
-
-,nil [Nil ;] def
 Error inherit {
     "queue underflow" $msg
 } $UnderflowError
 
-,underflowError [UnderflowError] def
+[UnderflowError ; throw] def $underflowError
 
-class {
-    ,; upcopy #[nil d* d* $head $tail $val] def
-    ,push [
-        me
+class inherit {
+    ,; upcopy
+    [
+        me r
         ?tail
         [ @tail { : { $val } dup $next } $tail ]
         [ : { $val } dup $tail $head ]
         if x
-    ] def
-    ,pop [
+    ] def $push
+    
+    [
         me
         ?head
         [ @head {
@@ -35,35 +33,11 @@ class {
         ]
         [ underflowError ]
         if x
-    ] def
-    ,empty [
+    ] def $poll
+    [
         me
         ?head
-    ] def
+    ] def $empty
 } $Queue
 
-
-*//*
-
-so
-obj .att 
-<=>
-obj { att } del
-
-,. [ swap { ^ } del ]
-*/
-
-template <class T>
-class Queue {
-    private:
-        struct Q {
-            T val;
-            Q* next;
-        }
-        Q *_head, *_tail;
-    public:
-        Queue() {_q=0;}
-        push(T val) {
-            
-        
-
+} ,Queues module

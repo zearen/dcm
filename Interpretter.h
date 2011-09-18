@@ -38,6 +38,8 @@ class Interpretter {
         void str(string& strng, int& i);
         static DcmChar *ch(string& c, int& i);
         static DcmElem *number(string& num, int& i);
+        
+        bool checkHeaven
     protected:
         // If an exec wraps a line
         stack<DcmExec*> cont;

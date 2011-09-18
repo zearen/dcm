@@ -54,9 +54,9 @@
 
 # How to define an array consructor in dcm
 
-,( [ 0 dup $delim ] def
+[ none copy dup $delim ] def $(
 
-,) [
+[
     [ @delim ] 
     [ "No delimiter defined, missing '(' ?" error ] catch
     : {
@@ -82,7 +82,7 @@
         while
         # We've filled the array
     } del
-] def
+] def $)
 
 ( 5 6 "hi" 'w ) print
 
