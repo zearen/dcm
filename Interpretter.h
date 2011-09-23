@@ -27,7 +27,7 @@ class InterpretterError : public exception {
 class Interpretter {
     private:
         // Sub-parsers
-        void peek(string& stkName, int& i);
+        void peek(string& stkName, int& i, bool checkHeaven);
         void pop(string& stkName, int& i);
         void push(string& stkName, int& i);
         void swap(string& stkName, int& i);
@@ -38,8 +38,6 @@ class Interpretter {
         void str(string& strng, int& i);
         static DcmChar *ch(string& c, int& i);
         static DcmElem *number(string& num, int& i);
-        
-        bool checkHeaven
     protected:
         // If an exec wraps a line
         stack<DcmExec*> cont;

@@ -6,6 +6,8 @@
 
 // InterpretterError
 
+#include <stdexcept>
+
 #include "Interpretter.h"
 
 InterpretterError::InterpretterError(){}
@@ -153,28 +155,35 @@ void Interpretter::execute(string commands) throw (DcmError*){
                 mainStack.push(ch(commands, i));
                 break;
             case '^':
-                peek(commands, ++i);
+                peek(commands, ++i, false);
             default:
-                peek(commands, i);
+                peek(commands, i, true);
         }
     }
 }
 
 // Sub-parsers
 
-void Interpretter::peek(string& stkName, int& i) {
-    DcmType *dcm;
+void Interpretter::peek(string& stkName, int& i, bool checkHeaven) {
+    DcmType *dcm = NULL;
     string name;
     int start, end;
     start = ++i;
     end = findEnd(stkName, i);
     name = stkName.substr(start, end);
     // This will grow heaven quick, optimize
-    if (heaven[name].empty()) {
-        dcm = raw_peek(name, &scope);
-    }
-    else {
-        dcm = heaven[name].top();
+    if (checkHeaven) {
+        DcmStack stk;
+        try {
+            stk = heaven.at(name);
+            if (stk.empty()) {
+                dcm = raw_peek(name, &scope);
+            }
+            else {
+                dcm = stk.top();
+            }
+        }
+        catch (out_of_range e) {}
     }
     if (dcm) {
         if (*dcm->type() = PRIMFUN) {
@@ -285,7 +294,7 @@ void Interpretter::attrib(string& attr, int& i) {
             swap(attr, ++i);
             break;
         default:
-            peek(attr, ++i);
+            peek(attr, ++i, false);
     }
     
     del(ns);

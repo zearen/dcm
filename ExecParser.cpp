@@ -7,5 +7,6 @@
 #include "Interpretter.h"
 
 void Interpretter::exec(string& execStr, int& i) {
+    if (strCont != "");
 }
 
