@@ -59,5 +59,12 @@ class Interpretter {
         void execute(string commands)throw (DcmError*);
         
 //        static DcmExec *Parse(string& str);
+        
+        friend class PeekCallback;
+        friend class PopCallback;
+        friend class PushCallback;
+        friend class SwapCallback;
+        friend class EmptyCallback;
+        friend class AttribCallback;
 };
 #endif

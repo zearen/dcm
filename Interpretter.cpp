@@ -138,6 +138,7 @@ void Interpretter::execute(string commands) throw (DcmError*){
                 attrib(commands, i);
                 break;
             case '[':
+                cont.push(new DcmExec());
                 exec(commands, ++i);
                 break;
             case '\"':
@@ -168,10 +169,10 @@ void Interpretter::peek(string& stkName, int& i, bool checkHeaven) {
     DcmType *dcm = NULL;
     string name;
     int start, end;
-    start = ++i;
+    start = i;
     end = findEnd(stkName, i);
     name = stkName.substr(start, end);
-    // This will grow heaven quick, optimize
+    
     if (checkHeaven) {
         DcmStack stk;
         try {

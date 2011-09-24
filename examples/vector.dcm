@@ -2,24 +2,30 @@
 
 # tricks
 
-( 1 2 3 'a 'b 'c )v # -> makes vector
+#( 1 2 3 'a 'b 'c )v # -> makes vector
 
-class inherit {
+,Vectors guard : {
+
+class {
     
-    ,; [
+    [
         1 $size
-        0 $len
+        0 $length
         0 array $arr
-    ] def
+        me
+    ] def $;
     
-    ,() [
-        dup len <
-        [arr ()]
+    [
+        dup length <
+        [arr r ()]
         [
-            len 1 - 
+            length 1 - 
             r boundsError
         ]
         if x
-    ]
+    ] def $()
     
-    
+    [
+        $v dup length <
+        [arr r @v
+} ,Vectors module
