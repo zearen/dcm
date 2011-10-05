@@ -55,7 +55,7 @@ class PushCallback : public Callback {
         }
 };
 
-void ex_push(string& commands, int& i) {
+void Interpretter::ex_push(string& commands, int& i) {
     int start , end;
     start = i;
     end = findEnd(commands, i);
@@ -79,7 +79,7 @@ class PopCallback : public Callback {
         }
 };
 
-void ex_pop(string& commands, int& i) {
+void Interpretter::ex_pop(string& commands, int& i) {
     int start, end;
     start = i;
     end = findEnd(commands, i);
@@ -103,7 +103,7 @@ class SwapCallback : public Callback {
         }
 };
 
-void ex_swap(string& commands, int& i) {
+void Interpretter::ex_swap(string& commands, int& i) {
     int start, end;
     start = i;
     end = findEnd(commands, i);
@@ -125,7 +125,7 @@ class EmptyCallback : public Callback {
         }
 };
 
-void ex_empty(string& commands, int& i) {
+void Interpretter::ex_empty(string& commands, int& i) {
     int start, end;
     start = i;
     end = findEnd(commands, i);
@@ -145,11 +145,11 @@ class PeekCallback : public Callback {
         
         Callback *run(Interpretter *interpretter) {
             int i = 0;
-            interpretter->peek(stkName, i);
+            interpretter->peek(stkName, i, chkScope);
         }
 };
 
-void ex_peek(string& commands, int& i, bool checkScope) {
+void Interpretter::ex_peek(string& commands, int& i, bool checkScope) {
     int start, end;
     start = i;
     end = findEnd(commands, i);

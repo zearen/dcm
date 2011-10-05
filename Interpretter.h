@@ -25,19 +25,6 @@ class InterpretterError : public exception {
 };
 
 class Interpretter {
-    private:
-        // Sub-parsers
-        void peek(string& stkName, int& i, bool checkHeaven);
-        void pop(string& stkName, int& i);
-        void push(string& stkName, int& i);
-        void swap(string& stkName, int& i);
-        void empty(string& stkName, int& i);
-        void attrib(string& attr, int& i);
-        void exec(string& execStr, int& i);
-        static DcmSymbol *sym(string& symName, int& i);
-        void str(string& strng, int& i);
-        static DcmChar *ch(string& c, int& i);
-        static DcmElem *number(string& num, int& i);
     protected:
         // If an exec wraps a line
         stack<DcmExec*> cont;
@@ -60,11 +47,32 @@ class Interpretter {
         
 //        static DcmExec *Parse(string& str);
         
-        friend class PeekCallback;
-        friend class PopCallback;
-        friend class PushCallback;
-        friend class SwapCallback;
-        friend class EmptyCallback;
-        friend class AttribCallback;
+    private:
+        // Sub-parsers
+        void peek(string& stkName, int& i, bool checkHeaven);
+        void pop(string& stkName, int& i);
+        void push(string& stkName, int& i);
+        void swap(string& stkName, int& i);
+        void empty(string& stkName, int& i);
+        void attrib(string& attr, int& i);
+        void exec(string& execStr, int& i);
+        static DcmSymbol *sym(string& symName, int& i);
+        void str(string& strng, int& i);
+        static DcmChar *ch(string& c, int& i);
+        static DcmElem *number(string& num, int& i);
+        
+        // Constructors for the exec parser
+        void ex_push(string& commands, int& i);
+        void ex_pop(string& commands, int& i);
+        void ex_swap(string& commands, int& i);
+        void ex_empty(string& commands, int& i);
+        void ex_peek(string& commands, int& i, bool checkScope);
+        
+    friend class PeekCallback;
+    friend class PopCallback;
+    friend class PushCallback;
+    friend class SwapCallback;
+    friend class EmptyCallback;
+    friend class AttribCallback;
 };
 #endif
