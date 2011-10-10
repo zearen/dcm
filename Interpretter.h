@@ -67,6 +67,7 @@ class Interpretter {
         void ex_swap(string& commands, int& i);
         void ex_empty(string& commands, int& i);
         void ex_peek(string& commands, int& i, bool checkScope);
+        void ex_attrib(string& commands, int& i);
         
     friend class PeekCallback;
     friend class PopCallback;
@@ -75,4 +76,8 @@ class Interpretter {
     friend class EmptyCallback;
     friend class AttribCallback;
 };
+
+int isEndChar(char c);
+
+int findEnd (string& str, int& i);
 #endif

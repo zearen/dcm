@@ -5,40 +5,6 @@
 */
 
 #include "Interpretter.h"
-
-int isEndChar(char c) {
-    switch (c) {
-        case ' ':
-        case '\t':
-        case '.':
-        case '[':
-        case ']':
-        case '#':
-            return true;
-        default:
-            return false;
-    }
-}
-
-int findEnd (string& str, int& i) {
-    int ret;
-    while (i < str.size() && !isEndChar(str[i])) i++;
-    ret = i - 1;
-    if (i >= str.size()) {
-        return ret;
-    }
-    switch (str[i]) {
-        // We do this check twice, optimize?
-        case '.':
-        case '[':
-        case ']':
-        case '#':
-            return ret;
-    }
-    while (i < str.size() && (str[i] == ' ' || str[i] == '\t')) i++;
-    return ret;
-}
-
 class PushCallback : public Callback {
     private:
         string stkName;
@@ -138,7 +104,7 @@ class PeekCallback : public Callback {
         bool chkScope;
         string stkName;
     public:
-        PeekCallback(string& stackName, bool checkScope) {
+        PeekCallback(string stackName, bool checkScope) {
             stkName = stackName;
             chkScope = checkScope;
         }
@@ -157,22 +123,44 @@ void Interpretter::ex_peek(string& commands, int& i, bool checkScope) {
         commands.substr(start, end), checkScope), true));
 }
 
+class AttribCallback : public Callback {
+    private:
+        string stkName;
+    public:
+        AttribCallback(string stackName) {
+            stkName = stackName;
+        }
+        
+        Callback *run(Interpretter *interpretter) {
+            int i = 0;
+            interpretter->attrib(stkName, i);
+        }
+};
+
+void Interpretter::ex_attrib(string& commands, int& i) {
+    int start, end;
+    start = i;
+    end = findEnd(commands, i);
+    cont.top()->push_back(new DcmPrimFun(new AttribCallback(
+        commands.substr(start, end)), true));
+}
+
 void Interpretter::exec(string& execStr, int& i) {
     if (strCont != "") {
         strCont += '\n';
-        str(commands, i);
-        if (i < commands.size()) {
+        str(execStr, i);
+        if (i < execStr.size()) {
             i++;
             mainStack.push(new DcmString(strCont));
             strCont = "";
         }
     }
-    findEnd(commands, i);
-    while (i < commands.size()) {
-        if (commands[i] <= '9' && commands[i] >= '0') {
-            cont.top()->push_back(number(commands, i));
+    findEnd(execStr, i);
+    while (i < execStr.size()) {
+        if (execStr[i] <= '9' && execStr[i] >= '0') {
+            cont.top()->push_back(number(execStr, i));
         }
-        else switch (commands[i]) {
+        else switch (execStr[i]) {
             case '#':
                 return;
             case ']':
@@ -189,41 +177,41 @@ void Interpretter::exec(string& execStr, int& i) {
                 }
                 break;
             case '$':
-                ex_push(commands, i);
+                ex_push(execStr, i);
                 break;
             case '@':
-                ex_pop(commands, i);
+                ex_pop(execStr, i);
                 break;
             case '~':
-                ex_swap(commands, i);
+                ex_swap(execStr, i);
                 break;
             case '?':
-                ex_empty(commands, i);
+                ex_empty(execStr, i);
                 break;
             case '.':
-                ex_attrib(commands, i);
+                ex_attrib(execStr, i);
                 break;
             case '[':
                 cont.push(new DcmExec());
                 break;
             case '\"':
-                str(commands, ++i);
-                if (i < commands.size()) {
+                str(execStr, ++i);
+                if (i < execStr.size()) {
                     cont.top()->push_back(new DcmString(strCont));
                     strCont = "";
                     i++;
                 }
                 break;
             case ',':
-                cont.top()->push_back(sym(commands, i));
+                cont.top()->push_back(sym(execStr, i));
                 break; 
             case '\'':
-                cont.top()->push_back(ch(commands, i));
+                cont.top()->push_back(ch(execStr, i));
                 break;
             case '^':
-                ex_peek(commands, ++i, false);
+                ex_peek(execStr, ++i, false);
             default:
-                ex_peek(commands, i, true);
+                ex_peek(execStr, i, true);
         }
     }
 }
