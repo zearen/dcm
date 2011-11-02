@@ -76,11 +76,11 @@ int isEndChar(char c) {
     }
 }
 
-// returns the end of the token and sets i to the beginning of next token
+// returns the length of the token and sets i to the beginning of next token
 int findEnd (string& str, int& i) {
-    int ret;
+    int ret = i;
     while (i < str.size() && !isEndChar(str[i])) i++;
-    ret = i - 1;
+    ret = i - ret;
     if (i >= str.size()) {
         return ret;
     }
@@ -112,7 +112,9 @@ void Interpretter::execute(string commands) throw (DcmError*){
             strCont = "";
         }
     }
-    findEnd(commands, i);
+    while (i < commands.size() && 
+        (commands[i] == ' ' || commands[i] == '\t')) i++;
+    //findEnd(commands, i);
     while (i < commands.size()) {
         if (commands[i] <= '9' && commands[i] >= '0') {
             mainStack.push(number(commands, i));
@@ -306,7 +308,9 @@ int parseNum(string& num, int& i) {
     int ret = 0;
     while (i < num.size() && '9' >= num[i] && '0' <= num[i]) {
         ret = ret * 10 + (num[i] - '0');
+        i++;
     }
+    findEnd(num, i);
     return ret;
 }
 
@@ -340,6 +344,7 @@ int parseHex(string& hex, int& i) {
             return ret;
         }
     }
+    findEnd(hex, i);
     return ret;
 }
 
@@ -413,6 +418,12 @@ DcmElem *Interpretter::number(string& num, int& i) {
         else {
             ret = parseNum(num, i);
         }
+    }
+    else {
+        int a;
+        a = 1;
+        ret = parseNum(num, i);
+        a += 3;
     }
     if (i >= num.size()) {
         return new DcmInt(ret);
