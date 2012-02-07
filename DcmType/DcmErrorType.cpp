@@ -5,15 +5,20 @@
 */
 
 #include "DcmType.h"
+#include <sstream>
 
 // DcmError {
     DcmType *DcmError::copy() {
         return new DcmError(*this);
     }
     
-    TypeVal DcmError::type() {
+    TypeVal DcmError::typeVal() {
         static unsigned char typeVal[] = {UNKNOWN_E};
         return typeVal;
+    }
+    
+    TypeVal DcmError::type() {
+        return DcmError::typeVal();
     }
     
     string DcmError::repr() {
@@ -44,13 +49,22 @@
         return got;
     }
     
-    TypeVal DcmTypeError::type() {
+    TypeVal DcmTypeError::typeVal() {
         static unsigned char typeVal[] = {TYPE_E};
         return typeVal;
     }
     
+    TypeVal DcmTypeError::type() {
+        return DcmTypeError::typeVal();
+    }
+    
     string DcmTypeError::repr() {
-        return "Error: Type Error expected: , got: ";
+        stringstream ret;
+        ret << "Error: TypeError expected:"; 
+        ret << typeVal2Str(exp);
+        ret << ", got: ";
+        ret << typeVal2Str(got);
+        return ret.str();
     }
 // };
 
@@ -77,9 +91,20 @@
         return giv;
     }
     
-    TypeVal DcmBoundsError::type() {
+    TypeVal DcmBoundsError::typeVal() {
         static unsigned char typeVal[] = {OUT_OF_BOUNDS_E};
         return typeVal;
+    }
+    
+    TypeVal DcmBoundsError::type() {
+        return DcmBoundsError::typeVal();
+    }
+    
+    string DcmBoundsError::repr() {
+        stringstream ret;
+        ret << "Error: Out of bounds (";
+        ret << giv << " > " << top << ")";
+        return ret.str();
     }
 // };
 
@@ -114,9 +139,13 @@
         return dcmStack;
     }
     
-    TypeVal DcmStackError::type() {
+    TypeVal DcmStackError::typeVal() {
         static unsigned char typeVal[] = {STACK_EMPTY_E};
         return typeVal;
+    }
+    
+    TypeVal DcmStackError::type() {
+        return DcmStackError::typeVal();
     }
     
     string DcmStackError::repr() {
@@ -155,8 +184,13 @@
             typeVal = new unsigned char[len];
             for (int i = 1; i < len; i++)
                 typeVal[i] = subtypeVal[i-1];
-            typeVal[0] = ELEM | (EXTEN << 1) | 1;
+            typeVal[0] = ERROR | (CUSTOM_E << 1) | 1;
         }
+        return typeVal;
+    }
+    
+    TypeVal DcmCustomError::typeVal() {
+        static unsigned char typeVal[] = {ERROR | (CUSTOM_E << 1) | 1, 0};
         return typeVal;
     }
     

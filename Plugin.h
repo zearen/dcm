@@ -18,7 +18,8 @@ class Plugin;
 
 class Plugin {
     public:
-        void link(Namespace& heaven);
+        virtual void link(Namespace& heaven);
+        virtual ~Plugin();
 };
 
 class VectorPlugin : public Plugin {
@@ -26,8 +27,8 @@ class VectorPlugin : public Plugin {
 		vector<Callback*> cbs;
 	public:
 		VectorPlugin();
-		VectorPlugin(vector<Callback*>& callbacks);
-        void link(Namespace& heaven);
+		VectorPlugin(vector<Callback*> callbacks);
+        virtual void link(Namespace& heaven);
 };
 		
 #endif

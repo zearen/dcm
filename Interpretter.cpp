@@ -29,6 +29,8 @@ const char* InterpretterError::what() {
 
 // Interpretter
 
+unsigned char none[] = { 0 };
+
 Interpretter::Interpretter() {
     scope.push(new Namespace());
 }
@@ -76,6 +78,10 @@ int isEndChar(char c) {
     }
 }
 
+inline void skipWhitespace(string& str, int& i) {
+    while (i < str.size() && (str[i] == ' ' || str[i] == '\t')) i++;
+}
+
 // returns the length of the token and sets i to the beginning of next token
 int findEnd (string& str, int& i) {
     int ret = i;
@@ -92,7 +98,7 @@ int findEnd (string& str, int& i) {
         case '#':
             return ret;
     }
-    while (i < str.size() && (str[i] == ' ' || str[i] == '\t')) i++;
+    skipWhitespace(str, i);
     return ret;
 }
 
@@ -112,8 +118,7 @@ void Interpretter::execute(string commands) throw (DcmError*){
             strCont = "";
         }
     }
-    while (i < commands.size() && 
-        (commands[i] == ' ' || commands[i] == '\t')) i++;
+    skipWhitespace(commands, i);
     //findEnd(commands, i);
     while (i < commands.size()) {
         if (commands[i] <= '9' && commands[i] >= '0') {
@@ -186,21 +191,24 @@ void Interpretter::peek(string& stkName, int& i, bool checkHeaven) {
                 dcm = stk.top();
             }
         }
-        catch (out_of_range e) {}
+        catch (out_of_range e) {
+            dcm = raw_peek(name, &scope);
+        }
     }
     if (dcm) {
         if (*dcm->type() = PRIMFUN) {
             Callback *cb = static_cast<DcmPrimFun*>(dcm)->run(this);
-            while (cb = cb->run(this));
+            while (cb) cb = cb->run(this);
         }
         else {
             dcm->addRef();
             mainStack.push(dcm);
         }
     }
+    else {
+        throw new DcmStackError(new DcmSymbol(name), none);
+    }
 }
-
-unsigned char none[] = { 0 };
 
 void Interpretter::pop(string& stkName, int& i) {
     DcmStack *stk;
@@ -248,12 +256,7 @@ void Interpretter::swap(string& stkName, int& i) {
     name = stkName.substr(start, end);
     
     stk = &(*scope.top())[name];
-    if (stk->empty()) {
-        throw new DcmStackError(new DcmSymbol(name), none);
-    }
-    else {
-        mainStack.swap(*stk);
-    }
+    mainStack.swap(*stk);
 }
 
 void Interpretter::empty(string& stkName, int& i) {
@@ -262,7 +265,7 @@ void Interpretter::empty(string& stkName, int& i) {
     start = ++i;
     end = findEnd(stkName, i);
     name = stkName.substr(start, end);
-    mainStack.push(new DcmBool((*scope.top())[name].empty()));
+    mainStack.push(new DcmBool(!(*scope.top())[name].empty()));
 }
 
 unsigned char tvNS[] = {NAMESPACE};
@@ -437,6 +440,7 @@ DcmElem *Interpretter::number(string& num, int& i) {
             multiplier /= 10;
             fret += (num[i] - '0') * multiplier;
         }
+        skipWhitespace(num, i);
         return new DcmFloat(fret);
     }
     else {

@@ -166,6 +166,7 @@ void Interpretter::exec(string& execStr, int& i) {
             case ']':
                 // Close exec
                 DcmExec *top;
+                i++;
                 top = cont.top();
                 cont.pop();
                 if (cont.empty()) {

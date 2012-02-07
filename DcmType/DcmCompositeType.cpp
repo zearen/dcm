@@ -42,9 +42,13 @@
         return new DcmArray(*this);
     }
     
-    TypeVal DcmArray::type() {
+    TypeVal DcmArray::typeVal() {
         static unsigned char typeVal[] = {ARRAY};
         return typeVal;
+    }
+    
+    TypeVal DcmArray::type() {
+        return DcmArray::typeVal();
     }
     
     string DcmArray::repr() {
@@ -74,9 +78,13 @@
         return new DcmNamespace(*this);
     }
     
-    TypeVal DcmNamespace::type() {
+    TypeVal DcmNamespace::typeVal() {
         static unsigned char typeVal[] = {NAMESPACE};
         return typeVal;
+    }
+    
+    TypeVal DcmNamespace::type() {
+        return DcmNamespace::typeVal();
     }
     
     string DcmNamespace::repr() {
@@ -127,9 +135,13 @@
         }
     }
     
-    TypeVal DcmClass::type() {
+    TypeVal DcmClass::typeVal() {
         static unsigned char typeVal[] = {CLASS};
         return typeVal;
+    }
+    
+    TypeVal DcmClass::type() {
+        return DcmClass::typeVal();
     }
     
     string DcmClass::repr() {
@@ -169,9 +181,13 @@
         return cb;
     }
     
-    TypeVal DcmPrimFun::type() {
+    TypeVal DcmPrimFun::typeVal() {
         static unsigned char typeVal[] = {PRIMFUN};
         return typeVal;
+    }
+    
+    TypeVal DcmPrimFun::type() {
+        return DcmPrimFun::typeVal();
     }
     
     string DcmPrimFun::repr() {
@@ -206,12 +222,16 @@
         source += bit;
     }
     
-    TypeVal DcmExec::type() {
+    TypeVal DcmExec::typeVal() {
         static unsigned char typeVal[] = {EXEC};
         return typeVal;
     }
     
+    TypeVal DcmExec::type() {
+        return DcmExec::typeVal();
+    }
+    
     string DcmExec::repr() {
-        return source;
+        return "[ " + source + " ]";
     }
 // };

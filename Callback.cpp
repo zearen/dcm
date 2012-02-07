@@ -39,6 +39,32 @@ DcmType *raw_peek(string& sym, Scope *scope) {
     }
 }
 
+// Utilities
+    Callback *addName(Callback *cb, string name) {
+        cb->name = name;
+        return cb;
+    }
+
+DcmType *safePeekMain(Interpretter* interpretter, TypeVal type)
+  throw (DcmError*) {
+    return safePeekMain(interpretter->mainStack, type);
+}
+
+DcmType *safePeekMain(DcmStack& stk, TypeVal type)
+  throw (DcmError*) {
+    DcmType *dcm;
+    if (!stk.empty()) {
+        dcm = stk.top();
+    }
+    else {
+        throw new DcmStackError(new DcmSymbol("main stack"),
+            DcmPrimFun::typeVal());
+    }
+    if (type && dcm->isType(type))
+        throw new DcmTypeError(type, dcm->type());
+    return dcm;
+}
+
 // Callback {
     DcmType *Callback::Peek(Scope *scope, string& sym) 
       throw (DcmStackError*) {

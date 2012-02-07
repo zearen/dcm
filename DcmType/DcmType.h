@@ -48,13 +48,23 @@ class DcmType {
         void addRef();
         virtual DcmType *copy() =0;
         friend void del(DcmType *dcm);
+        friend DcmType *dup(DcmType *dcm);
         
         bool isType(TypeVal otherType);
         virtual TypeVal type() =0;
         virtual string repr() =0;
 };
 
+// Safely attempt to delete a DcmType
+// Reduces refCount and deletes the object if 0
 void del(DcmType *dcm);
+
+// Duplicate a DcmType
+// Adds one to refCount and can be used in expressions
+DcmType *dup(DcmType *dcm);
+
+// Returns a type as a hexadecimal string
+string typeVal2Str(TypeVal type);
 
 typedef stack<DcmType*> DcmStack;
 

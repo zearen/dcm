@@ -18,45 +18,55 @@
 #define SYMBOL  6
 #define EXTEN   8
 
+// This categorizes atomic types
 class DcmElem : public DcmType {
+};
+
+// Types that act like numbers
+class DcmNum : public DcmElem {
+    // Eventually we'll add simple arithmetic here.
 };
 
 class DcmNone : public DcmElem {
     public:
         DcmType *copy();
         TypeVal type();
+        static TypeVal typeVal();
         string repr();
 };
 
 extern DcmNone *dcmNone;
 
-class DcmInt : public DcmElem {
+class DcmInt : public DcmNum {
     public:
         int val;
         DcmInt(DcmInt& toCopy);
         DcmInt(int newVal);
         DcmType *copy();
         TypeVal type();
+        static TypeVal typeVal();
         string repr();
 };
 
-class DcmFloat : public DcmElem {
+class DcmFloat : public DcmNum {
     public:
         double val;
         DcmFloat(DcmFloat& toCopy);
         DcmFloat(double newVal);
         DcmType *copy();
         TypeVal type();
+        static TypeVal typeVal();
         string repr();
 };
 
-class DcmChar : public DcmElem {
+class DcmChar : public DcmNum {
     public:
         char val;
         DcmChar(DcmChar& toCopy);
         DcmChar(char newVal);
         DcmType *copy();
         TypeVal type();
+        static TypeVal typeVal();
         string repr();
 };
 
@@ -67,6 +77,7 @@ class DcmBool : public DcmElem {
         DcmBool(bool newVal);
         DcmType *copy();
         TypeVal type();
+        static TypeVal typeVal();
         string repr();
 };
 
@@ -76,6 +87,7 @@ class DcmString : public DcmElem, public string {
         DcmString(string& toCopy);
         DcmType *copy();
         TypeVal type();
+        static TypeVal typeVal();
         string repr();
 };
 
@@ -88,6 +100,7 @@ class DcmSymbol : public DcmElem {
         DcmType *copy();
         string get();
         TypeVal type();
+        static TypeVal typeVal();
         string repr();
 };
 

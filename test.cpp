@@ -1,39 +1,44 @@
-// Test 1 for the library.  We just have a library for printing
-
 #include <iostream>
+#include <utility>
 #include "Interpretter.h"
 
-bool done;
+// Plugins
+#include "plugins/io.h"
+#include "plugins/prelude.h"
 
-class : public Callback {
-    Callback *run(Interpretter *interpretter) {
-        if (!interpretter->mainStack.empty()) {
-            cout << interpretter->mainStack.top()->repr() << endl;
-        }
-    }
-} cbPrint;
+volatile bool done;
 
 void cbfExit(DcmStack& stack) {
     done = true;
 }
 
-Plugin mainPlugin() {
-    SimpleCallback cbExit(cbfExit);
-    cbExit.name = "exit";
-    cbPrint.name = "print";
-    return VectorPlugin( vector<Callback*> {
-        &cbPrint,
-        &cbExit
-    } );
+Plugin *mainPlugin() {
+    SimpleCallback *cbExit = new SimpleCallback(cbfExit);
+    cbExit->name = "exit";
+    vector<Callback*> cbs;
+    cbs.push_back(cbExit);
+    return new VectorPlugin(cbs);
 }
 
 int main() {
     Interpretter interpretter;
     string strLine;
     
+    interpretter.addPlugin(*mainPlugin());
+    interpretter.addPlugin(*ioPlugin());
+    interpretter.addPlugin(*preludePlugin());
+    
     while (!done) {
         getline(cin, strLine);
-        interpretter.execute(strLine);
+        try {
+            interpretter.execute(strLine);
+        }
+        catch (DcmError *err) {
+            cerr << err->repr() << endl;
+        }
+        catch (InterpretterError err) {
+            cerr << err.what() << endl;
+        }
     }
     return 0;
 }

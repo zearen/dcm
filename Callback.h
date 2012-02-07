@@ -19,6 +19,17 @@ using namespace std;
 
 DcmType *raw_peek(string& sym, Scope *scope);
 
+// Adds a name to a callback.  Can be used in expressions.
+Callback *addName(Callback *cb, string name);
+
+// Peeks the top item of the stack throwing errors if the stack is empty
+// Optionally, one can specify the necessary type of the value
+DcmType *safePeekMain(Interpretter* interpretter, TypeVal type=0)
+  throw (DcmError*);
+
+DcmType *safePeekMain(DcmStack& stk, TypeVal type=0)
+  throw (DcmError*);
+
 class Callback {
     protected:
         // peek and pop can return stack empty error

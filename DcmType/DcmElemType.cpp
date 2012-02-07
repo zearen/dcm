@@ -5,15 +5,20 @@
 */
 
 #include "DcmType.h"
+#include <sstream>
 
 // DcmNone {
     DcmType *DcmNone::copy() {
         return new DcmNone(*this);
     }
 
-    TypeVal DcmNone::type() {
+    TypeVal DcmNone::typeVal() {
         static unsigned char typeVal[] = {ELEM | (NONE << 1)};
         return typeVal;
+    }
+    
+    TypeVal DcmNone::type() {
+        return DcmNone::typeVal();
     }
     
     string DcmNone::repr() {
@@ -36,13 +41,19 @@
         return new DcmInt(*this);
     }
 
-    TypeVal DcmInt::type() {
+    TypeVal DcmInt::typeVal() {
         static unsigned char typeVal[] = {ELEM | (INT << 1)};
         return typeVal;
     }
     
+    TypeVal DcmInt::type() {
+        return DcmInt::typeVal();
+    }
+    
     string DcmInt::repr() {
-        return "Int";
+        stringstream sout;
+        sout << val;
+        return sout.str();
     }
 // };
 
@@ -59,13 +70,19 @@
         return new DcmFloat(*this);
     }
 
-    TypeVal DcmFloat::type() {
+    TypeVal DcmFloat::typeVal() {
         static unsigned char typeVal[] = {ELEM | (FLOAT << 1)};
         return typeVal;
     }
     
+    TypeVal DcmFloat::type() {
+        return DcmFloat::typeVal();
+    }
+    
     string DcmFloat::repr() {
-        return "Float";
+        stringstream sout;
+        sout << val;
+        return sout.str();
     }
 // };
 
@@ -82,13 +99,19 @@
         return new DcmChar(*this);
     }
 
-    TypeVal DcmChar::type() {
+    TypeVal DcmChar::typeVal() {
         static unsigned char typeVal[] = {ELEM | (CHAR << 1)};
         return typeVal;
     }
     
+    TypeVal DcmChar::type() {
+        return DcmChar::typeVal();
+    }
+    
     string DcmChar::repr() {
-        return "Char";
+        stringstream sout;
+        sout << '\'' << val;
+        return sout.str();
     }
 // };
 
@@ -105,9 +128,13 @@
         return new DcmBool(*this);
     }
 
-    TypeVal DcmBool::type() {
+    TypeVal DcmBool::typeVal() {
         static unsigned char typeVal[] = {ELEM | (BOOL << 1)};
         return typeVal;
+    }
+    
+    TypeVal DcmBool::type() {
+        return DcmBool::typeVal();
     }
     
     string DcmBool::repr() {
@@ -128,9 +155,13 @@
         return new DcmString(*this);
     }
 
-    TypeVal DcmString::type() {
+    TypeVal DcmString::typeVal() {
         static unsigned char typeVal[] = {ELEM | (STRING << 1)};
         return typeVal;
+    }
+    
+    TypeVal DcmString::type() {
+        return DcmString::typeVal();
     }
     
     string DcmString::repr() {
@@ -155,9 +186,13 @@
         return symbol;
     }
     
-    TypeVal DcmSymbol::type() {
+    TypeVal DcmSymbol::typeVal() {
         static unsigned char typeVal[] = {ELEM | (SYMBOL << 1)};
         return typeVal;
+    }
+    
+    TypeVal DcmSymbol::type() {
+        return DcmSymbol::typeVal();
     }
     
     string DcmSymbol::repr() {

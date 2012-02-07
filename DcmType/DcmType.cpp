@@ -5,6 +5,7 @@
 */
 
 #include "DcmType.h"
+#include <sstream>
 
 DcmType::DcmType() {
     refs = 1;
@@ -26,6 +27,22 @@ void del(DcmType *dcm) {
     else {
         delete dcm;
     }
+}
+
+DcmType *dup(DcmType *dcm) {
+    dcm->refs++;
+    return dcm;
+}
+
+string typeVal2Str(TypeVal type) {
+    stringstream ret;
+    ret << hex << '<';
+    while (*type & 1) {
+        ret << *type;
+        type++;
+    }
+    ret << *type << '>';
+    return ret.str();
 }
 
 bool DcmType::isType(TypeVal otherType) {

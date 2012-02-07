@@ -7,10 +7,11 @@
 #include "Plugin.h"
 
 void Plugin::link(Namespace& heaven){}
+Plugin::~Plugin(){}
 
 VectorPlugin::VectorPlugin(){}
 
-VectorPlugin::VectorPlugin(vector<Callback*>& callbacks) {
+VectorPlugin::VectorPlugin(vector<Callback*> callbacks) {
 	cbs = callbacks;
 }
 

@@ -21,6 +21,7 @@ class DcmArray : public DcmType {
         ~DcmArray();
         DcmType *copy();
         TypeVal type();
+        static TypeVal typeVal();
         string repr();
         int length();
         DcmType *operator[] (int index) throw (DcmBoundsError*);
@@ -31,6 +32,7 @@ class DcmNamespace : public DcmType, public Namespace {
         char id();
         DcmType *copy();
         TypeVal type();
+        static TypeVal typeVal();
         string repr();
 };
 
@@ -46,6 +48,7 @@ class DcmClass : public DcmNamespace {
         DcmType *copy();
         DcmType *peek(string& sym);
         TypeVal type();
+        static TypeVal typeVal();
         string repr();
 };
 
@@ -64,6 +67,7 @@ class DcmPrimFun : public DcmType {
         Callback *run(Interpretter *interpretter);
         Callback *callback();
         TypeVal type();
+        static TypeVal typeVal();
         string repr();
 };
 
@@ -78,5 +82,6 @@ class DcmExec : public DcmType, public vector<DcmType*> {
         DcmType *copy();
         void append(string& bit);
         TypeVal type();
+        static TypeVal typeVal();
         string repr();
 };
