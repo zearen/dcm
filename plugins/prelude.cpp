@@ -16,15 +16,12 @@ void cbClear(DcmStack& stk) {
     }
 }
 
-class : public Callback {
-    Callback*
-
 Plugin *preludePlugin() {
     vector<Callback*> v = 
         { addName(new SimpleCallback(cbDup), "dup")
         , addName(new SimpleCallback(cbDel), "del")
         , addName(new SimpleCallback(cbClear), "clear")
-        , addName(&cbX, "x")
+        // , addName(&cbX, "x")
         };
     return new VectorPlugin(v);
 }

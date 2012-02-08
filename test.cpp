@@ -29,6 +29,8 @@ int main() {
     interpretter.addPlugin(*preludePlugin());
     
     while (!done) {
+        cout << "> ";
+        cout.flush();
         getline(cin, strLine);
         try {
             interpretter.execute(strLine);

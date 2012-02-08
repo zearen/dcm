@@ -7,7 +7,6 @@
 // InterpretterError
 
 #include <stdexcept>
-
 #include "Interpretter.h"
 
 InterpretterError::InterpretterError(){}
@@ -154,6 +153,7 @@ void Interpretter::execute(string commands) throw (DcmError*){
                     mainStack.push(new DcmString(strCont));
                     strCont = "";
                     i++;
+                    skipWhitespace(commands, i);
                 }
                 break;
             case ',':
@@ -164,6 +164,7 @@ void Interpretter::execute(string commands) throw (DcmError*){
                 break;
             case '^':
                 peek(commands, ++i, false);
+                break;
             default:
                 peek(commands, i, true);
         }
@@ -195,8 +196,11 @@ void Interpretter::peek(string& stkName, int& i, bool checkHeaven) {
             dcm = raw_peek(name, &scope);
         }
     }
+    else {
+        dcm = raw_peek(name, &scope);
+    }
     if (dcm) {
-        if (*dcm->type() = PRIMFUN) {
+        if (checkHeaven && *dcm->type() == PRIMFUN) {
             Callback *cb = static_cast<DcmPrimFun*>(dcm)->run(this);
             while (cb) cb = cb->run(this);
         }
@@ -358,7 +362,8 @@ char parseSpecialChar(string& chstr, int& i) {
     if ('9' >= chstr[i] && chstr[i] <= '0') {
         return (char) parseNum(chstr, i);
     }
-    switch (chstr[i]) {
+    i++;
+    switch (chstr[i-1]) {
         case 'n':
             return '\n';
         case 'r':
@@ -370,7 +375,6 @@ char parseSpecialChar(string& chstr, int& i) {
         case 'a':
             return '\a';
         defualt:
-            i++;
             return chstr[i-1];
     }
 }
@@ -385,30 +389,32 @@ DcmSymbol *Interpretter::sym(string& symName, int& i) {
 }
 
 void Interpretter::str(string& strng, int& i) {
-    int end = i;
-    for (;end < strng.size() && strng[end] != '\"'; end++) {
-        if (strng[end] == '\\') {
+    for (;i < strng.size() && strng[i] != '\"'; i++) {
+        if (strng[i] == '\\') {
             strCont += parseSpecialChar(strng, ++i);
         }
         else {
-            strCont += strng[end];
+            strCont += strng[i];
         }
     }
 }
 
 DcmChar *Interpretter::ch(string& c, int& i) {
+    DcmChar *dcmch;
     i++;
-    if (i < c.size()) {
+    if (i >= c.size()) {
         return new DcmChar('\n');
     }
     else if (c[i] == '\\') {
         i++;
-        return new DcmChar(parseSpecialChar(c, i));
+        dcmch = new DcmChar(parseSpecialChar(c, i));
     }
     else {
         i++;
-        return new DcmChar(c[i-1]);
+        dcmch = new DcmChar(c[i-1]);
     }
+    skipWhitespace(c, i);
+    return dcmch;
 }
 
 DcmElem *Interpretter::number(string& num, int& i) {
