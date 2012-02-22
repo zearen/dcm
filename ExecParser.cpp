@@ -18,6 +18,7 @@ class PushCallback : public Callback {
             //+ start of the string (as opposed to one after)
             int i = -1;
             interpretter->push(stkName, i);
+            return NULL;
         }
 };
 
@@ -42,6 +43,7 @@ class PopCallback : public Callback {
             //+ start of the string (as opposed to one after)
             int i = -1;
             interpretter->push(stkName, i);
+            return NULL;
         }
 };
 
@@ -66,6 +68,7 @@ class SwapCallback : public Callback {
             //+ start of the string (as opposed to one after)
             int i = -1;
             interpretter->swap(stkName, i);
+            return NULL;
         }
 };
 
@@ -88,6 +91,7 @@ class EmptyCallback : public Callback {
         Callback *run(Interpretter *interpretter) {
             int i = 0;
             interpretter->empty(stkName, i);
+            return NULL;
         }
 };
 
@@ -112,6 +116,7 @@ class PeekCallback : public Callback {
         Callback *run(Interpretter *interpretter) {
             int i = 0;
             interpretter->peek(stkName, i, chkScope);
+            return NULL;
         }
 };
 
@@ -134,6 +139,7 @@ class AttribCallback : public Callback {
         Callback *run(Interpretter *interpretter) {
             int i = 0;
             interpretter->attrib(stkName, i);
+            return NULL;
         }
 };
 
@@ -155,7 +161,7 @@ void Interpretter::exec(string& execStr, int& i) {
             strCont = "";
         }
     }
-    findEnd(execStr, i);
+    skipWhitespace(execStr, i);
     while (i < execStr.size()) {
         if (execStr[i] <= '9' && execStr[i] >= '0') {
             cont.top()->push_back(number(execStr, i));

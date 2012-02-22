@@ -20,11 +20,22 @@ ExecParser.o: Interpretter.h Callback.h
 lib/libDcmType.a: force_look
 	cd DcmType; make
 
+.PHONY: plugins
+plugins:
+	cd plugins; make all
+
+PLUGINO= plugins/io.o plugins/prelude.o
+dcmi: lib/dcm.so Interpretter.h plugins
+	sudo cp lib/libdcm.so /usr/lib/
+	g++ $(FLAGS) -o dcmi dcmi.cpp -Llib -ldcm $(PLUGINO)
+	cp dcmi lib
+
 force_look:
 	true
 
 .PHONY: clean
 clean:
 	cd DcmType; make clean
+	cd plugins; make clean
 	rm *.o
 	rm lib/*

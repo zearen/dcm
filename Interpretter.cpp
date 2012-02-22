@@ -146,6 +146,7 @@ void Interpretter::execute(string commands) throw (DcmError*){
             case '[':
                 cont.push(new DcmExec());
                 exec(commands, ++i);
+                skipWhitespace(commands, i);
                 break;
             case '\"':
                 str(commands, ++i);

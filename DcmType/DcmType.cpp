@@ -19,6 +19,10 @@ void DcmType::addRef() {
     refs++;
 }
 
+int DcmType::refCount() {
+    return (int) refs;
+}
+
 void del(DcmType *dcm) {
     dcm->refs--;
     if (dcm->refs) {

@@ -80,4 +80,6 @@ class Interpretter {
 int isEndChar(char c);
 
 int findEnd (string& str, int& i);
+
+void skipWhitespace(string& str, int& i);
 #endif

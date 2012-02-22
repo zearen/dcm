@@ -46,13 +46,16 @@ class DcmType {
         virtual ~DcmType(){}
         
         void addRef();
+        int refCount();
+
         virtual DcmType *copy() =0;
-        friend void del(DcmType *dcm);
-        friend DcmType *dup(DcmType *dcm);
-        
         bool isType(TypeVal otherType);
         virtual TypeVal type() =0;
         virtual string repr() =0;
+        
+    friend void del(DcmType *dcm);
+    friend DcmType *dup(DcmType *dcm);
+        
 };
 
 // Safely attempt to delete a DcmType

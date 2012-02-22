@@ -122,22 +122,27 @@ DcmType *safePeekMain(DcmStack& stk, TypeVal type)
         if (dcmRun->size() == 0) {
             return NULL;
         }
+
         auto end = dcmRun->end();
         end--;
-        DcmType *dcm;
-        for (auto i = dcmRun->begin();  i != end; i++) {
-            dcm = *i;
-            if (*dcm->type() = PRIMFUN) {
-                static_cast<DcmPrimFun*>(dcm)->run(interpretter);
+
+        for (auto i = dcmRun->begin(); i != end; i++) {
+            if ((*i)->isType(DcmPrimFun::typeVal())) {
+                Callback *cb = static_cast<DcmPrimFun*>(*i)
+                    ->run(interpretter);
+                while (cb = cb->run(interpretter));
             }
             else {
-                interpretter->mainStack.push(dcm->copy());
+                interpretter->mainStack.push(dup(*i));
             }
         }
-        if (*(*end)->type() = PRIMFUN) {
-            return static_cast<DcmPrimFun*>(*end)->callback();
+
+        if ((*end)->isType(DcmPrimFun::typeVal())) {
+            return static_cast<DcmPrimFun*>(*end)
+                ->run(interpretter);
         }
         else {
+            interpretter->mainStack.push(dup(*end));
             return NULL;
         }
     }
