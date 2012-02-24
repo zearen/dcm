@@ -30,6 +30,12 @@ DcmType *safePeekMain(Interpretter* interpretter, TypeVal type=0)
 DcmType *safePeekMain(DcmStack& stk, TypeVal type=0)
   throw (DcmError*);
 
+// Safely pops n things from the stack and returns them in an array
+// Manages most garbage for you, but you must delete array
+// The elements are added in the order the were popped
+// Does nothing to the reference count if no error
+DcmType **popN(DcmStack& stk, unsigned int n);
+
 class Callback {
     protected:
         // peek and pop can return stack empty error

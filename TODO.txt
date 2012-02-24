@@ -1,18 +1,18 @@
 Alright, the old todo list was completed
 Here's a new one.
 
-Garbage collection for primfuns is broken
-
-Add copy
+Rewrite dcmi with readline
 Add acceptable type vectors
 Implement equality testing for all DcmType
 Implement DcmNum
     - Use template?
     - Add + - * / < > <= >= >> << | & ^ ~
-Implement comparison on strings
+Add string words
 Implement while and if
 Implement classes and name spaces { _ } ; obj
-Implement arrays and string concatenation
+Implement arrays
+
+Split exec into a compiler and Interpretter::exec
 
 Debug lots.
 Ready for presentation !

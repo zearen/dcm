@@ -70,6 +70,26 @@ DcmType *safePeekMain(DcmStack& stk, TypeVal type)
     return dcm;
 }
 
+DcmType **popN(DcmStack& stk, unsigned int n) {
+    int pos = 0;
+    DcmType **rets = new DcmType*[n];
+    for (; pos < n; pos++) {
+        try {
+            rets[pos] = safePeekMain(stk);
+            stk.pop();
+        }
+        catch (DcmStackError *ex) {
+            // Let's free all the stuff we took first
+            for(pos--; pos >= 0; pos--) {
+                del(rets[pos]);
+            }
+            delete rets;
+            throw ex;
+        }
+    }
+    return rets;
+}
+
 // Callback {
     DcmType *Callback::Peek(Scope *scope, string& sym) 
       throw (DcmStackError*) {
