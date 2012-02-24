@@ -26,9 +26,8 @@ plugins:
 
 PLUGINO= plugins/io.o plugins/prelude.o
 dcmi: lib/dcm.so Interpretter.h plugins
-	sudo cp lib/libdcm.so /usr/lib/
+	sudo cp lib/libdcm.so /usr/lib
 	g++ $(FLAGS) -o dcmi dcmi.cpp -Llib -ldcm $(PLUGINO)
-	cp dcmi lib
 
 force_look:
 	true

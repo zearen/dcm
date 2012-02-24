@@ -13,10 +13,12 @@ void cbfExit(DcmStack& stack) {
 }
 
 Plugin *mainPlugin() {
-    SimpleCallback *cbExit = new SimpleCallback(cbfExit);
-    cbExit->name = "exit";
-    vector<Callback*> cbs;
-    cbs.push_back(cbExit);
+    vector<NamedCB> cbs =
+        { NamedCB("quit",   new SimpleCallback(cbfExit))
+        , NamedCB("exit",   new SimpleCallback(cbfExit))
+        , NamedCB("q",      new SimpleCallback(cbfExit))
+        , NamedCB(":q",     new SimpleCallback(cbfExit))
+        };
     return new VectorPlugin(cbs);
 }
 

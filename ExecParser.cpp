@@ -20,6 +20,9 @@ class PushCallback : public Callback {
             interpretter->push(stkName, i);
             return NULL;
         }
+        bool mustDestroy() {
+            return true;
+        }
 };
 
 void Interpretter::ex_push(string& commands, int& i) {
@@ -27,7 +30,7 @@ void Interpretter::ex_push(string& commands, int& i) {
     start = i;
     end = findEnd(commands, i);
     cont.top()->push_back(new DcmPrimFun(new PushCallback(
-        commands.substr(start, end)), true));
+        commands.substr(start, end))));
 }
 
 class PopCallback : public Callback {
@@ -42,8 +45,11 @@ class PopCallback : public Callback {
             // The parser will increment this so it begins at the
             //+ start of the string (as opposed to one after)
             int i = -1;
-            interpretter->push(stkName, i);
+            interpretter->pop(stkName, i);
             return NULL;
+        }
+        bool mustDestroy() {
+            return true;
         }
 };
 
@@ -52,7 +58,7 @@ void Interpretter::ex_pop(string& commands, int& i) {
     start = i;
     end = findEnd(commands, i);
     cont.top()->push_back(new DcmPrimFun(new PopCallback(
-        commands.substr(start, end)), true));
+        commands.substr(start, end))));
 }
 
 class SwapCallback : public Callback {
@@ -70,6 +76,9 @@ class SwapCallback : public Callback {
             interpretter->swap(stkName, i);
             return NULL;
         }
+        bool mustDestroy() {
+            return true;
+        }
 };
 
 void Interpretter::ex_swap(string& commands, int& i) {
@@ -77,7 +86,7 @@ void Interpretter::ex_swap(string& commands, int& i) {
     start = i;
     end = findEnd(commands, i);
     cont.top()->push_back(new DcmPrimFun(new SwapCallback(
-        commands.substr(start, end)), true));
+        commands.substr(start, end))));
 }
 
 class EmptyCallback : public Callback {
@@ -93,6 +102,9 @@ class EmptyCallback : public Callback {
             interpretter->empty(stkName, i);
             return NULL;
         }
+        bool mustDestroy() {
+            return true;
+        }
 };
 
 void Interpretter::ex_empty(string& commands, int& i) {
@@ -100,7 +112,7 @@ void Interpretter::ex_empty(string& commands, int& i) {
     start = i;
     end = findEnd(commands, i);
     cont.top()->push_back(new DcmPrimFun(new EmptyCallback(
-        commands.substr(start, end)), true));
+        commands.substr(start, end))));
 }
 
 class PeekCallback : public Callback {
@@ -118,6 +130,9 @@ class PeekCallback : public Callback {
             interpretter->peek(stkName, i, chkScope);
             return NULL;
         }
+        bool mustDestroy() {
+            return true;
+        }
 };
 
 void Interpretter::ex_peek(string& commands, int& i, bool checkScope) {
@@ -125,7 +140,7 @@ void Interpretter::ex_peek(string& commands, int& i, bool checkScope) {
     start = i;
     end = findEnd(commands, i);
     cont.top()->push_back(new DcmPrimFun(new PeekCallback(
-        commands.substr(start, end), checkScope), true));
+        commands.substr(start, end), checkScope)));
 }
 
 class AttribCallback : public Callback {
@@ -141,6 +156,9 @@ class AttribCallback : public Callback {
             interpretter->attrib(stkName, i);
             return NULL;
         }
+        bool mustDestroy() {
+            return true;
+        }
 };
 
 void Interpretter::ex_attrib(string& commands, int& i) {
@@ -148,7 +166,7 @@ void Interpretter::ex_attrib(string& commands, int& i) {
     start = i;
     end = findEnd(commands, i);
     cont.top()->push_back(new DcmPrimFun(new AttribCallback(
-        commands.substr(start, end)), true));
+        commands.substr(start, end))));
 }
 
 void Interpretter::exec(string& execStr, int& i) {
@@ -180,26 +198,28 @@ void Interpretter::exec(string& execStr, int& i) {
                     return;
                 }
                 else {
+                    skipWhitespace(execStr, i);
                     cont.top()->push_back(top);
                 }
                 break;
             case '$':
-                ex_push(execStr, i);
+                ex_push(execStr, ++i);
                 break;
             case '@':
-                ex_pop(execStr, i);
+                ex_pop(execStr, ++i);
                 break;
             case '~':
-                ex_swap(execStr, i);
+                ex_swap(execStr, ++i);
                 break;
             case '?':
-                ex_empty(execStr, i);
+                ex_empty(execStr, ++i);
                 break;
             case '.':
-                ex_attrib(execStr, i);
+                ex_attrib(execStr, ++i);
                 break;
             case '[':
                 cont.push(new DcmExec());
+                skipWhitespace(execStr, ++i);
                 break;
             case '\"':
                 str(execStr, ++i);

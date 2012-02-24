@@ -105,7 +105,6 @@ void Interpretter::execute(string commands) throw (DcmError*){
     int i = 0;
     if (!cont.empty()) {
         static string lf = "\n";
-        cont.top()->append(lf);
         exec(commands, i);
     }
     if (strCont != "") {
@@ -203,7 +202,7 @@ void Interpretter::peek(string& stkName, int& i, bool checkHeaven) {
     if (dcm) {
         if (checkHeaven && *dcm->type() == PRIMFUN) {
             Callback *cb = static_cast<DcmPrimFun*>(dcm)->run(this);
-            while (cb) cb = cb->run(this);
+            callbackLoop(cb, this);
         }
         else {
             dcm->addRef();

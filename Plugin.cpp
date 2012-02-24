@@ -11,12 +11,12 @@ Plugin::~Plugin(){}
 
 VectorPlugin::VectorPlugin(){}
 
-VectorPlugin::VectorPlugin(vector<Callback*> callbacks) {
+VectorPlugin::VectorPlugin(vector<NamedCB> callbacks) {
 	cbs = callbacks;
 }
 
 void VectorPlugin::link(Namespace& heaven) {
-	for (Callback *cb : cbs) {
-		heaven[cb->name].push(new DcmPrimFun(cb));
+	for (NamedCB ncb : cbs) {
+		heaven[ncb.first].push(new DcmPrimFun(ncb.second));
 	}
 }

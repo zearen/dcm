@@ -40,10 +40,15 @@ DcmType *raw_peek(string& sym, Scope *scope) {
 }
 
 // Utilities
-    Callback *addName(Callback *cb, string name) {
-        cb->name = name;
-        return cb;
+inline void callbackLoop(Callback* cb, Interpretter* interpretter) {
+    Callback* cbNext;
+    while (cb) {
+        cbNext = cb->run(interpretter);
+        if (cb->mustDestroy())
+            delete cb;
+        cb = cbNext;
     }
+}
 
 DcmType *safePeekMain(Interpretter* interpretter, TypeVal type)
   throw (DcmError*) {
@@ -60,7 +65,7 @@ DcmType *safePeekMain(DcmStack& stk, TypeVal type)
         throw new DcmStackError(new DcmSymbol("main stack"),
             DcmPrimFun::typeVal());
     }
-    if (type && dcm->isType(type))
+    if (type && !dcm->isType(type))
         throw new DcmTypeError(type, dcm->type());
     return dcm;
 }
@@ -94,6 +99,10 @@ DcmType *safePeekMain(DcmStack& stk, TypeVal type)
     
     void Callback::Push(Scope *scope, string& sym, DcmType *item){
         (*scope->top())[sym].push(item);
+    }
+
+    bool Callback::mustDestroy() {
+        return false;
     }
 // };
 
@@ -130,7 +139,7 @@ DcmType *safePeekMain(DcmStack& stk, TypeVal type)
             if ((*i)->isType(DcmPrimFun::typeVal())) {
                 Callback *cb = static_cast<DcmPrimFun*>(*i)
                     ->run(interpretter);
-                while (cb = cb->run(interpretter));
+                callbackLoop(cb, interpretter);
             }
             else {
                 interpretter->mainStack.push(dup(*i));
@@ -145,5 +154,9 @@ DcmType *safePeekMain(DcmStack& stk, TypeVal type)
             interpretter->mainStack.push(dup(*end));
             return NULL;
         }
+    }
+
+    bool ExecCallback::mustDestroy() {
+        return true;
     }
 // };

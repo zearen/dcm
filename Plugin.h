@@ -9,12 +9,15 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <utility>
 
 class Plugin;
 
 #include "Callback.h"
 
 // class for easier embedding
+
+typedef pair<string, Callback*> NamedCB;
 
 class Plugin {
     public:
@@ -24,10 +27,10 @@ class Plugin {
 
 class VectorPlugin : public Plugin {
 	private:
-		vector<Callback*> cbs;
+		vector<NamedCB> cbs;
 	public:
 		VectorPlugin();
-		VectorPlugin(vector<Callback*> callbacks);
+		VectorPlugin(vector<NamedCB> callbacks);
         virtual void link(Namespace& heaven);
 };
 		

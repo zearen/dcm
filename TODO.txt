@@ -1,8 +1,29 @@
-Finish writing and testing Tree.h
-Move Plugin to a separate file
-Start to flesh out DcmType.h more
-!Important! Write DcmType
-Write default plugin
-Write interpretter
-  More will be added here
-Write interface
+Alright, the old todo list was completed
+Here's a new one.
+
+Garbage collection for primfuns is broken
+
+Add copy
+Add acceptable type vectors
+Implement equality testing for all DcmType
+Implement DcmNum
+    - Use template?
+    - Add + - * / < > <= >= >> << | & ^ ~
+Implement comparison on strings
+Implement while and if
+Implement classes and name spaces { _ } ; obj
+Implement arrays and string concatenation
+
+Debug lots.
+Ready for presentation !
+
+Add module and god plugin
+
+Prepare for distribution
+    - Document like hell.
+    - Packaging ?
+    - Windows ?
+Enjoy ~
+
+Far off:
+forks

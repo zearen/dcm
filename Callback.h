@@ -19,8 +19,8 @@ using namespace std;
 
 DcmType *raw_peek(string& sym, Scope *scope);
 
-// Adds a name to a callback.  Can be used in expressions.
-Callback *addName(Callback *cb, string name);
+// Executes a callback until a NULL is encountered
+inline void callbackLoop(Callback* cb, Interpretter* interpretter);
 
 // Peeks the top item of the stack throwing errors if the stack is empty
 // Optionally, one can specify the necessary type of the value
@@ -40,10 +40,13 @@ class Callback {
           throw (DcmStackError*);
         static void Push(Scope *scope, string& sym, DcmType *item);
     public:
-        string name;
+        virtual ~Callback(){}
         // If run returns a callback, the interpretter executes it
         // Used primarily for tail call optimization by x
         virtual Callback *run(Interpretter *interpretter) =0;
+        // returns whether the callback should be destroyed after
+        // execution
+        virtual bool mustDestroy();
 };
 
 class SimpleCallback : public Callback {
@@ -62,5 +65,6 @@ class ExecCallback : public Callback {
         ExecCallback(DcmExec *exec);
         ~ExecCallback();
         Callback *run(Interpretter *interpretter);
+        bool mustDestroy();
 };
 #endif
