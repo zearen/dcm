@@ -20,12 +20,13 @@ class DcmError : public DcmType {
 
 class DcmTypeError : public DcmError {
     protected:
-        TypeVal exp, got;
+        vector<TypeVal> exp;
+        TypeVal got;
     public:
         DcmTypeError(DcmTypeError& toCopy);
-        DcmTypeError(TypeVal expected, TypeVal received);
+        DcmTypeError(vector<TypeVal> expected, TypeVal recieved);
         DcmType *copy();
-        TypeVal expected();
+        vector<TypeVal> expected();
         TypeVal received();
         TypeVal type();
         static TypeVal typeVal();

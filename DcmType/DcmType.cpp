@@ -23,6 +23,15 @@ int DcmType::refCount() {
     return (int) refs;
 }
 
+bool DcmType::operator==(DcmType& dcm) {
+    if (this->isType(dcm.type())) return this->equals(dcm)
+    else return false;
+}
+
+bool DcmType::operator!=(DcmType& dcm) {
+    return !(*this == dcm);
+}
+
 void del(DcmType *dcm) {
     dcm->refs--;
     if (dcm->refs) {
@@ -42,10 +51,10 @@ string typeVal2Str(TypeVal type) {
     stringstream ret;
     ret << hex << '<';
     while (*type & 1) {
-        ret << *type;
+        ret << (short)*type;
         type++;
     }
-    ret << *type << '>';
+    ret << (short)*type << '>';
     return ret.str();
 }
 

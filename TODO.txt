@@ -1,8 +1,6 @@
 Alright, the old todo list was completed
 Here's a new one.
 
-Rewrite dcmi with readline
-Add acceptable type vectors
 Implement equality testing for all DcmType
 Implement DcmNum
     - Use template?
@@ -17,6 +15,7 @@ Split exec into a compiler and Interpretter::exec
 Debug lots.
 Ready for presentation !
 
+Improve readline functionality in dcmi.
 Add module and god plugin
 
 Prepare for distribution

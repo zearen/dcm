@@ -32,7 +32,7 @@
         got = toCopy.got;
     }
     
-    DcmTypeError::DcmTypeError(TypeVal expected, TypeVal received) {
+    DcmTypeError::DcmTypeError(vector<TypeVal> expected, TypeVal received) {
         exp = expected;
         got = received;
     }
@@ -41,7 +41,7 @@
         return new DcmTypeError(*this);
     }
     
-    TypeVal DcmTypeError::expected() {
+    vector<TypeVal> DcmTypeError::expected() {
         return exp;
     }
     
@@ -60,9 +60,10 @@
     
     string DcmTypeError::repr() {
         stringstream ret;
-        ret << "Error: TypeError expected:"; 
-        ret << typeVal2Str(exp);
-        ret << ", got: ";
+        ret << "Error: TypeError expected: ( ";
+        for (auto e : exp)
+            ret << typeVal2Str(e) << " ";
+        ret << "), got: ";
         ret << typeVal2Str(got);
         return ret.str();
     }

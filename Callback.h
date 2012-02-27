@@ -22,13 +22,22 @@ DcmType *raw_peek(string& sym, Scope *scope);
 // Executes a callback until a NULL is encountered
 inline void callbackLoop(Callback* cb, Interpretter* interpretter);
 
+// Checks to see if dcm is one of the given types.
+// Will throw error if not.
+void checkTypes(DcmType* dcm, vector<TypeVal> types)
+  throw (DcmTypeError*);
+
 // Peeks the top item of the stack throwing errors if the stack is empty
 // Optionally, one can specify the necessary type of the value
-DcmType *safePeekMain(Interpretter* interpretter, TypeVal type=0)
+DcmType *safePeekMain(Interpretter* interpretter, vector<TypeVal> types)
   throw (DcmError*);
 
-DcmType *safePeekMain(DcmStack& stk, TypeVal type=0)
+DcmType *safePeekMain(Interpretter* interpretter) throw (DcmError*);
+
+DcmType *safePeekMain(DcmStack& stk, vector<TypeVal> types)
   throw (DcmError*);
+
+DcmType *safePeekMain(DcmStack& stk) throw (DcmError*);
 
 // Safely pops n things from the stack and returns them in an array
 // Manages most garbage for you, but you must delete array

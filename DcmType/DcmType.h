@@ -40,6 +40,7 @@ typedef unsigned char* TypeVal;
 class DcmType {
     protected:
         unsigned short refs;
+        virtual bool equals(DcmType& dcm) =0;
     public:
         DcmType();
         DcmType(DcmType &toCopy);
@@ -52,6 +53,10 @@ class DcmType {
         bool isType(TypeVal otherType);
         virtual TypeVal type() =0;
         virtual string repr() =0;
+        // Does a type check, then calls virtual function
+        bool operator==(DcmType& dcm);
+        bool operator!=(DcmType& dcm);
+
         
     friend void del(DcmType *dcm);
     friend DcmType *dup(DcmType *dcm);

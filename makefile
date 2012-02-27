@@ -24,10 +24,10 @@ lib/libDcmType.a: force_look
 plugins:
 	cd plugins; make all
 
-PLUGINO= plugins/io.o plugins/prelude.o
+PLUGINS= plugins/io.o plugins/prelude.o
 dcmi: lib/dcm.so Interpretter.h plugins
 	sudo cp lib/libdcm.so /usr/lib
-	g++ $(FLAGS) -o dcmi dcmi.cpp -Llib -ldcm $(PLUGINO)
+	g++ $(FLAGS) -o dcmi dcmi.cpp -Llib -ldcm -lreadline $(PLUGINS)
 
 force_look:
 	true

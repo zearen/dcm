@@ -50,12 +50,25 @@ inline void callbackLoop(Callback* cb, Interpretter* interpretter) {
     }
 }
 
-DcmType *safePeekMain(Interpretter* interpretter, TypeVal type)
-  throw (DcmError*) {
-    return safePeekMain(interpretter->mainStack, type);
+void checkTypes(DcmType* dcm, vector<TypeVal> types)
+  throw (DcmTypeError*) {
+    if (types.size() == 0) return;
+    for (auto type : types) {
+        if (dcm->isType(type)) return;
+    }
+    throw new DcmTypeError(types, dcm->type());
 }
 
-DcmType *safePeekMain(DcmStack& stk, TypeVal type)
+DcmType *safePeekMain(Interpretter* interpretter, vector<TypeVal> types)
+  throw (DcmError*) {
+    return safePeekMain(interpretter->mainStack, types);
+}
+
+DcmType *safePeekMain(Interpretter* interpretter) throw (DcmError*) {
+    return safePeekMain(interpretter->mainStack, {});
+}
+
+DcmType *safePeekMain(DcmStack& stk, vector<TypeVal> types)
   throw (DcmError*) {
     DcmType *dcm;
     if (!stk.empty()) {
@@ -65,9 +78,12 @@ DcmType *safePeekMain(DcmStack& stk, TypeVal type)
         throw new DcmStackError(new DcmSymbol("main stack"),
             DcmPrimFun::typeVal());
     }
-    if (type && !dcm->isType(type))
-        throw new DcmTypeError(type, dcm->type());
+    checkTypes(dcm, types);
     return dcm;
+}
+
+DcmType *safePeekMain(DcmStack& stk) throw (DcmError*) {
+    return safePeekMain(stk, {});
 }
 
 DcmType **popN(DcmStack& stk, unsigned int n) {

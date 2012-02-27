@@ -283,9 +283,7 @@ void Interpretter::attrib(string& attr, int& i) {
     }
     
     dcm = mainStack.top();
-    if (*dcm->type() != NAMESPACE && *dcm->type() != CLASS) {
-        throw new DcmTypeError(tvNS, dcm->type());
-    }
+    checkTypes(dcm, {DcmNamespace::typeVal(), DcmClass::typeVal()});
     mainStack.pop();
     ns = static_cast<DcmNamespace*>(dcm);
     scope.push(ns);

@@ -30,8 +30,10 @@ class : public Callback {
             cbRet = new ExecCallback(static_cast<DcmExec*>(dcm));
         }
         else {
+            TypeVal type = dcm->type();
             del(dcm);
-            throw new DcmTypeError(DcmExec::typeVal(), dcm->type());
+            throw new DcmTypeError(
+                {DcmExec::typeVal(), DcmPrimFun::typeVal()}, type);
         }
         del(dcm);
         return cbRet;
@@ -45,7 +47,7 @@ void cbRefs(DcmStack& stk) {
 
 void cbDef(DcmStack& stk) {
     DcmExec *exec = static_cast<DcmExec*>(safePeekMain(stk,
-      DcmExec::typeVal()));
+      {DcmExec::typeVal()}));
     stk.pop();
     stk.push(new DcmPrimFun(new ExecCallback(exec)));
     // We took it off the stack
