@@ -1,13 +1,12 @@
 Alright, the old todo list was completed
 Here's a new one.
 
-Implement equality testing for all DcmType
 Implement DcmNum
     - Use template?
     - Add + - * / < > <= >= >> << | & ^ ~
-Add string words
 Implement while and if
 Implement classes and name spaces { _ } ; obj
+Add string words
 Implement arrays
 
 Split exec into a compiler and Interpretter::exec
