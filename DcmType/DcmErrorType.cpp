@@ -8,6 +8,10 @@
 #include <sstream>
 
 // DcmError {
+    bool DcmError::equals(DcmType& dcm) {
+        return true;
+    }
+
     DcmType *DcmError::copy() {
         return new DcmError(*this);
     }
@@ -37,6 +41,15 @@
         got = received;
     }
     
+    bool DcmTypeError::equals(DcmType& dcm) {
+        DcmTypeError& dcmTE= static_cast<DcmTypeError&>(dcm);
+        if (!sameType(got, dcmTE.got)) return false;
+        if (exp.size() != dcmTE.exp.size()) return false;
+        for (int i = 0; i < exp.size(); i++)
+            if (!sameType(exp[i], dcmTE.exp[i])) return false;
+        return true;
+    }
+
     DcmType *DcmTypeError::copy() {
         return new DcmTypeError(*this);
     }
@@ -80,6 +93,11 @@
         giv = given;
     }
     
+    bool DcmBoundsError::equals(DcmType& dcm) {
+        DcmBoundsError& dcmBE = static_cast<DcmBoundsError&>(dcm);
+        return top == dcmBE.top && giv == dcmBE.giv;
+    }
+
     DcmType *DcmBoundsError::copy() {
         return new DcmBoundsError(*this);
     }
@@ -128,6 +146,11 @@
         }
     }
     
+    bool DcmStackError::equals(DcmType& dcm) {
+        DcmStackError& dcmSE = static_cast<DcmStackError&>(dcm);
+        return dcmStack == dcmSE.dcmStack;
+    }
+
     DcmType *DcmStackError::copy() {
         return new DcmStackError(*this);
     }
@@ -163,6 +186,10 @@
         msg = message;
     }
     
+    bool DcmCustomError::equals(DcmType& dcm) {
+        return false;
+    }
+
     DcmType *DcmCustomError::copy() {
         return new DcmCustomError(*this);
     }

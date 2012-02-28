@@ -19,6 +19,7 @@ class DcmArray : public DcmType {
         DcmArray(DcmArray& toCopy);
         DcmArray(int size);
         ~DcmArray();
+        bool equals(DcmType& dcm);
         DcmType *copy();
         TypeVal type();
         static TypeVal typeVal();
@@ -30,6 +31,7 @@ class DcmArray : public DcmType {
 class DcmNamespace : public DcmType, public Namespace {
     public:
         char id();
+        bool equals(DcmType& dcm);
         DcmType *copy();
         TypeVal type();
         static TypeVal typeVal();
@@ -45,6 +47,7 @@ class DcmClass : public DcmNamespace {
         DcmClass(DcmClass& toCopy);
         DcmClass(DcmClass *baseClass);
         ~DcmClass();
+        bool equals(DcmType& dcm);
         DcmType *copy();
         DcmType *peek(string& sym);
         TypeVal type();
@@ -55,14 +58,12 @@ class DcmClass : public DcmNamespace {
 class DcmPrimFun : public DcmType {
     private:
         Callback *cb;
-        bool resp;
     public:
         DcmPrimFun();
         DcmPrimFun(DcmPrimFun& toCopy);
-        // By setting responsible, you tie the life of callback 
-        //+ to the primfun
-        DcmPrimFun(Callback *action, bool responsible=false);
+        DcmPrimFun(Callback *action);
         ~DcmPrimFun();
+        bool equals(DcmType& dcm);
         DcmType *copy();
         Callback *run(Interpretter *interpretter);
         Callback *callback();
@@ -73,14 +74,17 @@ class DcmPrimFun : public DcmType {
 
 class DcmExec : public DcmType, public vector<DcmType*> {
     private:
-        string source;
+        // Total count of execs
+        static unsigned long count;
+        // Number for when exec was created
+        // Note:  Not garanteed to be unique !
+        unsigned long num;
     public:
         DcmExec();
-        DcmExec(string& sourceStr);
         DcmExec(DcmExec& toCopy);
         ~DcmExec();
+        bool equals(DcmType& dcm);
         DcmType *copy();
-        void append(string& bit);
         TypeVal type();
         static TypeVal typeVal();
         string repr();

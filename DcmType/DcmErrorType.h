@@ -12,6 +12,7 @@
 
 class DcmError : public DcmType {
     public:
+        bool equals(DcmType& dcm);
         DcmType *copy();
         TypeVal type();
         static TypeVal typeVal();
@@ -25,6 +26,7 @@ class DcmTypeError : public DcmError {
     public:
         DcmTypeError(DcmTypeError& toCopy);
         DcmTypeError(vector<TypeVal> expected, TypeVal recieved);
+        bool equals(DcmType& dcm);
         DcmType *copy();
         vector<TypeVal> expected();
         TypeVal received();
@@ -39,6 +41,7 @@ class DcmBoundsError : public DcmError {
     public:
         DcmBoundsError(DcmBoundsError& toCopy);
         DcmBoundsError(int topBound, int given);
+        bool equals(DcmType& dcm);
         DcmType *copy();
         int topBound();
         int given();
@@ -55,6 +58,7 @@ class DcmStackError : public DcmError {
         DcmStackError(DcmStackError& toCopy);
         DcmStackError(DcmSymbol* sym, TypeVal sentFrom);
         ~DcmStackError();
+        bool equals(DcmType& dcm);
         DcmType *copy();
         TypeVal sender();
         DcmSymbol *getSymbol();
@@ -71,6 +75,7 @@ class DcmCustomError : public DcmError {
     public:
         DcmCustomError(DcmCustomError& toCopy);
         DcmCustomError(string& message);
+        bool equals(DcmType& dcm);
         DcmType *copy();
         TypeVal type();  // Do not override!
         static TypeVal typeVal();

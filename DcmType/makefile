@@ -1,6 +1,6 @@
 FLAGS= --std=c++0x -fPIC
 
-OBJ=DcmType.o DcmElemType.o DcmErrorType.o DcmCompositeType.o
+OBJ=DcmType.o DcmElemType.o DcmCompositeType.o DcmErrorType.o
 
 ../lib/libDcmType.a: $(OBJ)
 	ar -cq ../lib/libDcmType.a $(OBJ)

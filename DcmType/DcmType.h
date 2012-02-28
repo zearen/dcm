@@ -34,7 +34,6 @@ ___________ _______________ ___
 #define FORK        0xA0 //            
 #define ERROR       0xE0 //  _/ _/ _/  
 
-
 typedef unsigned char* TypeVal;
 
 class DcmType {
@@ -73,6 +72,9 @@ DcmType *dup(DcmType *dcm);
 
 // Returns a type as a hexadecimal string
 string typeVal2Str(TypeVal type);
+
+// Checks type equality
+bool sameType(TypeVal type1, TypeVal type2);
 
 typedef stack<DcmType*> DcmStack;
 

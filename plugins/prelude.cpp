@@ -74,6 +74,13 @@ void cbCopy(DcmStack& stk) {
     stk.push(dcm->copy());
 }
 
+void cbEquals(DcmStack& stk) {
+    DcmType **dcms = popN(stk, 2);
+    stk.push(new DcmBool(*dcms[0] == *dcms[1]));
+    del(dcms[0]); del(dcms[1]);
+    delete dcms;
+}
+
 Plugin *preludePlugin() {
     vector<NamedCB> v = 
         { NamedCB("dup",    new SimpleCallback(cbDup))
@@ -85,6 +92,7 @@ Plugin *preludePlugin() {
         , NamedCB("def",    new SimpleCallback(cbDef))
         , NamedCB("is",     new SimpleCallback(cbIs))
         , NamedCB("copy",   new SimpleCallback(cbCopy))
+        , NamedCB("=",      new SimpleCallback(cbEquals))
         };
     return new VectorPlugin(v);
 }

@@ -8,6 +8,10 @@
 #include <sstream>
 
 // DcmNone {
+    bool DcmNone::equals(DcmType &dcm) {
+        return true;
+    }
+
     DcmType *DcmNone::copy() {
         return new DcmNone(*this);
     }
@@ -37,6 +41,10 @@
         val = newVal;
     }
     
+    bool DcmInt::equals(DcmType &dcm) {
+        return val == static_cast<DcmInt&>(dcm).val;
+    }
+
     DcmType *DcmInt::copy() {
         return new DcmInt(*this);
     }
@@ -66,6 +74,10 @@
         val = newVal;
     }
     
+    bool DcmFloat::equals(DcmType &dcm) {
+        return val == static_cast<DcmFloat&>(dcm).val;
+    }
+
     DcmType *DcmFloat::copy() {
         return new DcmFloat(*this);
     }
@@ -95,6 +107,10 @@
         val = newVal;
     }
     
+    bool DcmChar::equals(DcmType &dcm) {
+        return val == static_cast<DcmChar&>(dcm).val;
+    }
+
     DcmType *DcmChar::copy() {
         return new DcmChar(*this);
     }
@@ -124,6 +140,10 @@
         val = newVal;
     }
     
+    bool DcmBool::equals(DcmType &dcm) {
+        return val == static_cast<DcmBool&>(dcm).val;
+    }
+
     DcmType *DcmBool::copy() {
         return new DcmBool(*this);
     }
@@ -146,11 +166,14 @@
 // };
 
 // DcmString {
-    DcmString::DcmString() {}
+    DcmString::DcmString() : string() {}
     
-    DcmString::DcmString(string& toCopy) : string(toCopy) {
+    DcmString::DcmString(string& toCopy) : string(toCopy) {}
+    
+    bool DcmString::equals(DcmType &dcm) {
+        return (string)*this == (string)static_cast<DcmString&>(dcm);
     }
-    
+
     DcmType *DcmString::copy() {
         return new DcmString(*this);
     }
@@ -178,8 +201,13 @@
         symbol = name;
     }
     
+    bool DcmSymbol::equals(DcmType &dcm) {
+        return symbol == static_cast<DcmSymbol&>(dcm).symbol;
+    }
+
+    // DcmSymbols are immutable
     DcmType *DcmSymbol::copy() {
-        return new DcmSymbol(*this);
+        return dup(this);
     }
     
     string DcmSymbol::get() {

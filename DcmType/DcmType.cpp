@@ -24,7 +24,7 @@ int DcmType::refCount() {
 }
 
 bool DcmType::operator==(DcmType& dcm) {
-    if (this->isType(dcm.type())) return this->equals(dcm)
+    if (this->isType(dcm.type())) return this->equals(dcm);
     else return false;
 }
 
@@ -58,18 +58,21 @@ string typeVal2Str(TypeVal type) {
     return ret.str();
 }
 
-bool DcmType::isType(TypeVal otherType) {
+bool sameType(TypeVal type1, TypeVal type2) {
     bool same = true;
-    unsigned char* myPos = type(), *itsPos = otherType;
     while(true) {
-        same &= *myPos == *itsPos;
-        if (!(*myPos & 1 && *itsPos & 1)) {
+        same &= *type1 == *type2;
+        if (!(*type1 & 1 && *type2 & 1)) {
             break;
         }
-        myPos++;
-        itsPos++;
+        type1++;
+        type2++;
     }
     return same;
+}
+
+bool DcmType::isType(TypeVal otherType) {
+    return sameType(type(), otherType);
 }
 
 char Namespace::id() {

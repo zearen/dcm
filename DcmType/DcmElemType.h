@@ -29,6 +29,7 @@ class DcmNum : public DcmElem {
 
 class DcmNone : public DcmElem {
     public:
+        bool equals(DcmType& dcm);
         DcmType *copy();
         TypeVal type();
         static TypeVal typeVal();
@@ -42,6 +43,7 @@ class DcmInt : public DcmNum {
         int val;
         DcmInt(DcmInt& toCopy);
         DcmInt(int newVal);
+        bool equals(DcmType& dcm);
         DcmType *copy();
         TypeVal type();
         static TypeVal typeVal();
@@ -53,6 +55,7 @@ class DcmFloat : public DcmNum {
         double val;
         DcmFloat(DcmFloat& toCopy);
         DcmFloat(double newVal);
+        bool equals(DcmType& dcm);
         DcmType *copy();
         TypeVal type();
         static TypeVal typeVal();
@@ -64,6 +67,7 @@ class DcmChar : public DcmNum {
         char val;
         DcmChar(DcmChar& toCopy);
         DcmChar(char newVal);
+        bool equals(DcmType& dcm);
         DcmType *copy();
         TypeVal type();
         static TypeVal typeVal();
@@ -75,6 +79,7 @@ class DcmBool : public DcmElem {
         bool val;
         DcmBool(DcmBool& toCopy);
         DcmBool(bool newVal);
+        bool equals(DcmType& dcm);
         DcmType *copy();
         TypeVal type();
         static TypeVal typeVal();
@@ -85,6 +90,7 @@ class DcmString : public DcmElem, public string {
     public:
         DcmString();
         DcmString(string& toCopy);
+        bool equals(DcmType& dcm);
         DcmType *copy();
         TypeVal type();
         static TypeVal typeVal();
@@ -97,6 +103,7 @@ class DcmSymbol : public DcmElem {
     public:
         DcmSymbol(DcmSymbol& toCopy);
         DcmSymbol(string name);
+        bool equals(DcmType& dcm);
         DcmType *copy();
         string get();
         TypeVal type();

@@ -5,6 +5,7 @@
 */
 
 #include <algorithm>
+#include <sstream>
 
 #include "DcmType.h"
 
@@ -38,6 +39,15 @@
         delete[] vals;
     }
     
+    bool DcmArray::equals(DcmType& dcm) {
+        DcmArray& other = static_cast<DcmArray&>(dcm);
+        if (len != other.len) return false;
+        for (int i = 0; i < len; i++) {
+            if (*(vals[i]) != *(other.vals[i])) return false;
+        }
+        return true;
+    }
+
     DcmType *DcmArray::copy() {
         return new DcmArray(*this);
     }
@@ -74,6 +84,11 @@
         return 'n'; // dcmNamespace
     }
     
+    bool DcmNamespace::equals(DcmType& dcm) {
+        // Users should just use .= for class equality
+        throw new DcmTypeError({}, DcmNamespace::typeVal());
+    }
+
     DcmType *DcmNamespace::copy() {
         return new DcmNamespace(*this);
     }
@@ -115,6 +130,10 @@
         del(dcmBase);
     }
     
+    bool DcmClass::equals(DcmType& dcm) {
+        throw new DcmTypeError({}, DcmClass::typeVal());
+    }
+
     DcmType *DcmClass::copy() {
         return new DcmClass(*this);
     }
@@ -158,19 +177,24 @@
         cb = toCopy.cb;
     }
     
-    DcmPrimFun::DcmPrimFun(Callback *action, bool responsible) {
+    DcmPrimFun::DcmPrimFun(Callback *action) {
         cb = action;
-        resp = responsible;
     }
     
     DcmPrimFun::~DcmPrimFun() {
-        if (!refs && resp) {
+        if (!refs && cb->mustDestroy()) {
             delete cb;
         }
     }
     
+    bool DcmPrimFun::equals(DcmType& dcm) {
+        DcmPrimFun& dcmPrim = static_cast<DcmPrimFun&>(dcm);
+        return &cb == &dcmPrim.cb;
+    }
+
+    // PrimFuns are immutable
     DcmType *DcmPrimFun::copy() {
-        return new DcmPrimFun(*this);
+        return dup(this);
     }
     
     Callback *DcmPrimFun::run(Interpretter* interpretter) {
@@ -196,16 +220,17 @@
 // };
 
 // DcmExec {
+    unsigned long DcmExec::count = 0;
+    
     DcmExec::DcmExec() {
-        source = "";
+        num = count;
+        count++;
     }
     
-    DcmExec::DcmExec(DcmExec& toCopy) : vector<DcmType*>(toCopy) {
-        source = toCopy.source;
-    }
-    
-    DcmExec::DcmExec(string& sourceStr) {
-        source = sourceStr;
+    DcmExec::DcmExec(DcmExec& toCopy) 
+        : vector<DcmType*>(toCopy) {
+        num = count;
+        count++;
     }
     
     DcmExec::~DcmExec() {
@@ -214,12 +239,12 @@
         }
     }
     
+    bool DcmExec::equals(DcmType& dcm) {
+        throw new DcmTypeError({}, DcmExec::typeVal());
+    }
+
     DcmType *DcmExec::copy() {
         return new DcmExec(*this);
-    }
-    
-    void DcmExec::append(string& bit) {
-        source += bit;
     }
     
     TypeVal DcmExec::typeVal() {
@@ -232,6 +257,8 @@
     }
     
     string DcmExec::repr() {
-        return "[ " + source + " ]";
+        stringstream ss;
+        ss << "[ " << hex << num << " ]";
+        return ss.str();
     }
 // };
