@@ -97,7 +97,7 @@ DcmType **popN(DcmStack& stk, unsigned int n) {
         catch (DcmStackError *ex) {
             // Let's free all the stuff we took first
             for(pos--; pos >= 0; pos--) {
-                del(rets[pos]);
+                stk.push(rets[pos]);
             }
             delete rets;
             throw ex;

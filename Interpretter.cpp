@@ -61,6 +61,16 @@ void Interpretter::addPlugin(Plugin& plugin) {
     plugin.link(heaven);
 }
 
+bool Interpretter::isInString() {
+    return strCont != "";
+}
+
+bool Interpretter::isInExec() {
+    return !cont.empty();
+}
+
+// Parsing section
+
 // Utility functions for parsing:
 
 int isEndChar(char c) {

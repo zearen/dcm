@@ -32,7 +32,7 @@ class : public Callback {
         }
         else {
             TypeVal type = dcm->type();
-            del(dcm);
+            interpretter->mainStack.push(dcm);
             throw new DcmTypeError(
                 {DcmExec::typeVal(), DcmPrimFun::typeVal()}, type);
         }
@@ -110,11 +110,34 @@ void cbType(DcmStack& stk) {
     stk.push(new DcmString(typeVal2Str(dcm->type())));
 }
 
+void cbIf(DcmStack& stk) {
+    DcmType **dcms = popN(stk, 3);
+    if (dcms[2]->isType(DcmBool::typeVal())) {
+        if (static_cast<DcmBool*>(dcms[2])->val)
+            stk.push(dup(dcms[1]));
+        else
+            stk.push(dup(dcms[0]));
+    }
+    else {
+        stk.push(dcms[2]);
+        stk.push(dcms[1]);
+        stk.push(dcms[0]);
+        delete dcms;
+    }
+    del(dcms[0]);
+    del(dcms[1]);
+    del(dcms[2]);
+    delete dcms;
+}
+
 Plugin *preludePlugin() {
     vector<NamedCB> v = 
         // Flow control
         { NamedCB("x",      &cbX)
         , NamedCB("def",    new SimpleCallback(cbDef))
+        , NamedCB("if",     new SimpleCallback(cbIf))
+        //, NamedCB("while",  new SimpleCallback(cbWhile))
+        //, NamedCB("range",  new SimpleCallback(cbRange))
         // Stack management
         , NamedCB("dup",    new SimpleCallback(cbDup))
         , NamedCB("del",    new SimpleCallback(cbDel))

@@ -233,6 +233,7 @@ void Interpretter::exec(string& execStr, int& i) {
                     strCont = "";
                     i++;
                 }
+                skipWhitespace(execStr, i);
                 break;
             case ',':
                 cont.top()->push_back(sym(execStr, i));
@@ -242,6 +243,7 @@ void Interpretter::exec(string& execStr, int& i) {
                 break;
             case '^':
                 ex_peek(execStr, ++i, false);
+                break;
             default:
                 ex_peek(execStr, i, true);
         }

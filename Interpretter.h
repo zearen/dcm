@@ -41,9 +41,18 @@ class Interpretter {
         Interpretter(vector<Plugin> plugins);
         ~Interpretter();
         
+        // Link the plugin into heaven
         void addPlugin(Plugin& plugin);
         
-        void execute(string commands)throw (DcmError*);
+        // Execute given command
+        // That the input stream well accept anything but \n
+        void execute(string commands) throw (DcmError*);
+        
+        // Returns whether the parser is receiving a multiline string
+        bool isInString();
+
+        // Returns whether the parser is receiving a multiline exec
+        bool isInExec();
         
 //        static DcmExec *Parse(string& str);
         

@@ -6,6 +6,7 @@
 
 #include "DcmType.h"
 #include <sstream>
+#include <iostream>
 
 DcmType::DcmType() {
     refs = 1;

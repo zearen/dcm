@@ -128,8 +128,8 @@ StackProc stackFloatOp(FloatOp floatOp,
             stk.push(newNum);
         }
         catch (DcmTypeError *ex) {
-            del(dcms[0]);
-            del(dcms[1]);
+            stk.push(dcms[1]);
+            stk.push(dcms[0]);
             delete dcms;
             throw ex;
         }
@@ -149,8 +149,8 @@ StackProc stackIntOp(IntOp intOp,
             stk.push(newNum);
         }
         catch (DcmTypeError *ex) {
-            del(dcms[0]);
-            del(dcms[1]);
+            stk.push(dcms[1]);
+            stk.push(dcms[0]);
             delete dcms;
             throw ex;
         }
@@ -184,8 +184,8 @@ StackProc stackBoolOp(BoolOp boolOp,
                 , DcmChar::typeVal()
                 }, ex->received());
             del(ex);
-            del(dcms[0]);
-            del(dcms[1]);
+            stk.push(dcms[1]);
+            stk.push(dcms[0]);
             delete dcms;
             throw dcmTE;
         }
@@ -231,8 +231,8 @@ StackProc stackCompOp(StrComp strComp, NumComp numComp) {
             stk.push(new DcmBool(numComp(left, right)));
         }
         catch (DcmTypeError *ex) {
-            del(dcms[0]);
-            del(dcms[1]);
+            stk.push(dcms[1]);
+            stk.push(dcms[0]);
             delete dcms;
             throw ex;
         }
