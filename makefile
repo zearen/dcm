@@ -1,10 +1,14 @@
-FLAGS= -g --std=c++0x -fPIC
+include makefile.in
+
 LIBS= -Llib -lDcmType
 OBJ= Callback.o Plugin.o Interpretter.o ExecParser.o
 
-lib/dcm.so: $(OBJ)  lib/libDcmType.a
+lib/libdcm.so: $(OBJ) lib/libDcmType.a
 	g++ $(FLAGS) -shared -Wl,-soname,libdcm.so -o lib/libdcm.so $(OBJ) $(LIBS)
 	sudo cp lib/libdcm.so /usr/lib
+
+lib/libdcm.a: $(OBJ) lib/libDcmType.a
+	ar -cq lib/libdcm.a $(OBJ) lib/libDcmType.a
 
 Callback.o: Callback.cpp Callback.h Interpretter.h Plugin.h
 	g++ $(FLAGS) -o Callback.o -c Callback.cpp
@@ -25,8 +29,8 @@ lib/libDcmType.a: force_look
 plugins:
 	cd plugins; make all
 
-PLUGINS= plugins/io.o plugins/prelude.o
-dcmi: lib/dcm.so Interpretter.h plugins
+PLUGINS= -lplugin_io -lplugin_prelude
+dcmi: lib/libdcm.so Interpretter.h plugins
 	g++ $(FLAGS) -o dcmi dcmi.cpp -Llib -ldcm -lreadline $(PLUGINS)
 
 force_look:

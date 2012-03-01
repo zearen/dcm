@@ -168,7 +168,7 @@
 // DcmString {
     DcmString::DcmString() : string() {}
     
-    DcmString::DcmString(string& toCopy) : string(toCopy) {}
+    DcmString::DcmString(string toCopy) : string(toCopy) {}
     
     bool DcmString::equals(DcmType &dcm) {
         return (string)*this == (string)static_cast<DcmString&>(dcm);

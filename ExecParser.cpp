@@ -181,10 +181,15 @@ void Interpretter::exec(string& execStr, int& i) {
     }
     skipWhitespace(execStr, i);
     while (i < execStr.size()) {
-        if (execStr[i] <= '9' && execStr[i] >= '0') {
-            cont.top()->push_back(number(execStr, i));
+        if (execStr[i] <= '9' && execStr[i] >= '0'
+            || execStr[i] == '-') {
+            DcmElem* num = number(execStr, i);
+            if (num) {
+                cont.top()->push_back(num);
+                continue;
+            }
         }
-        else switch (execStr[i]) {
+        switch (execStr[i]) {
             case '#':
                 return;
             case ']':

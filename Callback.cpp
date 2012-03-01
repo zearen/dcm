@@ -40,7 +40,7 @@ DcmType *raw_peek(string& sym, Scope *scope) {
 }
 
 // Utilities
-inline void callbackLoop(Callback* cb, Interpretter* interpretter) {
+void callbackLoop(Callback* cb, Interpretter* interpretter) {
     Callback* cbNext;
     while (cb) {
         cbNext = cb->run(interpretter);
@@ -70,7 +70,7 @@ DcmType *safePeekMain(Interpretter* interpretter) throw (DcmError*) {
 
 DcmType *safePeekMain(DcmStack& stk, vector<TypeVal> types)
   throw (DcmError*) {
-    DcmType *dcm;
+   DcmType *dcm;
     if (!stk.empty()) {
         dcm = stk.top();
     }
@@ -143,12 +143,12 @@ DcmType **popN(DcmStack& stk, unsigned int n) {
 // };
 
 // SimpleCallback {
-    SimpleCallback::SimpleCallback(void (*callback)(DcmStack&)) {
+    SimpleCallback::SimpleCallback(function<void(DcmStack&)>callback) {
         cb = callback;
     }
     
     Callback *SimpleCallback::run(Interpretter *interpretter) {
-        (*cb)(interpretter->mainStack);
+        cb(interpretter->mainStack);
         return NULL;
     }
 // };

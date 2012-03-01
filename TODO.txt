@@ -1,13 +1,11 @@
 Alright, the old todo list was completed
 Here's a new one.
 
-Implement DcmNum
-    - Use template?
-    - Add + - * / < > <= >= >> << | & ^ ~
-Implement while and if
+Implement control structures
 Implement classes and name spaces { _ } ; obj
 Add string words
 Implement arrays
+Implement error handling
 
 Split exec into a compiler and Interpretter::exec
 

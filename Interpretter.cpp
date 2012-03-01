@@ -77,7 +77,7 @@ int isEndChar(char c) {
     }
 }
 
-inline void skipWhitespace(string& str, int& i) {
+void skipWhitespace(string& str, int& i) {
     while (i < str.size() && (str[i] == ' ' || str[i] == '\t')) i++;
 }
 
@@ -117,12 +117,16 @@ void Interpretter::execute(string commands) throw (DcmError*){
         }
     }
     skipWhitespace(commands, i);
-    //findEnd(commands, i);
     while (i < commands.size()) {
-        if (commands[i] <= '9' && commands[i] >= '0') {
-            mainStack.push(number(commands, i));
+        if (commands[i] <= '9' && commands[i] >= '0' 
+            || commands[i] == '-') {
+            DcmElem *num = number(commands, i);
+            if (num) {
+                mainStack.push(num);
+                continue;
+            }
         }
-        else switch (commands[i]) {
+        switch (commands[i]) {
             case '#':
                 return;
             case ']':
@@ -416,7 +420,18 @@ DcmChar *Interpretter::ch(string& c, int& i) {
 }
 
 DcmElem *Interpretter::number(string& num, int& i) {
+    int neg = 1;
     int ret=0;
+    if (num[i] == '-') {
+        i++;
+        if (i >= num.size() || num[i] < '0' || num[i] > '9') {
+            i--;
+            return NULL;
+        }
+        else {
+            neg = -1;
+        }
+    }
     if (num[i] == '0') {
         i++;
         if (num[i] == 'x') {
@@ -433,7 +448,7 @@ DcmElem *Interpretter::number(string& num, int& i) {
         a += 3;
     }
     if (i >= num.size()) {
-        return new DcmInt(ret);
+        return new DcmInt(ret * neg);
     }
     if (num[i] == '.') {
         // Parse as float
@@ -445,10 +460,10 @@ DcmElem *Interpretter::number(string& num, int& i) {
             fret += (num[i] - '0') * multiplier;
         }
         skipWhitespace(num, i);
-        return new DcmFloat(fret);
+        return new DcmFloat(fret * neg);
     }
     else {
-        return new DcmInt(ret);
+        return new DcmInt(ret * neg);
     }
 }
 

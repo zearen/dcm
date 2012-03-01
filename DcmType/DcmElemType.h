@@ -89,7 +89,7 @@ class DcmBool : public DcmElem {
 class DcmString : public DcmElem, public string {
     public:
         DcmString();
-        DcmString(string& toCopy);
+        DcmString(string toCopy);
         bool equals(DcmType& dcm);
         DcmType *copy();
         TypeVal type();

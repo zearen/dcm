@@ -12,6 +12,8 @@
 class Callback;
 class Interpretter;
 
+#include <functional>
+
 #include "DcmType/DcmType.h"
 #include "Interpretter.h"
 
@@ -20,7 +22,7 @@ using namespace std;
 DcmType *raw_peek(string& sym, Scope *scope);
 
 // Executes a callback until a NULL is encountered
-inline void callbackLoop(Callback* cb, Interpretter* interpretter);
+void callbackLoop(Callback* cb, Interpretter* interpretter);
 
 // Checks to see if dcm is one of the given types.
 // Will throw error if not.
@@ -66,9 +68,9 @@ class Callback {
 
 class SimpleCallback : public Callback {
     private:
-        void (*cb)(DcmStack&);
+        function<void(DcmStack&)> cb;
     public:
-        SimpleCallback(void (*callback)(DcmStack&));
+        SimpleCallback(function<void(DcmStack&)>callback);
         Callback *run(DcmStack& stk);
         Callback *run(Interpretter *interpretter);
 };

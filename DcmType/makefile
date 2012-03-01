@@ -1,4 +1,4 @@
-FLAGS= --std=c++0x -fPIC
+include ../makefile.in
 
 OBJ=DcmType.o DcmElemType.o DcmCompositeType.o DcmErrorType.o
 

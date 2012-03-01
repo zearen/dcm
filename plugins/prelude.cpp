@@ -1,4 +1,5 @@
 #include "prelude.h"
+#include "preludeMath.h"
 
 #include <iostream>
 
@@ -55,7 +56,7 @@ void cbDef(DcmStack& stk) {
 }
 
 // Eventually we'll want ExecStrCallback("$a $b @a @b");
-void cbR(DcmStack& stk) {
+void cbRev(DcmStack& stk) {
     DcmType **dcms = popN(stk, 2);
     stk.push(dcms[0]);
     stk.push(dcms[1]);
@@ -81,18 +82,72 @@ void cbEquals(DcmStack& stk) {
     delete dcms;
 }
 
+void cbNotEquals(DcmStack& stk) {
+    DcmType **dcms = popN(stk, 2);
+    stk.push(new DcmBool(*dcms[0] != *dcms[1]));
+    del(dcms[0]); del(dcms[1]);
+    delete dcms;
+}
+
+DcmBool *dcmTrue = new DcmBool(true);
+DcmBool *dcmFalse = new DcmBool(false);
+DcmNone *dcmNone = new DcmNone();
+
+void cbTrue(DcmStack& stk) {
+    stk.push(dup(dcmTrue));
+}
+
+void cbFalse(DcmStack& stk) {
+    stk.push(dup(dcmFalse));
+}
+
+void cbNone(DcmStack& stk) {
+    stk.push(dup(dcmNone));
+}
+
+void cbType(DcmStack& stk) {
+    DcmType *dcm = safePeekMain(stk);
+    stk.push(new DcmString(typeVal2Str(dcm->type())));
+}
+
 Plugin *preludePlugin() {
     vector<NamedCB> v = 
-        { NamedCB("dup",    new SimpleCallback(cbDup))
+        // Flow control
+        { NamedCB("x",      &cbX)
+        , NamedCB("def",    new SimpleCallback(cbDef))
+        // Stack management
+        , NamedCB("dup",    new SimpleCallback(cbDup))
         , NamedCB("del",    new SimpleCallback(cbDel))
         , NamedCB("clear",  new SimpleCallback(cbClear))
-        , NamedCB("x",      &cbX)
         , NamedCB("refs",   new SimpleCallback(cbRefs))
-        , NamedCB("r",      new SimpleCallback(cbR))
-        , NamedCB("def",    new SimpleCallback(cbDef))
-        , NamedCB("is",     new SimpleCallback(cbIs))
+        , NamedCB("rev",    new SimpleCallback(cbRev))
         , NamedCB("copy",   new SimpleCallback(cbCopy))
+        // Types and pseudo-literals
+        , NamedCB("true",   new SimpleCallback(cbTrue))
+        , NamedCB("false",  new SimpleCallback(cbFalse))
+        , NamedCB("none",   new SimpleCallback(cbNone))
+        , NamedCB("type",   new SimpleCallback(cbType))
+        // Comparison
+        , NamedCB("is",     new SimpleCallback(cbIs))
         , NamedCB("=",      new SimpleCallback(cbEquals))
+        , NamedCB("/=",     new SimpleCallback(cbNotEquals))
+        , NamedCB("<",      new SimpleCallback(cbLT))
+        , NamedCB(">",      new SimpleCallback(cbGT))
+        , NamedCB("<=",     new SimpleCallback(cbLTE))
+        , NamedCB(">=",     new SimpleCallback(cbGTE))
+        // Arithmetic
+        , NamedCB("+",      new SimpleCallback(cbAdd))
+        , NamedCB("-",      new SimpleCallback(cbSub))
+        , NamedCB("*",      new SimpleCallback(cbMul))
+        , NamedCB("/",      new SimpleCallback(cbDiv))
+        , NamedCB("%",      new SimpleCallback(cbMod))
+        , NamedCB(">>",     new SimpleCallback(cbRShift))
+        , NamedCB("<<",     new SimpleCallback(cbLShift))
+        // Boolean operators
+        , NamedCB("or",     new SimpleCallback(cbOr))
+        , NamedCB("and",    new SimpleCallback(cbAnd))
+        , NamedCB("xor",    new SimpleCallback(cbXor))
+        , NamedCB("not",    new SimpleCallback(cbNot))
         };
     return new VectorPlugin(v);
 }
