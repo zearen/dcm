@@ -1,22 +1,22 @@
 # Lets define a while loop in DCM itself
-[ $_body $_cond # We get the values we need off the stack
-  [ _cond x # We check the condition
-    [ _body x _while ] # If true, run the body and recurse
-    [] # Otherwise do nothing
+[ $_body $_cond         # We get the values we need off the stack
+  [ _cond x             # We check the condition
+    [ _body x _while ]  # If true, run the body and recurse
+    []                  # Otherwise do nothing
     if x
-  ] def dup $_while x # promote to function, store, and execute
+  ] def dup $_while x   # promote to function, store, and execute
   @_body del @_cond del @_while del # cleanup
-] def $while # promote to function and store
+] def $myWhile          # promote to function and store
 
 # Now let's test it
-[ $a # Get the value
-  [ a 0 > ] # Our condition ( a > 0 )
+[ $a            # Get the value
+  [ a 0 > ]     # Our condition ( a > 0 )
   [ a print
-    @a 1 - $a # Decrement a
-  ] while
+    @a 1 - $a   # Decrement a
+  ] myWhile     # Call our looping function
   "Blast off" print
-  @a del # clean up
+  @a del        # clean up
 ] def $count-down
-10 count-down # Run our function
+10 count-down   # Run our function
 
 exit

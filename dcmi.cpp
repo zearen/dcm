@@ -29,9 +29,16 @@ Plugin *mainPlugin() {
     return new VectorPlugin(cbs);
 }
 
-char * skipWS(char * line) {
-    while (*line == ' ' || *line == '\t') line++;
-    return line;
+string sanitize(char * cpLine) {
+    string line(cpLine);
+    int start, end;
+    for (start=0; start < line.size(); start++)
+        if (line[start] != ' ' || line[start] != '\t') break;
+    end = line.find('#', start);
+    end = end == string::npos ? line.size() - 1 : end - 1;
+    for (; end >= start; end--)
+        if (line[end] != ' ' || line[end] != '\t') break;
+    return line.substr(start, end - start + 1);
 }
 
 void interact(Interpretter& interpretter) {
@@ -61,19 +68,21 @@ void interact(Interpretter& interpretter) {
             catch (InterpretterError err) {
                 cerr << err.what() << endl;
             }
-            histLine.append(skipWS(line));
-            delete line;
             if (interpretter.isInString()) {
+                histLine.append(line);
                 histLine.append("\\n");
             }
             else if (interpretter.isInExec()) {
+                histLine.append(sanitize(line));
                 histLine.append(" ");
             }
             else{
+                histLine.append(sanitize(line));
                 add_history(histLine.c_str());
                 histLine = "";
                 lineCount++;
             }
+            delete line;
         }}
         else {
             cout << endl;
