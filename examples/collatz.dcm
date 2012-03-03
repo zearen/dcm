@@ -13,10 +13,10 @@ class inherit {
         dup $val
         dup LIMIT < [
             dup 2 * Collatz ; $trunk
-            dup dup 4 > r 6 % 4 = and [
+            dup dup 4 > rev 6 % 4 = and [
                 1 - 3 / Collatz ; $branch
-            ] [] if x
-        ] [] if x
+            ] [] if ex
+        ] [] if ex
         me
     ] def $;
     
@@ -26,10 +26,10 @@ class inherit {
             dup '  val repr len * & "| " &
             branch .print_inner
             del
-        ] [] if x
+        ] [] if ex
         ?trunk [
             trunk .print_inner
-        ] [] if x
+        ] [] if ex
     ] def $print_inner
     
     [ # print ( me -- )

@@ -1,0 +1,20 @@
+,Prelude guard : {
+
+[ $a $b @a @b ] def $rev
+
+[ [false] if ex ] def $and-then
+
+[ [true] rev if ex ] def $or-else
+
+[ $_body $_cond
+  [ _cond ex
+    [ _body ex _while ]
+    []
+    if ex
+  ] def dup $_while ex
+  @_body del @_cond del @_while del # cleanup
+] def $while
+
+[ false rev [ not ] rev while ] def $until
+
+} ,Prelude module

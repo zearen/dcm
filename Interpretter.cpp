@@ -329,7 +329,6 @@ int parseNum(string& num, int& i) {
         ret = ret * 10 + (num[i] - '0');
         i++;
     }
-    findEnd(num, i);
     return ret;
 }
 
@@ -363,7 +362,6 @@ int parseHex(string& hex, int& i) {
             return ret;
         }
     }
-    findEnd(hex, i);
     return ret;
 }
 
@@ -374,8 +372,7 @@ char parseSpecialChar(string& chstr, int& i) {
     if ('9' >= chstr[i] && chstr[i] <= '0') {
         return (char) parseNum(chstr, i);
     }
-    i++;
-    switch (chstr[i-1]) {
+    switch (chstr[i]) {
         case 'n':
             return '\n';
         case 'r':
@@ -387,7 +384,7 @@ char parseSpecialChar(string& chstr, int& i) {
         case 'a':
             return '\a';
         defualt:
-            return chstr[i-1];
+            return chstr[i];
     }
 }
 
@@ -418,12 +415,12 @@ DcmChar *Interpretter::ch(string& c, int& i) {
         return new DcmChar('\n');
     }
     else if (c[i] == '\\') {
+        dcmch = new DcmChar(parseSpecialChar(c, ++i));
         i++;
-        dcmch = new DcmChar(parseSpecialChar(c, i));
     }
     else {
+        dcmch = new DcmChar(c[i]);
         i++;
-        dcmch = new DcmChar(c[i-1]);
     }
     skipWhitespace(c, i);
     return dcmch;
@@ -473,6 +470,7 @@ DcmElem *Interpretter::number(string& num, int& i) {
         return new DcmFloat(fret * neg);
     }
     else {
+        skipWhitespace(num, i);
         return new DcmInt(ret * neg);
     }
 }

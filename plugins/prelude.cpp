@@ -133,7 +133,7 @@ void cbIf(DcmStack& stk) {
 Plugin *preludePlugin() {
     vector<NamedCB> v = 
         // Flow control
-        { NamedCB("x",      &cbX)
+        { NamedCB("ex",     &cbX)
         , NamedCB("def",    new SimpleCallback(cbDef))
         , NamedCB("if",     new SimpleCallback(cbIf))
         //, NamedCB("while",  new SimpleCallback(cbWhile))

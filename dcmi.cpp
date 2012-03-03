@@ -23,21 +23,45 @@ Plugin *mainPlugin() {
     vector<NamedCB> cbs =
         { NamedCB("quit",   new SimpleCallback(cbfExit))
         , NamedCB("exit",   new SimpleCallback(cbfExit))
-        , NamedCB("q",      new SimpleCallback(cbfExit))
         , NamedCB(":q",     new SimpleCallback(cbfExit))
         };
     return new VectorPlugin(cbs);
+}
+
+int findLineEnd(string& line, int start) {
+    int end=start;
+    bool inString = false;
+    bool afterSlash = false;
+    for (; end < line.size(); end++) {
+        if (inString) {
+            inString = !afterSlash && line[end] == '\"';
+            if (line[end] == '\\') {
+                afterSlash = !afterSlash;
+            }
+            else {
+                afterSlash = false;
+            }
+        }
+        else {
+            if (line[end] == '\"') {
+                inString = true;
+            }
+            else if (line[end] == '#') {
+                break;
+            }
+        }
+    }
+    return end - 1;
 }
 
 string sanitize(char * cpLine) {
     string line(cpLine);
     int start, end;
     for (start=0; start < line.size(); start++)
-        if (line[start] != ' ' || line[start] != '\t') break;
-    end = line.find('#', start);
-    end = end == string::npos ? line.size() - 1 : end - 1;
+        if (line[start] != ' ' && line[start] != '\t') break;
+    end = findLineEnd(line, start);
     for (; end >= start; end--)
-        if (line[end] != ' ' || line[end] != '\t') break;
+        if (line[end] != ' ' && line[end] != '\t') break;
     return line.substr(start, end - start + 1);
 }
 

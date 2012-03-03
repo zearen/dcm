@@ -14,11 +14,11 @@ Error inherit {
 class inherit {
     ,; upcopy
     [
-        me r
+        me rev
         ?tail
         [ @tail { : { $val } dup $next } $tail ]
         [ : { $val } dup $tail $head ]
-        if x
+        if ex
     ] def $push
     
     [
@@ -29,10 +29,10 @@ class inherit {
             ?next
             [ @next _ { $head } ]
             [ @tail del ]
-            if x
+            if ex
         ]
         [ underflowError ]
-        if x
+        if ex
     ] def $poll
     [
         me

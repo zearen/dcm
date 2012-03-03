@@ -17,15 +17,15 @@ class {
     
     [
         dup length <
-        [arr r ()]
+        [arr rev ()]
         [
             length 1 - 
-            r boundsError
+            rev boundsError
         ]
-        if x
+        if ex
     ] def $()
     
     [
         $v dup length <
-        [arr r @v
+        [arr rev @v
 } ,Vectors module

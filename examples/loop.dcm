@@ -1,10 +1,10 @@
 # Lets define a while loop in DCM itself
 [ $_body $_cond         # We get the values we need off the stack
-  [ _cond x             # We check the condition
-    [ _body x _while ]  # If true, run the body and recurse
+  [ _cond ex            # We check the condition
+    [ _body ex _while ] # If true, run the body and recurse
     []                  # Otherwise do nothing
-    if x
-  ] def dup $_while x   # promote to function, store, and execute
+    if ex
+  ] def dup $_while ex  # promote to function, store, and execute
   @_body del @_cond del @_while del # cleanup
 ] def $myWhile          # promote to function and store
 

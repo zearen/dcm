@@ -8,9 +8,9 @@
     ]
     [
       d 1 - 
-      fac x
+      fac ex
     ] 
-  if x
+  if ex
   *
 ] $fac
 
@@ -26,26 +26,26 @@
 ] primfun
 
 ,upcopy [
-    d _ r . r $
+    d _ rev . rev $
 ] primfun
 
 ,upcopyall [
     _ [upcopy] foreach
 ] primfun
 
-[ target 10 r .doDamage 10 r .doPoison ]
+[ target 10 rev .doDamage 10 rev .doPoison ]
 
-[ target .pl 2 / r .doDamage ]
+[ target .pl 2 / rev .doDamage ]
 
 [ ,curDamage [ 2 * ] withDo target curDamage .doDamage ]
 
-,withDo [d $a ~ a r x @a ~ ] primfun
+,withDo [d $a ~ a rev x @a ~ ] primfun
 
-: {
+class inherit {
     ,; [d 0 = ["zero div" error] [$q $p me] if x] primfun
     ,print [p print "/" print q print me] primfun
     ,* [.p @p * $p .q @q * $q del me] primfun
-    ,+ [.p q * r .q @p * r .q @q * $q del + $p me] primfun
+    ,+ [.p q * rev .q @p * rev .q @q * $q del + $p me] primfun
 } $rational
 
 ,// [ rational ; ] primfun

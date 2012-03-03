@@ -38,9 +38,7 @@ void cbInput(DcmStack& stk) {
 Plugin * ioPlugin() {
     vector<NamedCB> v =
         { NamedCB("print",  new SimpleCallback(cbPrint))
-        , NamedCB("p",      new SimpleCallback(cbPrint))
         , NamedCB("p-stk",  new SimpleCallback(cbPStk))
-        , NamedCB("f",      new SimpleCallback(cbPStk))
         , NamedCB("input",  new SimpleCallback(cbInput))
         };
     return new VectorPlugin(v);
