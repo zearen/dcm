@@ -5,15 +5,15 @@
 
 setlocal iskeyword+=:
 
-syn keyword dcmBuiltin dup clone r del repr swap clear empty?
+syn keyword dcmBuiltin dup copy rev del repr swap clear empty?
 syn keyword dcmBuiltin fold map len upcopy inherit obj me
 syn keyword dcmBuiltin true false none
 syn keyword dcmStatement push pop peek
-syn keyword dcmRepeat while until foreach for
-syn keyword dcmConditional if and or
+syn keyword dcmRepeat while until for range
+syn keyword dcmConditional if and or xor not
 syn keyword dcmException error catch try
-syn keyword dcmInclude load
-syn keyword dcmFunction x o def
+syn keyword dcmInclude load with as guard module
+syn keyword dcmFunction ex o def
 syn keyword dcmType class : array def
 
 syn match dcmComment /#.*/
