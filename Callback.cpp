@@ -154,16 +154,21 @@ DcmType **popN(DcmStack& stk, unsigned int n) {
 // };
 
 // ExecCallback {
+    ExecCallback::ExecCallback() {
+        dcmRun = NULL;
+    }
+    
     ExecCallback::ExecCallback(DcmExec *exec) {
-        dcmRun = exec;
-        dcmRun->addRef();
+        if (exec) dcmRun = static_cast<DcmExec*>(dup(exec));
     }
     
     ExecCallback::~ExecCallback() {
-        del(dcmRun);
+        if (dcmRun) del(dcmRun);
     }
     
     Callback *ExecCallback::run(Interpretter *interpretter) {
+        if (!dcmRun) return NULL;
+        
         if (dcmRun->size() == 0) {
             return NULL;
         }
@@ -181,7 +186,7 @@ DcmType **popN(DcmStack& stk, unsigned int n) {
                 interpretter->mainStack.push(dup(*i));
             }
         }
-
+        
         if ((*end)->isType(DcmPrimFun::typeVal())) {
             return static_cast<DcmPrimFun*>(*end)
                 ->run(interpretter);
@@ -191,7 +196,7 @@ DcmType **popN(DcmStack& stk, unsigned int n) {
             return NULL;
         }
     }
-
+    
     bool ExecCallback::mustDestroy() {
         return true;
     }

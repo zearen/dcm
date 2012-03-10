@@ -76,9 +76,10 @@ class SimpleCallback : public Callback {
 };
 
 class ExecCallback : public Callback {
-    private:
+    protected:
         DcmExec *dcmRun;
     public:
+        ExecCallback();
         ExecCallback(DcmExec *exec);
         ~ExecCallback();
         Callback *run(Interpretter *interpretter);

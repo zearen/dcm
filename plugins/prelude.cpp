@@ -121,12 +121,13 @@ void cbIf(DcmStack& stk) {
             stk.push(dup(dcms[0]));
     }
     else {
-        DcmTypeError *dcmTE new DcmTypeError(
-            {DcmBool::typeVal()}, dcms[2]->received());
+        DcmTypeError *dcmTE = new DcmTypeError(
+            {DcmBool::typeVal()}, dcms[2]->type());
         stk.push(dcms[2]);
         stk.push(dcms[1]);
         stk.push(dcms[0]);
         delete dcms;
+        throw dcmTE;
     }
     del(dcms[0]);
     del(dcms[1]);
@@ -135,36 +136,46 @@ void cbIf(DcmStack& stk) {
 }
 
 class ExecRunner : public ExecCallback {
+  public:
+    ExecRunner() : ExecCallback() {
+    }
     
     // The idea here is that when we're done with the Runner
     // we're done with the exec.
-    ExecRunner(DcmExec* exec) : ExecCallback(exec) {
-        del(exec);
+    ExecRunner(DcmExec* exec) : ExecCallback() {
+        setExec(exec);
+    }
+
+    void setExec(DcmExec *exec) {
+        if (dcmRun) del(dcmRun);
+        dcmRun = exec;
     }
     
     // Run the exec
     void runExec(Interpretter *interpretter) {
-        callbackLoop(run(interpretter), interpretter);
+        if (dcmRun)
+            callbackLoop(run(interpretter), interpretter);
     }
 
     bool mustDestroy() {
         return false;
     }
-}
+};
 
 class : public Callback {
+  public:
     Callback *run(Interpretter *interpretter) {
-        DcmType **dcms = popN(2, interpretter->mainStack);
-        ExecRunner *xBody, *xCond;
+        DcmType **dcms = popN(interpretter->mainStack, 2);
+        ExecRunner xBody, xCond;
         if (!dcms[0]->isType(DcmExec::typeVal())
           || !dcms[1]->isType(DcmExec::typeVal())) {
             DcmTypeError *dcmTE;
             if (!dcms[0]->isType(DcmExec::typeVal())) {
-                dcmTE = new DcmTypeError( {DcmExec::typeVal()}
+                dcmTE = new DcmTypeError( {DcmExec::typeVal()},
                     dcms[0]->type());
             }
             else {
-                dcmTE = new DcmTypeError( {DcmExec::typeVal()}
+                dcmTE = new DcmTypeError( {DcmExec::typeVal()},
                     dcms[1]->type());
             }
             interpretter->mainStack.push(dcms[1]);
@@ -173,25 +184,51 @@ class : public Callback {
             throw dcmTE;
         }
         delete dcms;  // At this point, the exec garbage collection is
-                      //+ handles by RTTI
+                      //+ handled by RAII
         
         DcmBool *dcmBool;
-        xBody = new ExecRunner(static_cast<DcmExec*>(dcms[0]));
-        xCond = new ExecRunner(static_cast<DcmExec*>(dcms[1]));
+        xBody.setExec(static_cast<DcmExec*>(dcms[0]));
+        xCond.setExec(static_cast<DcmExec*>(dcms[1]));
         xCond.runExec(interpretter);
 
         dcmBool = static_cast<DcmBool*>(
             safePeekMain(interpretter, {DcmBool::typeVal()}));
         interpretter->mainStack.pop();
-        while (dcmBool->val) {
-            dcmBool = static_cast<DcmBool*>(
-                safePeekMain(interpretter, {DcmBool::typeVal()}));
-            interpretter->mainStack.pop();
+        try {
+            while (dcmBool->val) {
+                xBody.runExec(interpretter);
+                xCond.runExec(interpretter);
+                del(dcmBool);
+                dcmBool = static_cast<DcmBool*>(
+                    safePeekMain(interpretter, {DcmBool::typeVal()}));
+                interpretter->mainStack.pop();
+            }
         }
-        
+        catch (DcmError *err) {
+            if (dcmBool) interpretter->mainStack.push(dcmBool);
+            throw err;
+        }
+        del(dcmBool);
         return NULL;
     }
 } cbWhile;
+
+class : public Callback {
+    Callback *run(Interpretter *interpretter) {
+        ExecRunner xBody(static_cast<DcmExec*>(
+          safePeekMain(interpretter, {DcmExec::typeVal()})));
+        interpretter->mainStack.pop();
+        bool cont;
+        DcmBool *dcmCont;
+        do {
+            xBody.runExec(interpretter);
+            dcmCont = static_cast<DcmBool*>(
+              safePeekMain(interpretter, {DcmBool::typeVal()}));
+            cont = dcmCont->val;
+            del(dcmCont);
+        } while(!cont);
+    }
+} cbUntil;
 
 Plugin *preludePlugin() {
     vector<NamedCB> v = 
@@ -199,9 +236,9 @@ Plugin *preludePlugin() {
         { NamedCB("ex",     &cbX)
         , NamedCB("def",    new SimpleCallback(cbDef))
         , NamedCB("if",     new SimpleCallback(cbIf))
-        , NamedCB("while",  new SimpleCallback(cbWhile))
-        , NamedCB("until",  new SimpleCallback(cbWhile))
-        , NamedCB("range",  new SimpleCallback(cbRange))
+        , NamedCB("while",  &cbWhile)
+        , NamedCB("until",  &cbUntil)
+        //, NamedCB("range",  &cbRange)
         // Stack management
         , NamedCB("dup",    new SimpleCallback(cbDup))
         , NamedCB("del",    new SimpleCallback(cbDel))
