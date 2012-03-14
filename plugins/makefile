@@ -7,13 +7,19 @@ IO_OBJ= io.o
 ../lib/libplugin_io.a: $(IO_OBJ)
 	ar -cq ../lib/libplugin_io.a $(IO_OBJ)
 
-prelude.o: preludeMath.h prelude.h prelude.cpp ../Interpretter.h
+prelude.o: prelude.h prelude.cpp ../Interpretter.h
 	g++ $(FLAGS) -o prelude.o -c prelude.cpp
 
-preludeMath.o: preludeMath.h prelude.h preludeMath.cpp ../Interpretter.h
+preludeControl.o: prelude.h preludeControl.cpp ../Interpretter.h
+	g++ $(FLAGS) -o preludeControl.o -c preludeControl.cpp
+
+preludeMath.o: prelude.h preludeMath.cpp ../Interpretter.h
 	g++ $(FLAGS) -o preludeMath.o -c preludeMath.cpp
 
-PRELUDE_OBJ= prelude.o preludeMath.o
+preludeOOP.o: prelude.h preludeOOP.cpp ../Interpretter.h
+	g++ $(FLAGS) -o preludeOOP.o -c preludeOOP.cpp
+
+PRELUDE_OBJ= prelude.o preludeMath.o preludeControl.o preludeOOP.o
 
 ../lib/libplugin_prelude.a: $(PRELUDE_OBJ)
 	ar -cq ../lib/libplugin_prelude.a $(PRELUDE_OBJ)

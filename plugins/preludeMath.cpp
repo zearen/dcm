@@ -1,12 +1,8 @@
-#include "preludeMath.h"
+#include "prelude.h"
 
 typedef function<void(DcmStack&)> StackProc;
 
 typedef function<bool(bool, bool)> BoolOp;
-typedef function<double(double, double)> FloatOp;
-typedef function<int(int, int)> IntOp;
-typedef function<char(char, char)> CharOp;
-
 typedef function<bool(double, double)> NumComp;
 typedef function<bool(string&, string&)> StrComp;
 
@@ -18,10 +14,10 @@ DcmNum * doIntOp(IntOp intOp,
                  throw (DcmTypeError*) {
     if (right->isType(DcmInt::typeVal())) {
         if (left->isType(DcmInt::typeVal())) {
-            int x =    static_cast<DcmInt*>(left)->val;
-            int y =    static_cast<DcmInt*>(right)->val;
-            int res = intOp(x, y);
-            return new DcmInt(res);
+            return new DcmInt(intOp(
+                static_cast<DcmInt*>(left)->val,
+                static_cast<DcmInt*>(right)->val
+            ));
         }
         else if (left->isType(DcmChar::typeVal())) {
             return new DcmChar((char)intOp(
@@ -356,5 +352,43 @@ void cbGTE(DcmStack& stk) {
     stackCompOp(
     [](string& x, string& y)->bool  {return x>=y;},
     [](double x, double y)->bool    {return x>=y;})(stk);
+}
+
+void cbEqual(DcmStack& stk) {
+    stackCompOp(
+    [](string& x, string& y)->bool  {return x==y;},
+    [](double x, double y)->bool    {return x==y;})(stk);
+}
+
+void cbNotEqual(DcmStack& stk) {
+    stackCompOp(
+    [](string& x, string& y)->bool  {return x!=y;},
+    [](double x, double y)->bool    {return x!=y;})(stk);
+}
+
+void prelude_addMath(vector<NamedCB>& vec) {
+    vector<NamedCB> v = 
+        // Comparison
+        { NamedCB("<",      new SimpleCallback(cbLT))
+        , NamedCB(">",      new SimpleCallback(cbGT))
+        , NamedCB("<=",     new SimpleCallback(cbLTE))
+        , NamedCB(">=",     new SimpleCallback(cbGTE))
+        , NamedCB("==",     new SimpleCallback(cbEqual))
+        , NamedCB("/=",     new SimpleCallback(cbNotEqual))
+        // Arithmetic
+        , NamedCB("+",      new SimpleCallback(cbAdd))
+        , NamedCB("-",      new SimpleCallback(cbSub))
+        , NamedCB("*",      new SimpleCallback(cbMul))
+        , NamedCB("/",      new SimpleCallback(cbDiv))
+        , NamedCB("%",      new SimpleCallback(cbMod))
+        , NamedCB(">>",     new SimpleCallback(cbRShift))
+        , NamedCB("<<",     new SimpleCallback(cbLShift))
+        // Boolean operators
+        , NamedCB("or",     new SimpleCallback(cbOr))
+        , NamedCB("and",    new SimpleCallback(cbAnd))
+        , NamedCB("xor",    new SimpleCallback(cbXor))
+        , NamedCB("not",    new SimpleCallback(cbNot))
+        };
+    vec.insert(vec.end(), v.begin(), v.end());
 }
 

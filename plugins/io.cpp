@@ -35,11 +35,29 @@ void cbInput(DcmStack& stk) {
     stk.push(new DcmString(str));
 }
 
+void cbPut(DcmStack& stk) {
+    DcmString *dcmStr = static_cast<DcmString*>(
+      safePeekMain(stk, {DcmString::typeVal()}));
+    stk.pop();
+    dcmout << *dcmStr;
+    del(dcmStr);
+}
+
+void cbPutLine(DcmStack& stk) {
+    DcmString *dcmStr = static_cast<DcmString*>(
+      safePeekMain(stk, {DcmString::typeVal()}));
+    stk.pop();
+    dcmout << *dcmStr << endl;
+    del(dcmStr);
+}
+
 Plugin * ioPlugin() {
     vector<NamedCB> v =
         { NamedCB("print",  new SimpleCallback(cbPrint))
         , NamedCB("p-stk",  new SimpleCallback(cbPStk))
         , NamedCB("input",  new SimpleCallback(cbInput))
+        , NamedCB("put",    new SimpleCallback(cbPut))
+        , NamedCB("put-ln", new SimpleCallback(cbPutLine))
         };
     return new VectorPlugin(v);
 }
