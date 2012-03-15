@@ -58,7 +58,8 @@ class Interpretter {
         
     private:
         // Sub-parsers
-        void peek(string& stkName, int& i, bool checkHeaven);
+        void peek(string& stkName, int& i,
+                  bool checkHeaven, bool runPrimFun=true);
         void pop(string& stkName, int& i);
         void push(string& stkName, int& i);
         void swap(string& stkName, int& i);

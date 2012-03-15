@@ -121,13 +121,13 @@ CharOp charRange(Interpretter *interpretter,
                 throw new DcmBoundsError(0, 0);
         }
         if (step > 0) {
-            for (char i = start; i < end; i += step) {
+            for (char i = start; i <= end; i += step) {
                 interpretter->mainStack.push(new DcmChar(i));
                 xBody.runExec(interpretter);
             }
         }
         else {
-            for (char i = start; i > end; i += step) {
+            for (char i = start; i >= end; i += step) {
                 interpretter->mainStack.push(new DcmChar(i));
                 xBody.runExec(interpretter);
             }
@@ -150,13 +150,13 @@ IntOp intRange(Interpretter *interpretter,
                 throw new DcmBoundsError(0, 0);
         }
         if (step > 0) {
-            for (int i = start; i < end; i += step) {
+            for (int i = start; i <= end; i += step) {
                 interpretter->mainStack.push(new DcmInt(i));
                 xBody.runExec(interpretter);
             }
         }
         else {
-            for (int i = start; i > end; i += step) {
+            for (int i = start; i >= end; i += step) {
                 interpretter->mainStack.push(new DcmInt(i));
                 xBody.runExec(interpretter);
             }
@@ -179,13 +179,13 @@ FloatOp floatRange(Interpretter *interpretter,
                 throw new DcmBoundsError(0, 0);
         }
         if (step > 0) {
-            for (double i = start; i < end; i += step) {
+            for (double i = start; i <= end; i += step) {
                 interpretter->mainStack.push(new DcmFloat(i));
                 xBody.runExec(interpretter);
             }
         }
         else {
-            for (double i = start; i > end; i += step) {
+            for (double i = start; i >= end; i += step) {
                 interpretter->mainStack.push(new DcmFloat(i));
                 xBody.runExec(interpretter);
             }

@@ -21,8 +21,8 @@ DcmNum * doIntOp(IntOp intOp,
         }
         else if (left->isType(DcmChar::typeVal())) {
             return new DcmChar((char)intOp(
-                (int)static_cast<DcmInt*>(left)->val,
-                static_cast<DcmChar*>(right)->val
+                (int)static_cast<DcmChar*>(left)->val,
+                static_cast<DcmInt*>(right)->val
                 ));
         }
         throw new DcmTypeError({DcmInt::typeVal(),

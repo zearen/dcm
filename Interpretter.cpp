@@ -177,7 +177,7 @@ void Interpretter::execute(string commands) throw (DcmError*){
                 mainStack.push(ch(commands, i));
                 break;
             case '^':
-                peek(commands, ++i, false);
+                peek(commands, ++i, false, false);
                 break;
             default:
                 peek(commands, i, true);
@@ -187,7 +187,10 @@ void Interpretter::execute(string commands) throw (DcmError*){
 
 // Sub-parsers
 
-void Interpretter::peek(string& stkName, int& i, bool checkHeaven) {
+void Interpretter::peek(string& stkName,
+                        int& i,
+                        bool checkHeaven, 
+                        bool runPrimFuns) {
     DcmType *dcm = NULL;
     string name;
     int start, end;
@@ -214,7 +217,7 @@ void Interpretter::peek(string& stkName, int& i, bool checkHeaven) {
         dcm = raw_peek(name, &scope);
     }
     if (dcm) {
-        if (checkHeaven && *dcm->type() == PRIMFUN) {
+        if (runPrimFuns && *dcm->type() == PRIMFUN) {
             Callback *cb = static_cast<DcmPrimFun*>(dcm)->run(this);
             callbackLoop(cb, this);
         }
@@ -290,16 +293,19 @@ unsigned char tvNS[] = {NAMESPACE};
 
 void Interpretter::attrib(string& attr, int& i) {         
     DcmType *dcm;
-    DcmNamespace *ns;
+    Namespace *ns;
     
     if (mainStack.empty()) {
         throw new DcmStackError(new DcmSymbol("main stack"), none);
     }
     
     dcm = mainStack.top();
-    checkTypes(dcm, {DcmNamespace::typeVal(), DcmClass::typeVal()});
+    ns = dcm->getNamespace();
+    if (!ns) throw new DcmTypeError(
+        { DcmNamespace::typeVal()
+        , DcmClass::typeVal()}, dcm->type());
+    del(dcm);
     mainStack.pop();
-    ns = static_cast<DcmNamespace*>(dcm);
     scope.push(ns);
     
     switch (attr[i]) {
@@ -318,9 +324,11 @@ void Interpretter::attrib(string& attr, int& i) {
         default:
             peek(attr, ++i, false);
     }
-    
-    del(ns);
-    scope.pop();
+    dcm = ns->restore();
+    if (dcm) {
+        scope.pop();
+        del(dcm);
+    }
 }
 
 int parseNum(string& num, int& i) {

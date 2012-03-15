@@ -84,6 +84,10 @@
         return 'n'; // dcmNamespace
     }
     
+    DcmType *DcmNamespace::restore() {
+        return this;
+    }
+    
     bool DcmNamespace::equals(DcmType& dcm) {
         // Users should just use .= for class equality
         throw new DcmTypeError({}, DcmNamespace::typeVal());
@@ -104,6 +108,10 @@
     
     string DcmNamespace::repr() {
         return "Namespace @ " + to_string((long)this);
+    }
+    
+    Namespace *DcmNamespace::getNamespace() {
+        return (DcmClass*)dup(this);
     }
 // };
 

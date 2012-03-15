@@ -127,7 +127,7 @@ Plugin *preludePlugin() {
     prelude_addBasic(v);
     prelude_addControl(v);
     prelude_addMath(v);
-    //prelude_addOOP(v);
+    prelude_addOOP(v);
     return new VectorPlugin(v);
 }
 

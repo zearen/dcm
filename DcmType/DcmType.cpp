@@ -6,7 +6,14 @@
 
 #include "DcmType.h"
 #include <sstream>
-#include <iostream>
+
+char Namespace::id() {
+    return 'b'; // Baseclass
+}
+
+DcmType *Namespace::restore() {
+    return NULL;
+}
 
 DcmType::DcmType() {
     refs = 1;
@@ -22,6 +29,10 @@ void DcmType::addRef() {
 
 int DcmType::refCount() {
     return (int) refs;
+}
+
+Namespace* DcmType::getNamespace() {
+    return NULL;
 }
 
 bool DcmType::operator==(DcmType& dcm) {
@@ -76,6 +87,3 @@ bool DcmType::isType(TypeVal otherType) {
     return sameType(type(), otherType);
 }
 
-char Namespace::id() {
-    return 'b'; // Baseclass
-}

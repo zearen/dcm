@@ -36,6 +36,21 @@ ___________ _______________ ___
 
 typedef unsigned char* TypeVal;
 
+class DcmType;
+
+typedef stack<DcmType*> DcmStack;
+
+class Namespace : public unordered_map<string, DcmStack> {
+    public:
+        virtual char id();
+
+        virtual DcmType* restore();
+        
+        virtual ~Namespace(){}
+};
+
+typedef stack<Namespace*> Scope;
+
 class DcmType {
     protected:
         unsigned short refs;
@@ -52,6 +67,8 @@ class DcmType {
         bool isType(TypeVal otherType);
         virtual TypeVal type() =0;
         virtual string repr() =0;
+        // Returns null if it does not support a class interface
+        virtual Namespace* getNamespace();
         // Does a type check, then calls virtual function
         bool operator==(DcmType& dcm);
         bool operator!=(DcmType& dcm);
@@ -75,17 +92,6 @@ string typeVal2Str(TypeVal type);
 
 // Checks type equality
 bool sameType(TypeVal type1, TypeVal type2);
-
-typedef stack<DcmType*> DcmStack;
-
-class Namespace : public unordered_map<string, DcmStack> {
-    public:
-        virtual char id();
-        
-        virtual ~Namespace(){}
-};
-
-typedef stack<Namespace*> Scope;
 
 //string reprType(TypeVal type);
 

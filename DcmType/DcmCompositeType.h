@@ -31,11 +31,13 @@ class DcmArray : public DcmType {
 class DcmNamespace : public DcmType, public Namespace {
     public:
         char id();
+        DcmType *restore();
         bool equals(DcmType& dcm);
         DcmType *copy();
         TypeVal type();
         static TypeVal typeVal();
         string repr();
+        Namespace *getNamespace();
 };
 
 class DcmClass : public DcmNamespace {
