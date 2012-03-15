@@ -154,7 +154,7 @@ void Interpretter::execute(string commands) throw (DcmError*){
                 empty(commands, i);
                 break;
             case '.':
-                attrib(commands, i);
+                attrib(commands, ++i);
                 break;
             case '[':
                 cont.push(new DcmExec());
@@ -322,7 +322,7 @@ void Interpretter::attrib(string& attr, int& i) {
             swap(attr, ++i);
             break;
         default:
-            peek(attr, ++i, false);
+            peek(attr, i, false);
     }
     dcm = ns->restore();
     if (dcm) {

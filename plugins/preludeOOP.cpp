@@ -55,10 +55,16 @@ void cbInherit(DcmStack& stk) {
 class : public Callback {
   Callback *run(Interpretter *interpretter) {
     Namespace *top = interpretter->scope.top();
-    interpretter->scope.pop();
-    Namespace *back = interpretter->scope.top();
-    interpretter->scope.push(top);
-    DcmType *dcm = back->restore();
+    DcmType *dcm;
+    if (top->id() == 'c') {
+        dcm = static_cast<DcmClass*>(top)->base();
+    }
+    else {
+        interpretter->scope.pop();
+        Namespace *back = interpretter->scope.top();
+        interpretter->scope.push(top);
+        dcm = back->restore();
+    }
     if (dcm) {
         interpretter->mainStack.push(dup(dcm));
     }
@@ -95,6 +101,7 @@ class : public Callback {
         }
     }
     del(dcm);
+    return NULL;
   }
 } cbUpcopy;
 
@@ -108,6 +115,7 @@ class : public Callback {
         throw new DcmStackError(new DcmSymbol("scope stack"),
             DcmNone::typeVal());
     }
+    return NULL;
   }
 } cbMe;
 

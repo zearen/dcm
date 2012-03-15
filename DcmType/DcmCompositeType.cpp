@@ -162,6 +162,10 @@
         }
     }
     
+    DcmClass *DcmClass::base() {
+        return dcmBase;
+    }
+
     TypeVal DcmClass::typeVal() {
         static unsigned char typeVal[] = {CLASS};
         return typeVal;

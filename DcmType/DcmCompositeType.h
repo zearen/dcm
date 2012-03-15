@@ -52,6 +52,7 @@ class DcmClass : public DcmNamespace {
         bool equals(DcmType& dcm);
         DcmType *copy();
         DcmType *peek(string& sym);
+        DcmClass *base();
         TypeVal type();
         static TypeVal typeVal();
         string repr();

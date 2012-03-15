@@ -1,0 +1,60 @@
+[ obj .;; ] def $;
+
+[ dup * ] def $sq
+
+class inherit {
+  [ 0.0 + $imag 0.0 + $real me ] def $;;
+  
+  [ real repr put
+    "i" put
+    imag print
+  ] def $print
+  
+  [ dup $other
+    .real real +
+    @other .imag imag +
+    me ;
+  ] def $+
+
+  [ dup $other
+    .real real -
+    @other .imag imag -
+    me ;
+  ] def $-
+
+  [ $other
+    real other .real * imag  other .imag * -
+    real other .imag * imag @other .real * +
+    me ;
+  ] def $*
+
+  [ $other
+    real sq imag sq + $denom
+    real other .real * imag  other .imag * + denom /
+    real other .imag * imag @other .real * - @denom /
+    me ;
+  ] def $/
+
+  [ real 0 imag - me ; ] def $conjugate
+
+} $Imaginary
+
+[ Imaginary ; ] def $i+
+
+1 2 i+ $a
+3 4 i+ $b
+
+"a = " put a .print
+"b = " put b .print
+
+"a + b = " put a b .+ .print
+
+"a - b = " put a b .- .print
+
+"a * b = " put a b .* .print
+
+"a / b = " put a b ./ .print
+
+"a conjugate = " put a .conjugate .print
+
+Imaginary refs print
