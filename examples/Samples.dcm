@@ -48,7 +48,7 @@ class inherit {
     ,+ [.p q * rev .q @p * rev .q @q * $q del + $p me] primfun
 } $rational
 
-,// [ rational ; ] primfun
+[ rational ; ] def $//
 
 3  4 // 1  2 // .+ 4  1 // .* .print
 
@@ -91,3 +91,7 @@ class inherit {
 ( ( 1 0 ) 
   ( 0 1 ) )
   $identity
+
+,a [ 1 - ] mod
+
+[ $_body dup $_stk pop @_body ex @_stk push ] def $mod

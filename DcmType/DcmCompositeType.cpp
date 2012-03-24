@@ -139,7 +139,7 @@
     }
     
     bool DcmClass::equals(DcmType& dcm) {
-        throw new DcmTypeError({}, DcmClass::typeVal());
+        return &dcm == this;
     }
 
     DcmType *DcmClass::copy() {
@@ -176,7 +176,7 @@
     }
     
     string DcmClass::repr() {
-        return "Class @ " + to_string((long)this);
+        return "<Class@" + to_string((long)this) + ">";
     }
 // };
 
@@ -227,7 +227,7 @@
     }
     
     string DcmPrimFun::repr() {
-        return "PrimFun @ " + to_string((long)this);
+        return "<PrimFun@" + to_string((long)this) + ">";
     }
 // };
 

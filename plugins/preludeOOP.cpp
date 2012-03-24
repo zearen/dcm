@@ -1,4 +1,5 @@
 #include "prelude.h"
+#include "../ExecParser.h"
 #include <stdexcept>
 
 DcmClass *dcmClass = new DcmClass();
@@ -83,7 +84,7 @@ class : public Callback {
     string sym = dcm->get();
     bool needFetch = false;
     try {
-        // If we already 
+        // If we already have it, we don't need to copy it.
         needFetch = interpretter->scope.top()->at(sym).empty();
     }
     catch (out_of_range ex) {
@@ -119,6 +120,16 @@ class : public Callback {
   }
 } cbMe;
 
+static string semiStr = ";";
+static Callback *semiAttrib = new AttribCallback(semiStr);
+class : public Callback {
+    Callback *run(Interpretter *interpretter) {
+        cbInherit(interpretter->mainStack);
+        semiAttrib->run(interpretter);
+        return NULL;
+    }
+} cbConstruct;
+
 void prelude_addOOP(vector<NamedCB>& vec) {
     vector<NamedCB> v = 
         { NamedCB("class",      new SimpleCallback(cbClass))
@@ -131,6 +142,7 @@ void prelude_addOOP(vector<NamedCB>& vec) {
         , NamedCB("_",          &cbLookback)
         , NamedCB("upcopy",     &cbUpcopy)
         , NamedCB("me",         &cbMe)
+        , NamedCB(";",          &cbConstruct)
         };
     vec.insert(vec.end(), v.begin(), v.end());
 }

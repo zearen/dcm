@@ -5,25 +5,23 @@
 */
 
 #include "Interpretter.h"
-class PushCallback : public Callback {
-    private:
-        string stkName;
-    public:
-        PushCallback(string stackName) {
-            stkName = stackName;
-        }
-        
-        Callback *run(Interpretter *interpretter) {
-            // The parser will increment this so it begins at the
-            //+ start of the string (as opposed to one after)
-            int i = -1;
-            interpretter->push(stkName, i);
-            return NULL;
-        }
-        bool mustDestroy() {
-            return true;
-        }
-};
+#include "ExecParser.h"
+
+PushCallback::PushCallback(string stackName) {
+    stkName = stackName;
+}
+
+Callback *PushCallback::run(Interpretter *interpretter) {
+    // The parser will increment this so it begins at the
+    //+ start of the string (as opposed to one after)
+    int i = -1;
+    interpretter->push(stkName, i);
+    return NULL;
+}
+
+bool PushCallback::mustDestroy() {
+    return true;
+}
 
 void Interpretter::ex_push(string& commands, int& i) {
     int start , end;
@@ -33,25 +31,20 @@ void Interpretter::ex_push(string& commands, int& i) {
         commands.substr(start, end))));
 }
 
-class PopCallback : public Callback {
-    private:
-        string stkName;
-    public:
-        PopCallback(string stackName) {
-            stkName = stackName;
-        }
-        
-        Callback *run(Interpretter *interpretter) {
-            // The parser will increment this so it begins at the
-            //+ start of the string (as opposed to one after)
-            int i = -1;
-            interpretter->pop(stkName, i);
-            return NULL;
-        }
-        bool mustDestroy() {
-            return true;
-        }
-};
+PopCallback::PopCallback(string stackName) {
+    stkName = stackName;
+}
+
+Callback *PopCallback::run(Interpretter *interpretter) {
+    // The parser will increment this so it begins at the
+    //+ start of the string (as opposed to one after)
+    int i = -1;
+    interpretter->pop(stkName, i);
+    return NULL;
+}
+bool PopCallback::mustDestroy() {
+    return true;
+}
 
 void Interpretter::ex_pop(string& commands, int& i) {
     int start, end;
@@ -61,25 +54,20 @@ void Interpretter::ex_pop(string& commands, int& i) {
         commands.substr(start, end))));
 }
 
-class SwapCallback : public Callback {
-    private:
-        string stkName;
-    public:
-        SwapCallback(string stackName) {
-            stkName = stackName;
-        }
-        
-        Callback *run(Interpretter *interpretter) {
-            // The parser will increment this so it begins at the
-            //+ start of the string (as opposed to one after)
-            int i = -1;
-            interpretter->swap(stkName, i);
-            return NULL;
-        }
-        bool mustDestroy() {
-            return true;
-        }
-};
+SwapCallback::SwapCallback(string stackName) {
+    stkName = stackName;
+}
+
+Callback *SwapCallback::run(Interpretter *interpretter) {
+    // The parser will increment this so it begins at the
+    //+ start of the string (as opposed to one after)
+    int i = -1;
+    interpretter->swap(stkName, i);
+    return NULL;
+}
+bool SwapCallback::mustDestroy() {
+    return true;
+}
 
 void Interpretter::ex_swap(string& commands, int& i) {
     int start, end;
@@ -89,23 +77,18 @@ void Interpretter::ex_swap(string& commands, int& i) {
         commands.substr(start, end))));
 }
 
-class EmptyCallback : public Callback {
-    private:
-        string stkName;
-    public:
-        EmptyCallback(string stackName) {
-            stkName = stackName;
-        }
-        
-        Callback *run(Interpretter *interpretter) {
-            int i = 0;
-            interpretter->empty(stkName, i);
-            return NULL;
-        }
-        bool mustDestroy() {
-            return true;
-        }
-};
+EmptyCallback::EmptyCallback(string stackName) {
+    stkName = stackName;
+}
+
+Callback *EmptyCallback::run(Interpretter *interpretter) {
+    int i = 0;
+    interpretter->empty(stkName, i);
+    return NULL;
+}
+bool EmptyCallback::mustDestroy() {
+    return true;
+}
 
 void Interpretter::ex_empty(string& commands, int& i) {
     int start, end;
@@ -115,25 +98,19 @@ void Interpretter::ex_empty(string& commands, int& i) {
         commands.substr(start, end))));
 }
 
-class PeekCallback : public Callback {
-    private:
-        bool chkScope;
-        string stkName;
-    public:
-        PeekCallback(string stackName, bool checkScope) {
-            stkName = stackName;
-            chkScope = checkScope;
-        }
-        
-        Callback *run(Interpretter *interpretter) {
-            int i = 0;
-            interpretter->peek(stkName, i, chkScope);
-            return NULL;
-        }
-        bool mustDestroy() {
-            return true;
-        }
-};
+PeekCallback::PeekCallback(string stackName, bool checkScope) {
+    stkName = stackName;
+    chkScope = checkScope;
+}
+
+Callback *PeekCallback::run(Interpretter *interpretter) {
+    int i = 0;
+    interpretter->peek(stkName, i, chkScope);
+    return NULL;
+}
+bool PeekCallback::mustDestroy() {
+    return true;
+}
 
 void Interpretter::ex_peek(string& commands, int& i, bool checkScope) {
     int start, end;
@@ -143,23 +120,18 @@ void Interpretter::ex_peek(string& commands, int& i, bool checkScope) {
         commands.substr(start, end), checkScope)));
 }
 
-class AttribCallback : public Callback {
-    private:
-        string stkName;
-    public:
-        AttribCallback(string stackName) {
-            stkName = stackName;
-        }
-        
-        Callback *run(Interpretter *interpretter) {
-            int i = 0;
-            interpretter->attrib(stkName, i);
-            return NULL;
-        }
-        bool mustDestroy() {
-            return true;
-        }
-};
+AttribCallback::AttribCallback(string stackName) {
+    stkName = stackName;
+}
+
+Callback *AttribCallback::run(Interpretter *interpretter) {
+    int i = 0;
+    interpretter->attrib(stkName, i);
+    return NULL;
+}
+bool AttribCallback::mustDestroy() {
+    return true;
+}
 
 void Interpretter::ex_attrib(string& commands, int& i) {
     int start, end;

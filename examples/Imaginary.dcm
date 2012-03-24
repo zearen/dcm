@@ -1,9 +1,7 @@
-[ obj .;; ] def $;
-
 [ dup * ] def $sq
 
 class inherit {
-  [ 0.0 + $imag 0.0 + $real me ] def $;;
+  [ 0.0 + $imag 0.0 + $real me ] def $;
   
   [ real repr put
     "i" put
@@ -35,14 +33,20 @@ class inherit {
     me ;
   ] def $/
 
+} $Imaginary
+
+[ real 0 imag - me ; ] def Imaginary .$conjugate
+
+Imaginary inherit {
+
   [ real 0 imag - me ; ] def $conjugate
 
-} $Imaginary
+} $ConjugableImaginary
 
 [ Imaginary ; ] def $i+
 
-1 2 i+ $a
-3 4 i+ $b
+1 2 Imaginary ; $a
+3 4 ConjugableImaginary ; $b
 
 "a = " put a .print
 "b = " put b .print
@@ -55,6 +59,4 @@ class inherit {
 
 "a / b = " put a b ./ .print
 
-"a conjugate = " put a .conjugate .print
-
-Imaginary refs print
+"b conjugate = " put b .conjugate .print
