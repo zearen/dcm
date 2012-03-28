@@ -119,6 +119,7 @@ void interact(Interpretter& interpretter) {
 }
 
 void runFile(Interpretter& interpretter, char* fn) {
+    int lines = 0;
     string line;
     fstream inFile;
     inFile.open(fn, fstream::in);
@@ -128,15 +129,16 @@ void runFile(Interpretter& interpretter, char* fn) {
     }
     try {
         while (inFile) {
+            lines++;
             getline(inFile, line);
             interpretter.execute(line);
         }
     }
     catch (DcmError *err) {
-        cerr << err->repr() << endl;
+        cerr << lines << ": " << err->repr() << endl;
     }
     catch (InterpretterError err) {
-        cerr << err.what() << endl;
+        cerr << lines << ": " << err.what() << endl;
     }
     inFile.close();
 }

@@ -4,21 +4,21 @@ void cbIs(DcmStack& stk) {
     DcmType **dcms = popN(stk, 2);
     stk.push(new DcmBool(dcms[0] == dcms[1]));
     del(dcms[0]); del(dcms[1]);
-    delete dcms;
+    delete[] dcms;
 }
 
 void cbEquals(DcmStack& stk) {
     DcmType **dcms = popN(stk, 2);
     stk.push(new DcmBool(*dcms[0] == *dcms[1]));
     del(dcms[0]); del(dcms[1]);
-    delete dcms;
+    delete[] dcms;
 }
 
 void cbNotEquals(DcmStack& stk) {
     DcmType **dcms = popN(stk, 2);
     stk.push(new DcmBool(*dcms[0] != *dcms[1]));
     del(dcms[0]); del(dcms[1]);
-    delete dcms;
+    delete[] dcms;
 }
 
 void cbIf(DcmStack& stk) {
@@ -35,13 +35,13 @@ void cbIf(DcmStack& stk) {
         stk.push(dcms[2]);
         stk.push(dcms[1]);
         stk.push(dcms[0]);
-        delete dcms;
+        delete[] dcms;
         throw dcmTE;
     }
     del(dcms[0]);
     del(dcms[1]);
     del(dcms[2]);
-    delete dcms;
+    delete[] dcms;
 }
 
 class : public Callback {
@@ -62,14 +62,14 @@ class : public Callback {
             }
             interpretter->mainStack.push(dcms[1]);
             interpretter->mainStack.push(dcms[0]);
-            delete dcms;
+            delete[] dcms;
             throw dcmTE;
         }
         
         DcmBool *dcmBool;
         xBody.setExec(static_cast<DcmExec*>(dcms[0]));
         xCond.setExec(static_cast<DcmExec*>(dcms[1]));
-        delete dcms;  // At this point, the exec garbage collection is
+        delete[] dcms;  // At this point, the exec garbage collection is
                       //+ handled by RAII
 
         xCond.runExec(interpretter);
@@ -210,12 +210,12 @@ class : public Callback {
             catch (DcmError *ex) {
                 del(dcms[1]);
                 del(dcms[0]);
-                delete dcms;
+                delete[] dcms;
                 throw ex;
             }
             del(dcms[1]);
             del(dcms[0]);
-            delete dcms;
+            delete[] dcms;
         }
         else {
             double step;
@@ -232,7 +232,7 @@ class : public Callback {
                 interpretter->mainStack.push(dcms[2]);
                 interpretter->mainStack.push(dcms[1]);
                 interpretter->mainStack.push(dcms[0]);
-                delete dcms;
+                delete[] dcms;
                 throw new DcmTypeError(
                   { DcmChar::typeVal()
                   , DcmInt::typeVal()
@@ -247,7 +247,7 @@ class : public Callback {
                 interpretter->mainStack.push(dcms[2]);
                 interpretter->mainStack.push(dcms[1]);
                 interpretter->mainStack.push(dcms[0]);
-                delete dcms;
+                delete[] dcms;
                 throw ex;
             }
             try {
@@ -262,13 +262,13 @@ class : public Callback {
                 del(dcms[2]);
                 del(dcms[1]);
                 del(dcms[0]);
-                delete dcms;
+                delete[] dcms;
                 throw ex;
             }
             del(dcms[2]);
             del(dcms[1]);
             del(dcms[0]);
-            delete dcms;
+            delete[] dcms;
         }
     }
 } cbRange;

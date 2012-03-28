@@ -22,7 +22,10 @@ preludeOOP.o: prelude.h preludeOOP.cpp ../Interpretter.h
 preludeStack.o: prelude.h preludeStack.cpp ../Interpretter.h
 	g++ $(FLAGS) -o preludeStack.o -c preludeStack.cpp
 
-PRELUDE_OBJ= prelude.o preludeMath.o preludeControl.o preludeOOP.o preludeStack.o
+preludeSeq.o: prelude.h preludeSeq.cpp ../Interpretter.h
+	g++ $(FLAGS) -o preludeSeq.o -c preludeSeq.cpp
+
+PRELUDE_OBJ= prelude.o preludeMath.o preludeControl.o preludeOOP.o preludeStack.o preludeSeq.o
 
 ../lib/libplugin_prelude.a: $(PRELUDE_OBJ)
 	ar -cq ../lib/libplugin_prelude.a $(PRELUDE_OBJ)

@@ -18,7 +18,7 @@ void cbClear(DcmStack& stk) {
     }
 }
 
-void cbEmpty(DcmStack& stk) {
+void cbBottom(DcmStack& stk) {
     stk.push(new DcmBool(stk.empty()));
 }
 
@@ -63,7 +63,7 @@ void cbRev(DcmStack& stk) {
     DcmType **dcms = popN(stk, 2);
     stk.push(dcms[0]);
     stk.push(dcms[1]);
-    delete dcms;
+    delete[] dcms;
 }
 
 void cbCopy(DcmStack& stk) {
@@ -109,7 +109,7 @@ void prelude_addBasic(vector<NamedCB>& vec) {
         , NamedCB("dup",    new SimpleCallback(cbDup))
         , NamedCB("del",    new SimpleCallback(cbDel))
         , NamedCB("clear",  new SimpleCallback(cbClear))
-        , NamedCB("empty",  new SimpleCallback(cbEmpty))
+        , NamedCB("bottom",  new SimpleCallback(cbBottom))
         , NamedCB("refs",   new SimpleCallback(cbRefs))
         , NamedCB("rev",    new SimpleCallback(cbRev))
         , NamedCB("copy",   new SimpleCallback(cbCopy))
@@ -130,6 +130,7 @@ Plugin *preludePlugin() {
     prelude_addMath(v);
     prelude_addOOP(v);
     prelude_addStack(v);
+    prelude_addSeq(v);
     return new VectorPlugin(v);
 }
 
@@ -157,3 +158,9 @@ bool ExecRunner::mustDestroy() {
     return false;
 }
 
+Finally::Finally(function<void()> initCb) {
+    cb = initCb;
+}
+Finally::~Finally() {
+    cb();
+}

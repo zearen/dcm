@@ -81,6 +81,7 @@ class : public Callback {
   Callback *run(Interpretter *interpretter) {
     DcmSymbol *dcm = static_cast<DcmSymbol*>(
         safePeekMain(interpretter, {DcmSymbol::typeVal()}));
+    interpretter->mainStack.pop();
     string sym = dcm->get();
     bool needFetch = false;
     try {
@@ -123,11 +124,11 @@ class : public Callback {
 static string semiStr = ";";
 static Callback *semiAttrib = new AttribCallback(semiStr);
 class : public Callback {
-    Callback *run(Interpretter *interpretter) {
+  Callback *run(Interpretter *interpretter) {
         cbInherit(interpretter->mainStack);
         semiAttrib->run(interpretter);
         return NULL;
-    }
+  }
 } cbConstruct;
 
 void prelude_addOOP(vector<NamedCB>& vec) {

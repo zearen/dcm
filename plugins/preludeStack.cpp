@@ -92,18 +92,6 @@ class : public Callback {
   }
 } cbSet;
 
-class Finally {
-  private:
-    function<void()> cb;
-  public:
-    Finally(function<void()> initCb) {
-        cb = initCb;
-    }
-    ~Finally() {
-        cb();
-    }
-};
-
 class : public Callback {
   Callback *run(Interpretter *interpretter) {
     DcmSymbol *dcmSym = static_cast<DcmSymbol*>(

@@ -62,16 +62,20 @@
     }
     
     string DcmArray::repr() {
-        string ret = "(";
-        bool comma = false;
-        
+        stringstream ss;
+        ss << "( ";
+        for (int i=0; i < len; i++) {
+            ss << vals[i]->repr() << " ";
+        }
+        ss << ")";
+        return ss.str();
     }
     
     int DcmArray::length() {
         return len;
     }
     
-    DcmType *DcmArray::operator[] (int index) throw (DcmBoundsError*) {
+    DcmType*& DcmArray::operator[] (int index) throw (DcmBoundsError*) {
         if (index < 0 || index >= len) {
             throw new DcmBoundsError(len - 1, index);
         }
@@ -111,7 +115,7 @@
     }
     
     Namespace *DcmNamespace::getNamespace() {
-        return (DcmClass*)dup(this);
+        return (DcmNamespace*)dup(this);
     }
 // };
 
@@ -243,6 +247,9 @@
         : vector<DcmType*>(toCopy) {
         num = count;
         count++;
+        for (DcmType *dcm : (*this)) {
+            dup(dcm);
+        }
     }
     
     DcmExec::~DcmExec() {

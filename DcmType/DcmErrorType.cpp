@@ -122,7 +122,7 @@
     string DcmBoundsError::repr() {
         stringstream ret;
         ret << "Error: Out of bounds (";
-        ret << giv << " > " << top << ")";
+        ret << giv << (giv > top ? " > " : " < ") << top << ")";
         return ret.str();
     }
 // };

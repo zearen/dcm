@@ -25,7 +25,7 @@ class DcmArray : public DcmType {
         static TypeVal typeVal();
         string repr();
         int length();
-        DcmType *operator[] (int index) throw (DcmBoundsError*);
+        DcmType*& operator[] (int index) throw (DcmBoundsError*);
 };
 
 class DcmNamespace : public DcmType, public Namespace {

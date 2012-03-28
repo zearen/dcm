@@ -34,6 +34,8 @@ void prelude_addOOP(vector<NamedCB>& vec);
 
 void prelude_addStack(vector<NamedCB>& vec);
 
+void prelude_addSeq(vector<NamedCB>& vec);
+
 class ExecRunner : public ExecCallback {
   public:
     ExecRunner();
@@ -45,6 +47,14 @@ class ExecRunner : public ExecCallback {
     void runExec(Interpretter *interpretter);
 
     bool mustDestroy();
+};
+
+class Finally {
+  private:
+    function<void()> cb;
+  public:
+    Finally(function<void()> initCb);
+    ~Finally();
 };
 
 #endif
