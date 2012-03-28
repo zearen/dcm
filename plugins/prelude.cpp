@@ -98,6 +98,7 @@ void cbRepr(DcmStack& stk) {
     DcmType *dcm = safePeekMain(stk);
     stk.pop();
     stk.push(new DcmString(dcm->repr()));
+    del(dcm);
 }
 
 void prelude_addBasic(vector<NamedCB>& vec) {
@@ -128,6 +129,7 @@ Plugin *preludePlugin() {
     prelude_addControl(v);
     prelude_addMath(v);
     prelude_addOOP(v);
+    prelude_addStack(v);
     return new VectorPlugin(v);
 }
 

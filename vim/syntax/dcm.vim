@@ -3,18 +3,18 @@
 " Maintainer:   Zachary Weaver <zearen.wover@gmail.com>
 " Last Change:  2011-7-27
 
-setlocal iskeyword+=:
+setlocal iskeyword+=:-
 
-syn keyword dcmBuiltin dup copy rev del repr swap clear empty?
+syn keyword dcmBuiltin dup copy rev del repr clear
 syn keyword dcmBuiltin fold map len upcopy inherit obj me
 syn keyword dcmBuiltin true false none
-syn keyword dcmStatement push pop peek
+syn keyword dcmStatement push pop peek swap empty with
 syn keyword dcmRepeat while until for range
 syn keyword dcmConditional if and or xor not
 syn keyword dcmException error catch try
-syn keyword dcmInclude load with as guard module
+syn keyword dcmInclude load as use guard module
 syn keyword dcmFunction ex o def
-syn keyword dcmType class : array def
+syn keyword dcmType class : array def int float char
 
 syn match dcmComment /#.*/
 syn match dcmNumber /\(^\|\s\|\[\)\d\+\(\.\d*\)\?/

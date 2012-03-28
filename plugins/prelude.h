@@ -32,6 +32,8 @@ DcmNum * doFloatOp(FloatOp floatOp,
 
 void prelude_addOOP(vector<NamedCB>& vec);
 
+void prelude_addStack(vector<NamedCB>& vec);
+
 class ExecRunner : public ExecCallback {
   public:
     ExecRunner();

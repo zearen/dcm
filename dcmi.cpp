@@ -147,9 +147,17 @@ int main(int argc, char **argv) {
     interpretter.addPlugin(*ioPlugin());
     interpretter.addPlugin(*preludePlugin());
     
-    if (argc > 2 && string(argv[1]) == "-f")
-        runFile(interpretter, argv[2]);
-    else
+    if (argc > 2) {
+        if (string(argv[1]) == "-f") {
+            runFile(interpretter, argv[2]);
+        }
+        else if (string(argv[1]) == "-l") {
+            runFile(interpretter, argv[2]);
+            interact(interpretter);
+        }
+    }
+    else {
         interact(interpretter);
+    }
     return 0;
 }

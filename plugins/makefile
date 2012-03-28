@@ -19,7 +19,10 @@ preludeMath.o: prelude.h preludeMath.cpp ../Interpretter.h
 preludeOOP.o: prelude.h preludeOOP.cpp ../Interpretter.h
 	g++ $(FLAGS) -o preludeOOP.o -c preludeOOP.cpp
 
-PRELUDE_OBJ= prelude.o preludeMath.o preludeControl.o preludeOOP.o
+preludeStack.o: prelude.h preludeStack.cpp ../Interpretter.h
+	g++ $(FLAGS) -o preludeStack.o -c preludeStack.cpp
+
+PRELUDE_OBJ= prelude.o preludeMath.o preludeControl.o preludeOOP.o preludeStack.o
 
 ../lib/libplugin_prelude.a: $(PRELUDE_OBJ)
 	ar -cq ../lib/libplugin_prelude.a $(PRELUDE_OBJ)
