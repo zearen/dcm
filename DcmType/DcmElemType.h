@@ -4,20 +4,21 @@
     DcmElemType.h
 */
 
-#ifndef _DCM_TYPE
+#ifndef _DCM_ELEM_TYPE
+#define _DCM_ELEM_TYPE
 #include "DcmType.h"
-#endif
 
 // Elementary Types
-#define NONE    0
-#define INT     1
-#define FLOAT   2
-#define CHAR    3
-#define BOOL    4
-#define STRING  5
-#define SYMBOL  6
-#define EXTEN   8
+#define DCM_NONE    0
+#define DCM_INT     1
+#define DCM_FLOAT   2
+#define DCM_CHAR    3
+#define DCM_BOOL    4
+#define DCM_STRING  5
+#define DCM_SYMBOL  6
+#define DCM_EXTEN   8
 
+namespace Dcm {
 // This categorizes atomic types
 class DcmElem : public DcmType {
 };
@@ -33,7 +34,7 @@ class DcmNone : public DcmElem {
         DcmType *copy();
         TypeVal type();
         static TypeVal typeVal();
-        string repr();
+        std::string repr();
 };
 
 extern DcmNone *dcmNone;
@@ -47,7 +48,7 @@ class DcmInt : public DcmNum {
         DcmType *copy();
         TypeVal type();
         static TypeVal typeVal();
-        string repr();
+        std::string repr();
 };
 
 class DcmFloat : public DcmNum {
@@ -59,7 +60,7 @@ class DcmFloat : public DcmNum {
         DcmType *copy();
         TypeVal type();
         static TypeVal typeVal();
-        string repr();
+        std::string repr();
 };
 
 class DcmChar : public DcmNum {
@@ -71,7 +72,7 @@ class DcmChar : public DcmNum {
         DcmType *copy();
         TypeVal type();
         static TypeVal typeVal();
-        string repr();
+        std::string repr();
 };
 
 class DcmBool : public DcmElem {
@@ -83,32 +84,32 @@ class DcmBool : public DcmElem {
         DcmType *copy();
         TypeVal type();
         static TypeVal typeVal();
-        string repr();
+        std::string repr();
 };
 
-class DcmString : public DcmElem, public string {
+class DcmString : public DcmElem, public std::string {
     public:
         DcmString();
-        DcmString(string toCopy);
+        DcmString(std::string toCopy);
         bool equals(DcmType& dcm);
         DcmType *copy();
         TypeVal type();
         static TypeVal typeVal();
-        string repr();
+        std::string repr();
 };
 
 class DcmSymbol : public DcmElem {
     private:
-       string symbol;
+		std::string symbol;
     public:
         DcmSymbol(DcmSymbol& toCopy);
-        DcmSymbol(string name);
+        DcmSymbol(std::string name);
         bool equals(DcmType& dcm);
         DcmType *copy();
-        string get();
+        std::string get();
         TypeVal type();
         static TypeVal typeVal();
-        string repr();
+        std::string repr();
 };
 
 // Inherit this for custom primitives
@@ -121,3 +122,5 @@ class DcmExtension : public DcmType {
         DcmExtension();
         TypeVal type();  // Do not override!
 };
+}
+#endif

@@ -1,5 +1,9 @@
 #include "prelude.h"
 
+using namespace std;
+using namespace Dcm;
+using namespace Dcm::Prelude;
+
 typedef function<void(DcmStack&)> StackProc;
 
 typedef function<bool(bool, bool)> BoolOp;
@@ -7,7 +11,7 @@ typedef function<bool(double, double)> NumComp;
 typedef function<bool(string&, string&)> StrComp;
 
 
-DcmNum * doIntOp(IntOp intOp,
+DcmNum * Dcm::Prelude::doIntOp(IntOp intOp,
                  CharOp charOp,
                  DcmType *left,
                  DcmType *right) 
@@ -52,7 +56,7 @@ DcmNum * doIntOp(IntOp intOp,
                             DcmChar::typeVal()}, right->type());
 }
 
-DcmNum * doFloatOp(FloatOp floatOp,
+DcmNum * Dcm::Prelude::doFloatOp(FloatOp floatOp,
                    IntOp intOp,
                    CharOp charOp,
                    DcmType *left,
@@ -366,7 +370,7 @@ void cbNotEqual(DcmStack& stk) {
     [](double x, double y)->bool    {return x!=y;})(stk);
 }
 
-void prelude_addMath(vector<NamedCB>& vec) {
+void Dcm::Prelude::prelude_addMath(vector<NamedCB>& vec) {
     vector<NamedCB> v = 
         // Comparison
         { NamedCB("<",      new SimpleCallback(cbLT))

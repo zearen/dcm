@@ -2,6 +2,10 @@
 
 #include <iostream>
 
+using namespace std;
+using namespace Dcm;
+using namespace Dcm::Prelude;
+
 void cbDup(DcmStack& stk) {
     stk.push(dup(safePeekMain(stk)));
 }
@@ -75,7 +79,7 @@ void cbCopy(DcmStack& stk) {
 
 DcmBool *dcmTrue = new DcmBool(true);
 DcmBool *dcmFalse = new DcmBool(false);
-DcmNone *dcmNone = new DcmNone();
+extern DcmNone *Dcm::dcmNone;
 
 void cbTrue(DcmStack& stk) {
     stk.push(dup(dcmTrue));
@@ -101,7 +105,7 @@ void cbRepr(DcmStack& stk) {
     del(dcm);
 }
 
-void prelude_addBasic(vector<NamedCB>& vec) {
+void Dcm::Prelude::prelude_addBasic(vector<NamedCB>& vec) {
     vector<NamedCB> v = 
         { NamedCB("ex",     &cbX)
         , NamedCB("def",    new SimpleCallback(cbDef))
@@ -123,7 +127,7 @@ void prelude_addBasic(vector<NamedCB>& vec) {
     vec.insert(vec.end(), v.begin(), v.end());
 }
 
-Plugin *preludePlugin() {
+Plugin *Dcm::Prelude::preludePlugin() {
     vector<NamedCB> v;
     prelude_addBasic(v);
     prelude_addControl(v);

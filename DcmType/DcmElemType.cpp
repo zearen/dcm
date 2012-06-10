@@ -7,6 +7,9 @@
 #include "DcmType.h"
 #include <sstream>
 
+using namespace std;
+using namespace Dcm;
+
 // DcmNone {
     bool DcmNone::equals(DcmType &dcm) {
         return true;
@@ -17,7 +20,7 @@
     }
 
     TypeVal DcmNone::typeVal() {
-        static unsigned char typeVal[] = {ELEM | (NONE << 1)};
+        static unsigned char typeVal[] = {ELEM | (DCM_NONE << 1)};
         return typeVal;
     }
     
@@ -29,7 +32,7 @@
         return "None";
     }
     
-    DcmNone *dcmNone = new DcmNone();
+    DcmNone *Dcm::dcmNone = new DcmNone();
 // };
 
 // DcmInt {
@@ -50,7 +53,7 @@
     }
 
     TypeVal DcmInt::typeVal() {
-        static unsigned char typeVal[] = {ELEM | (INT << 1)};
+        static unsigned char typeVal[] = {ELEM | (DCM_INT << 1)};
         return typeVal;
     }
     
@@ -83,7 +86,7 @@
     }
 
     TypeVal DcmFloat::typeVal() {
-        static unsigned char typeVal[] = {ELEM | (FLOAT << 1)};
+        static unsigned char typeVal[] = {ELEM | (DCM_FLOAT << 1)};
         return typeVal;
     }
     
@@ -116,7 +119,7 @@
     }
 
     TypeVal DcmChar::typeVal() {
-        static unsigned char typeVal[] = {ELEM | (CHAR << 1)};
+        static unsigned char typeVal[] = {ELEM | (DCM_CHAR << 1)};
         return typeVal;
     }
     
@@ -149,7 +152,7 @@
     }
 
     TypeVal DcmBool::typeVal() {
-        static unsigned char typeVal[] = {ELEM | (BOOL << 1)};
+        static unsigned char typeVal[] = {ELEM | (DCM_BOOL << 1)};
         return typeVal;
     }
     
@@ -179,7 +182,7 @@
     }
 
     TypeVal DcmString::typeVal() {
-        static unsigned char typeVal[] = {ELEM | (STRING << 1)};
+        static unsigned char typeVal[] = {ELEM | (DCM_STRING << 1)};
         return typeVal;
     }
     
@@ -215,7 +218,7 @@
     }
     
     TypeVal DcmSymbol::typeVal() {
-        static unsigned char typeVal[] = {ELEM | (SYMBOL << 1)};
+        static unsigned char typeVal[] = {ELEM | (DCM_SYMBOL << 1)};
         return typeVal;
     }
     
@@ -242,7 +245,7 @@
             typeVal = new unsigned char[len];
             for (int i = 1; i < len; i++)
                 typeVal[i] = subtypeVal[i-1];
-            typeVal[0] = ELEM | (EXTEN << 1) | 1;
+            typeVal[0] = ELEM | (DCM_EXTEN << 1) | 1;
         }
         return typeVal;
     }

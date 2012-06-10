@@ -1,6 +1,10 @@
 #include <stdexcept>
 #include "prelude.h"
 
+using namespace std;
+using namespace Dcm;
+using namespace Dcm::Prelude;
+
 void cbConcat(DcmStack& stk) {
     DcmType **dcms = popN(stk, 2);
     bool mismatch = false;
@@ -493,7 +497,7 @@ void cbSlice(DcmStack& stk) {
     delete[] dcms;
 }
 
-void prelude_addSeq(vector<NamedCB>& vec) {
+void Dcm::Prelude::prelude_addSeq(vector<NamedCB>& vec) {
     vector<NamedCB> v = 
         { NamedCB("&",      new SimpleCallback(cbConcat))
         , NamedCB("(",      new SimpleCallback(cbLParen))

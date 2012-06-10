@@ -6,9 +6,12 @@
 
 #include "Callback.h"
 
+using namespace std;
+using namespace Dcm;
+
 static unsigned char type[] = {0};
 
-DcmType *raw_peek(string& sym, Scope *scope) {
+DcmType *Dcm::raw_peek(string& sym, Scope *scope) {
     Namespace *ns;
     DcmType *ret = NULL;
     DcmStack *stk;
@@ -40,7 +43,7 @@ DcmType *raw_peek(string& sym, Scope *scope) {
 }
 
 // Utilities
-void callbackLoop(Callback* cb, Interpretter* interpretter) {
+void Dcm::callbackLoop(Callback* cb, Interpretter* interpretter) {
     Callback* cbNext;
     while (cb) {
         cbNext = cb->run(interpretter);
@@ -50,7 +53,7 @@ void callbackLoop(Callback* cb, Interpretter* interpretter) {
     }
 }
 
-void checkTypes(DcmType* dcm, vector<TypeVal> types)
+void Dcm::checkTypes(DcmType* dcm, vector<TypeVal> types)
   throw (DcmTypeError*) {
     if (types.size() == 0) return;
     for (auto type : types) {
@@ -59,16 +62,16 @@ void checkTypes(DcmType* dcm, vector<TypeVal> types)
     throw new DcmTypeError(types, dcm->type());
 }
 
-DcmType *safePeekMain(Interpretter* interpretter, vector<TypeVal> types)
+DcmType *Dcm::safePeekMain(Interpretter* interpretter, vector<TypeVal> types)
   throw (DcmError*) {
     return safePeekMain(interpretter->mainStack, types);
 }
 
-DcmType *safePeekMain(Interpretter* interpretter) throw (DcmError*) {
+DcmType *Dcm::safePeekMain(Interpretter* interpretter) throw (DcmError*) {
     return safePeekMain(interpretter->mainStack, {});
 }
 
-DcmType *safePeekMain(DcmStack& stk, vector<TypeVal> types)
+DcmType *Dcm::safePeekMain(DcmStack& stk, vector<TypeVal> types)
   throw (DcmError*) {
    DcmType *dcm;
     if (!stk.empty()) {
@@ -82,11 +85,11 @@ DcmType *safePeekMain(DcmStack& stk, vector<TypeVal> types)
     return dcm;
 }
 
-DcmType *safePeekMain(DcmStack& stk) throw (DcmError*) {
+DcmType *Dcm::safePeekMain(DcmStack& stk) throw (DcmError*) {
     return safePeekMain(stk, {});
 }
 
-DcmType **popN(DcmStack& stk, unsigned int n) {
+DcmType **Dcm::popN(DcmStack& stk, unsigned int n) {
     int pos = 0;
     DcmType **rets = new DcmType*[n];
     for (; pos < n; pos++) {

@@ -13,13 +13,13 @@
 #include "DcmType/DcmType.h"
 #include "Plugin.h"
 
-using namespace std;
-class InterpretterError : public exception {
+namespace Dcm {
+class InterpretterError : public std::exception {
     private:
-        string msg;
+	std::string msg;
     public:
         InterpretterError();
-        InterpretterError(string message);
+        InterpretterError(std::string message);
         ~InterpretterError() throw ();
         const char* what();
 };
@@ -27,9 +27,9 @@ class InterpretterError : public exception {
 class Interpretter {
     protected:
         // If an exec wraps a line
-        stack<DcmExec*> cont;
+		std::stack<DcmExec*> cont;
         // If a string wraps a line
-        string strCont;
+		std::string strCont;
     public:
         // This namespace is search first
         Namespace heaven;
@@ -38,7 +38,7 @@ class Interpretter {
         DcmStack mainStack;
         
         Interpretter();
-        Interpretter(vector<Plugin> plugins);
+        Interpretter(std::vector<Plugin> plugins);
         ~Interpretter();
         
         // Link the plugin into heaven
@@ -46,7 +46,7 @@ class Interpretter {
         
         // Execute given command
         // That the input stream well accept anything but \n
-        void execute(string commands) throw (DcmError*);
+        void execute(std::string commands) throw (DcmError*);
         
         // Returns whether the parser is receiving a multiline string
         bool isInString();
@@ -58,26 +58,26 @@ class Interpretter {
         
     private:
         // Sub-parsers
-        void peek(string& stkName, int& i,
+        void peek(std::string& stkName, int& i,
                   bool checkHeaven, bool runPrimFun=true);
-        void pop(string& stkName, int& i);
-        void push(string& stkName, int& i);
-        void swap(string& stkName, int& i);
-        void empty(string& stkName, int& i);
-        void attrib(string& attr, int& i);
-        void exec(string& execStr, int& i);
-        static DcmSymbol *sym(string& symName, int& i);
-        void str(string& strng, int& i);
-        static DcmChar *ch(string& c, int& i);
-        static DcmElem *number(string& num, int& i);
+        void pop(std::string& stkName, int& i);
+        void push(std::string& stkName, int& i);
+        void swap(std::string& stkName, int& i);
+        void empty(std::string& stkName, int& i);
+        void attrib(std::string& attr, int& i);
+        void exec(std::string& execStr, int& i);
+        static DcmSymbol *sym(std::string& symName, int& i);
+        void str(std::string& strng, int& i);
+        static DcmChar *ch(std::string& c, int& i);
+        static DcmElem *number(std::string& num, int& i);
         
         // Constructors for the exec parser
-        void ex_push(string& commands, int& i);
-        void ex_pop(string& commands, int& i);
-        void ex_swap(string& commands, int& i);
-        void ex_empty(string& commands, int& i);
-        void ex_peek(string& commands, int& i, bool checkScope);
-        void ex_attrib(string& commands, int& i);
+        void ex_push(std::string& commands, int& i);
+        void ex_pop(std::string& commands, int& i);
+        void ex_swap(std::string& commands, int& i);
+        void ex_empty(std::string& commands, int& i);
+        void ex_peek(std::string& commands, int& i, bool checkScope);
+        void ex_attrib(std::string& commands, int& i);
         
     friend class PeekCallback;
     friend class PopCallback;
@@ -89,7 +89,8 @@ class Interpretter {
 
 int isEndChar(char c);
 
-int findEnd (string& str, int& i);
+int findEnd (std::string& str, int& i);
 
-void skipWhitespace(string& str, int& i);
+void skipWhitespace(std::string& str, int& i);
+}
 #endif

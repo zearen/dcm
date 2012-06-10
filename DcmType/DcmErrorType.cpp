@@ -7,6 +7,9 @@
 #include "DcmType.h"
 #include <sstream>
 
+using namespace Dcm;
+using namespace std;
+
 // DcmError {
     bool DcmError::equals(DcmType& dcm) {
         return true;

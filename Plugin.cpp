@@ -6,6 +6,9 @@
 
 #include "Plugin.h"
 
+using namespace std;
+using namespace Dcm;
+
 void Plugin::link(Namespace& heaven){}
 Plugin::~Plugin(){}
 

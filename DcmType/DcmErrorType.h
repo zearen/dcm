@@ -1,6 +1,10 @@
-#ifndef _DCM_TYPE
+/*
+
+*/
+
+#ifndef _DCM_ERROR_TYPE_H
+#define _DCM_ERROR_TYPE_H
 #include "DcmType.h"
-#endif
 
 // Error Types
 #define UNKNOWN_E       0
@@ -10,29 +14,31 @@
 // Bit 3 set in a custom error means runtime custom
 #define CUSTOM_E        8
 
+
+namespace Dcm {
 class DcmError : public DcmType {
     public:
         bool equals(DcmType& dcm);
         DcmType *copy();
         TypeVal type();
         static TypeVal typeVal();
-        string repr();
+        std::string repr();
 };
 
 class DcmTypeError : public DcmError {
     protected:
-        vector<TypeVal> exp;
+		std::vector<TypeVal> exp;
         TypeVal got;
     public:
         DcmTypeError(DcmTypeError& toCopy);
-        DcmTypeError(vector<TypeVal> expected, TypeVal recieved);
+        DcmTypeError(std::vector<TypeVal> expected, TypeVal recieved);
         bool equals(DcmType& dcm);
         DcmType *copy();
-        vector<TypeVal> expected();
+        std::vector<TypeVal> expected();
         TypeVal received();
         TypeVal type();
         static TypeVal typeVal();
-        string repr();
+        std::string repr();
 };
 
 class DcmBoundsError : public DcmError {
@@ -47,7 +53,7 @@ class DcmBoundsError : public DcmError {
         int given();
         TypeVal type();
         static TypeVal typeVal();
-        string repr();
+        std::string repr();
 };
 
 class DcmStackError : public DcmError {
@@ -64,20 +70,22 @@ class DcmStackError : public DcmError {
         DcmSymbol *getSymbol();
         TypeVal type();
         static TypeVal typeVal();
-        string repr();
+        std::string repr();
 }; 
 
 // Inherit this for custom errors
 class DcmCustomError : public DcmError {
     protected:
-        string msg;
+		std::string msg;
         virtual TypeVal subtype();
     public:
         DcmCustomError(DcmCustomError& toCopy);
-        DcmCustomError(string& message);
+        DcmCustomError(std::string& message);
         bool equals(DcmType& dcm);
         DcmType *copy();
         TypeVal type();  // Do not override!
         static TypeVal typeVal();
-        string repr();
+        std::string repr();
 };
+}
+#endif

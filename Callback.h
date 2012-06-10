@@ -9,34 +9,35 @@
 
 #include <stack>
 
+namespace Dcm {
 class Callback;
 class Interpretter;
+}
 
 #include <functional>
 
 #include "DcmType/DcmType.h"
 #include "Interpretter.h"
 
-using namespace std;
-
-DcmType *raw_peek(string& sym, Scope *scope);
+namespace Dcm {
+DcmType *raw_peek(std::string& sym, Scope *scope);
 
 // Executes a callback until a NULL is encountered
 void callbackLoop(Callback* cb, Interpretter* interpretter);
 
 // Checks to see if dcm is one of the given types.
 // Will throw error if not.
-void checkTypes(DcmType* dcm, vector<TypeVal> types)
+void checkTypes(DcmType* dcm, std::vector<TypeVal> types)
   throw (DcmTypeError*);
 
 // Peeks the top item of the stack throwing errors if the stack is empty
 // Optionally, one can specify the necessary type of the value
-DcmType *safePeekMain(Interpretter* interpretter, vector<TypeVal> types)
+DcmType *safePeekMain(Interpretter* interpretter, std::vector<TypeVal> types)
   throw (DcmError*);
 
 DcmType *safePeekMain(Interpretter* interpretter) throw (DcmError*);
 
-DcmType *safePeekMain(DcmStack& stk, vector<TypeVal> types)
+DcmType *safePeekMain(DcmStack& stk, std::vector<TypeVal> types)
   throw (DcmError*);
 
 DcmType *safePeekMain(DcmStack& stk) throw (DcmError*);
@@ -51,11 +52,11 @@ class Callback {
     protected:
         // peek and pop can return stack empty error
         // It is ill advised to override these
-        static DcmType *Peek(Scope *scope, string& sym)
+        static DcmType *Peek(Scope *scope, std::string& sym)
           throw (DcmStackError*);
-        static DcmType *Pop(Scope *scope, string& sym)
+        static DcmType *Pop(Scope *scope, std::string& sym)
           throw (DcmStackError*);
-        static void Push(Scope *scope, string& sym, DcmType *item);
+        static void Push(Scope *scope, std::string& sym, DcmType *item);
     public:
         virtual ~Callback(){}
         // If run returns a callback, the interpretter executes it
@@ -68,9 +69,9 @@ class Callback {
 
 class SimpleCallback : public Callback {
     private:
-        function<void(DcmStack&)> cb;
+		std::function<void(DcmStack&)> cb;
     public:
-        SimpleCallback(function<void(DcmStack&)>callback);
+        SimpleCallback(std::function<void(DcmStack&)>callback);
         Callback *run(DcmStack& stk);
         Callback *run(Interpretter *interpretter);
 };
@@ -85,4 +86,6 @@ class ExecCallback : public Callback {
         Callback *run(Interpretter *interpretter);
         bool mustDestroy();
 };
+}
 #endif
+

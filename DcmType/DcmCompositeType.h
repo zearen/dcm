@@ -4,12 +4,12 @@
     DcmCompositeType.h
 */
 
-#ifndef DCM_MAIN
+#ifndef _DCM_COMPOSITE_TYPE_H
+#define _DCM_COMPOSITE_TYPE_H
 #include "DcmType.h"
-#endif
-
 #include "../Callback.h"
 
+namespace Dcm {
 class DcmArray : public DcmType {
     protected:
         int len;
@@ -23,7 +23,7 @@ class DcmArray : public DcmType {
         DcmType *copy();
         TypeVal type();
         static TypeVal typeVal();
-        string repr();
+        std::string repr();
         int length();
         DcmType*& operator[] (int index) throw (DcmBoundsError*);
 };
@@ -36,7 +36,7 @@ class DcmNamespace : public DcmType, public Namespace {
         DcmType *copy();
         TypeVal type();
         static TypeVal typeVal();
-        string repr();
+        std::string repr();
         Namespace *getNamespace();
 };
 
@@ -51,11 +51,11 @@ class DcmClass : public DcmNamespace {
         ~DcmClass();
         bool equals(DcmType& dcm);
         DcmType *copy();
-        DcmType *peek(string& sym);
+        DcmType *peek(std::string& sym);
         DcmClass *base();
         TypeVal type();
         static TypeVal typeVal();
-        string repr();
+        std::string repr();
 };
 
 class DcmPrimFun : public DcmType {
@@ -72,10 +72,10 @@ class DcmPrimFun : public DcmType {
         Callback *callback();
         TypeVal type();
         static TypeVal typeVal();
-        string repr();
+        std::string repr();
 };
 
-class DcmExec : public DcmType, public vector<DcmType*> {
+class DcmExec : public DcmType, public std::vector<DcmType*> {
     private:
         // Total count of execs
         static unsigned long count;
@@ -90,5 +90,7 @@ class DcmExec : public DcmType, public vector<DcmType*> {
         DcmType *copy();
         TypeVal type();
         static TypeVal typeVal();
-        string repr();
+        std::string repr();
 };
+}
+#endif

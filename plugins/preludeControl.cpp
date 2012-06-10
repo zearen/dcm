@@ -1,5 +1,9 @@
 #include "prelude.h"
 
+using namespace std;
+using namespace Dcm;
+using namespace Dcm::Prelude;
+
 void cbIs(DcmStack& stk) {
     DcmType **dcms = popN(stk, 2);
     stk.push(new DcmBool(dcms[0] == dcms[1]));
@@ -273,7 +277,7 @@ class : public Callback {
     }
 } cbRange;
 
-void prelude_addControl(vector<NamedCB>& vec) {
+void Dcm::Prelude::prelude_addControl(vector<NamedCB>& vec) {
     vector<NamedCB> v = 
         { NamedCB("is",     new SimpleCallback(cbIs))
         , NamedCB("===",    new SimpleCallback(cbEquals))

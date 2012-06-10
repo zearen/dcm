@@ -3,6 +3,7 @@
 #include <string>
 
 using namespace std;
+using namespace Dcm;
 
 static ostream& dcmout = cout;
 
@@ -51,7 +52,7 @@ void cbPutLine(DcmStack& stk) {
     del(dcmStr);
 }
 
-Plugin * ioPlugin() {
+Plugin * Dcm::IO::ioPlugin() {
     vector<NamedCB> v =
         { NamedCB("print",  new SimpleCallback(cbPrint))
         , NamedCB("p-stk",  new SimpleCallback(cbPStk))

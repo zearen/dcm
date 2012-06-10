@@ -2,6 +2,10 @@
 #include "../ExecParser.h"
 #include <stdexcept>
 
+using namespace std;
+using namespace Dcm;
+using namespace Dcm::Prelude;
+
 DcmClass *dcmClass = new DcmClass();
 
 void cbClass(DcmStack& stk) {
@@ -131,7 +135,7 @@ class : public Callback {
   }
 } cbConstruct;
 
-void prelude_addOOP(vector<NamedCB>& vec) {
+void Dcm::Prelude::prelude_addOOP(vector<NamedCB>& vec) {
     vector<NamedCB> v = 
         { NamedCB("class",      new SimpleCallback(cbClass))
         , NamedCB("namespace",  new SimpleCallback(cbNamespace))
@@ -139,7 +143,9 @@ void prelude_addOOP(vector<NamedCB>& vec) {
         , NamedCB("{",          &cbLBrace)
         , NamedCB("}",          &cbRBrace)
         , NamedCB("inherit",    new SimpleCallback(cbInherit))
+        // Let's depreciate this in favor of >:
         , NamedCB("obj",        new SimpleCallback(cbInherit))
+        , NamedCB(">:",         new SimpleCallback(cbInherit))
         , NamedCB("_",          &cbLookback)
         , NamedCB("upcopy",     &cbUpcopy)
         , NamedCB("me",         &cbMe)

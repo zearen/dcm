@@ -7,6 +7,9 @@
 #include "DcmType.h"
 #include <sstream>
 
+using namespace std;
+using namespace Dcm;
+
 char Namespace::id() {
     return 'b'; // Baseclass
 }
@@ -44,7 +47,7 @@ bool DcmType::operator!=(DcmType& dcm) {
     return !(*this == dcm);
 }
 
-void del(DcmType *dcm) {
+void Dcm::del(DcmType *dcm) {
     dcm->refs--;
     if (dcm->refs) {
         dcm = NULL;
@@ -54,12 +57,12 @@ void del(DcmType *dcm) {
     }
 }
 
-DcmType *dup(DcmType *dcm) {
+DcmType *Dcm::dup(DcmType *dcm) {
     dcm->refs++;
     return dcm;
 }
 
-string typeVal2Str(TypeVal type) {
+string Dcm::typeVal2Str(TypeVal type) {
     stringstream ret;
     ret << hex << '<';
     while (*type & 1) {
@@ -70,7 +73,7 @@ string typeVal2Str(TypeVal type) {
     return ret.str();
 }
 
-bool sameType(TypeVal type1, TypeVal type2) {
+bool Dcm::sameType(TypeVal type1, TypeVal type2) {
     bool same = true;
     while(true) {
         same &= *type1 == *type2;

@@ -9,6 +9,9 @@
 #include <stdexcept>
 #include "Interpretter.h"
 
+using namespace std;
+using namespace Dcm;
+
 InterpretterError::InterpretterError(){}
 
 InterpretterError::InterpretterError(string message) {
@@ -73,7 +76,7 @@ bool Interpretter::isInExec() {
 
 // Utility functions for parsing:
 
-int isEndChar(char c) {
+int Dcm::isEndChar(char c) {
     switch (c) {
         case ' ':
         case '\t':
@@ -87,12 +90,12 @@ int isEndChar(char c) {
     }
 }
 
-void skipWhitespace(string& str, int& i) {
+void Dcm::skipWhitespace(string& str, int& i) {
     while (i < str.size() && (str[i] == ' ' || str[i] == '\t')) i++;
 }
 
 // returns the length of the token and sets i to the beginning of next token
-int findEnd (string& str, int& i) {
+int Dcm::findEnd (string& str, int& i) {
     int ret = i;
     while (i < str.size() && !isEndChar(str[i])) i++;
     ret = i - ret;

@@ -7,6 +7,9 @@
 #include "Interpretter.h"
 #include "ExecParser.h"
 
+using namespace std;
+using namespace Dcm;
+
 PushCallback::PushCallback(string stackName) {
     stkName = stackName;
 }

@@ -3,6 +3,10 @@
 #include "prelude.h"
 #include "../ExecParser.h"
 
+using namespace std;
+using namespace Dcm;
+using namespace Dcm::Prelude;
+
 class : public Callback {
   Callback *run(Interpretter *interpretter) {
     DcmSymbol *dcm = static_cast<DcmSymbol*>(
@@ -112,7 +116,7 @@ class : public Callback {
   }
 } cbWith;
 
-void prelude_addStack(vector<NamedCB>& vec) {
+void Dcm::Prelude::prelude_addStack(vector<NamedCB>& vec) {
     vector<NamedCB> v = 
         { NamedCB("=",      &cbSet)
         , NamedCB("pop",    &cbPop)

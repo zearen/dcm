@@ -3,6 +3,9 @@
 
 #include "../Interpretter.h"
 
+namespace Dcm {
+namespace IO {
 Plugin * ioPlugin();
-
+}
+}
 #endif

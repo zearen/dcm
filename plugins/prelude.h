@@ -3,17 +3,19 @@
 
 #include "../Interpretter.h"
 
-typedef function<double(double, double)> FloatOp;
-typedef function<int(int, int)> IntOp;
-typedef function<char(char, char)> CharOp;
+namespace Dcm {
+namespace Prelude {
+typedef std::function<double(double, double)> FloatOp;
+typedef std::function<int(int, int)> IntOp;
+typedef std::function<char(char, char)> CharOp;
 
 Plugin * preludePlugin();
 
-void prelude_addBasic(vector<NamedCB>& vec);
+void prelude_addBasic(std::vector<NamedCB>& vec);
 
-void prelude_addControl(vector<NamedCB>& vec);
+void prelude_addControl(std::vector<NamedCB>& vec);
 
-void prelude_addMath(vector<NamedCB>& vec);
+void prelude_addMath(std::vector<NamedCB>& vec);
 
 // Some higher level functions from math useful for casting
 
@@ -30,11 +32,11 @@ DcmNum * doFloatOp(FloatOp floatOp,
                    DcmType *right) 
                    throw (DcmTypeError*);
 
-void prelude_addOOP(vector<NamedCB>& vec);
+void prelude_addOOP(std::vector<NamedCB>& vec);
 
-void prelude_addStack(vector<NamedCB>& vec);
+void prelude_addStack(std::vector<NamedCB>& vec);
 
-void prelude_addSeq(vector<NamedCB>& vec);
+void prelude_addSeq(std::vector<NamedCB>& vec);
 
 class ExecRunner : public ExecCallback {
   public:
@@ -51,10 +53,10 @@ class ExecRunner : public ExecCallback {
 
 class Finally {
   private:
-    function<void()> cb;
+	std::function<void()> cb;
   public:
-    Finally(function<void()> initCb);
+    Finally(std::function<void()> initCb);
     ~Finally();
 };
-
+}}
 #endif

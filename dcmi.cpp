@@ -11,6 +11,9 @@
 #include "plugins/prelude.h"
 //#include "stdlib.h"
 
+using namespace std;
+using namespace Dcm;
+
 volatile bool done;
 
 const char *Hist_File = ".history";
@@ -146,8 +149,8 @@ void runFile(Interpretter& interpretter, char* fn) {
 int main(int argc, char **argv) {
     Interpretter interpretter;
     interpretter.addPlugin(*mainPlugin());
-    interpretter.addPlugin(*ioPlugin());
-    interpretter.addPlugin(*preludePlugin());
+    interpretter.addPlugin(*IO::ioPlugin());
+    interpretter.addPlugin(*Prelude::preludePlugin());
     
     if (argc > 2) {
         if (string(argv[1]) == "-f") {

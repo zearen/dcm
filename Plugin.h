@@ -11,13 +11,15 @@
 #include <unordered_map>
 #include <utility>
 
+namespace Dcm {
 class Plugin;
+}
 
 #include "Callback.h"
 
 // class for easier embedding
-
-typedef pair<string, Callback*> NamedCB;
+namespace Dcm {
+typedef std::pair<std::string, Callback*> NamedCB;
 
 class Plugin {
     public:
@@ -27,11 +29,11 @@ class Plugin {
 
 class VectorPlugin : public Plugin {
 	private:
-		vector<NamedCB> cbs;
+	std::vector<NamedCB> cbs;
 	public:
 		VectorPlugin();
-		VectorPlugin(vector<NamedCB> callbacks);
+		VectorPlugin(std::vector<NamedCB> callbacks);
         virtual void link(Namespace& heaven);
 };
-		
+}
 #endif

@@ -5,15 +5,15 @@
 */
 
 
-#ifndef _DCM_TYPE
-#define _DCM_TYPE
+#ifndef _DCM_TYPE_H
+#define _DCM_TYPE_H
 
 #include <string>
 #include <vector>
 #include <unordered_map>
 #include <stack>
 
-using namespace std;
+//using namespace std;
 
 /*
 Type bits   Subtype bits    Subtype continuation bit
@@ -34,13 +34,15 @@ ___________ _______________ ___
 #define FORK        0xA0 //            
 #define ERROR       0xE0 //  _/ _/ _/  
 
+namespace Dcm {
+
 typedef unsigned char* TypeVal;
 
 class DcmType;
 
-typedef stack<DcmType*> DcmStack;
+typedef std::stack<DcmType*> DcmStack;
 
-class Namespace : public unordered_map<string, DcmStack> {
+class Namespace : public std::unordered_map<std::string, DcmStack> {
     public:
         virtual char id();
 
@@ -49,7 +51,7 @@ class Namespace : public unordered_map<string, DcmStack> {
         virtual ~Namespace(){}
 };
 
-typedef stack<Namespace*> Scope;
+typedef std::stack<Namespace*> Scope;
 
 class DcmType {
     protected:
@@ -66,7 +68,7 @@ class DcmType {
         virtual DcmType *copy() =0;
         bool isType(TypeVal otherType);
         virtual TypeVal type() =0;
-        virtual string repr() =0;
+        virtual std::string repr() =0;
         // Returns null if it does not support a class interface
         virtual Namespace* getNamespace();
         // Does a type check, then calls virtual function
@@ -88,7 +90,7 @@ void del(DcmType *dcm);
 DcmType *dup(DcmType *dcm);
 
 // Returns a type as a hexadecimal string
-string typeVal2Str(TypeVal type);
+std::string typeVal2Str(TypeVal type);
 
 // Checks type equality
 bool sameType(TypeVal type1, TypeVal type2);
@@ -120,7 +122,7 @@ class DcmNamespace;
 class DcmClass;
 class DcmPrimFun;
 class DcmExec;
-
+}
 //BEGIN Forks
 //class DcmFork;
 
@@ -128,4 +130,5 @@ class DcmExec;
 #include "DcmErrorType.h"
 #include "DcmCompositeType.h"
 //#include "DcmForkType.h"
+
 #endif

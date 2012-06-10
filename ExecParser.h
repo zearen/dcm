@@ -2,11 +2,13 @@
 #define _EXEC_PARSER
 #include "Interpretter.h"
 
+namespace Dcm {
+
 class PushCallback : public Callback {
     private:
-        string stkName;
+        std::string stkName;
     public:
-        PushCallback(string stackName);
+        PushCallback(std::string stackName);
         
         Callback *run(Interpretter *interpretter);
 
@@ -16,9 +18,9 @@ class PushCallback : public Callback {
 
 class PopCallback : public Callback {
     private:
-        string stkName;
+		std::string stkName;
     public:
-        PopCallback(string stackName);
+        PopCallback(std::string stackName);
         
         Callback *run(Interpretter *interpretter);
 
@@ -27,9 +29,9 @@ class PopCallback : public Callback {
 
 class SwapCallback : public Callback {
     private:
-        string stkName;
+		std::string stkName;
     public:
-        SwapCallback(string stackName);
+        SwapCallback(std::string stackName);
         
         Callback *run(Interpretter *interpretter);
 
@@ -38,9 +40,9 @@ class SwapCallback : public Callback {
 
 class EmptyCallback : public Callback {
     private:
-        string stkName;
+		std::string stkName;
     public:
-        EmptyCallback(string stackName);
+        EmptyCallback(std::string stackName);
         
         Callback *run(Interpretter *interpretter);
 
@@ -50,9 +52,9 @@ class EmptyCallback : public Callback {
 class PeekCallback : public Callback {
     private:
         bool chkScope;
-        string stkName;
+        std::string stkName;
     public:
-        PeekCallback(string stackName, bool checkScope);
+        PeekCallback(std::string stackName, bool checkScope);
         
         Callback *run(Interpretter *interpretter);
 
@@ -61,13 +63,13 @@ class PeekCallback : public Callback {
 
 class AttribCallback : public Callback {
     private:
-        string stkName;
+		std::string stkName;
     public:
-        AttribCallback(string stackName);
+        AttribCallback(std::string stackName);
         
         Callback *run(Interpretter *interpretter);
 
         bool mustDestroy();
 };
-
+}
 #endif

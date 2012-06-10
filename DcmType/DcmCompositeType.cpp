@@ -9,6 +9,9 @@
 
 #include "DcmType.h"
 
+using namespace std;
+using namespace Dcm;
+
 // DcmArray {
     DcmArray::DcmArray() {
         len = 0;
