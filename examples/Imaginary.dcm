@@ -1,6 +1,6 @@
 [ dup * ] def $sq
 
-class inherit {
+class >: {
   [ 0.0 + $imag 0.0 + $real me ] def $;
   
   [ real repr put
@@ -37,7 +37,7 @@ class inherit {
 
 [ real 0 imag - me ; ] def Imaginary .$conjugate
 
-Imaginary inherit {
+Imaginary >: {
 
   [ real 0 imag - me ; ] def $conjugate
 

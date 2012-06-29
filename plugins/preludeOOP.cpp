@@ -136,6 +136,9 @@ class : public Callback {
 } cbConstruct;
 
 void Dcm::Prelude::prelude_addOOP(vector<NamedCB>& vec) {
+	if ((*dcmClass)[";"].empty()) {
+		(*dcmClass)[";"].push(new DcmPrimFun(&cbMe));
+	}
     vector<NamedCB> v = 
         { NamedCB("class",      new SimpleCallback(cbClass))
         , NamedCB("namespace",  new SimpleCallback(cbNamespace))

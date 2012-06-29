@@ -187,6 +187,48 @@ using namespace Dcm;
     }
 // };
 
+// DcmLens {
+//  private:
+//	DcmType *dcmInner;
+
+	DcmLens::DcmLens() {
+
+	}
+
+	DcmLens::DcmLens(DcmLens& dcmLens) {
+
+	}
+
+	DcmLens::DcmLens(DcmType* newDcmInner) {
+
+	}
+
+	DcmLens::~DcmLens() {
+
+	}
+
+	bool DcmLens::equals(DcmType& dcm) {
+		return false;
+	}
+
+	DcmType *DcmLens::copy() {
+		throw new DcmError();
+	}
+
+	TypeVal DcmLens::type() {
+		return DcmLens::typeVal();
+	}
+
+	static TypeVal DcmLens::typeVal() {
+		static unsigned char tv[] { EXEC | 0x80 };
+		return tv;
+	}
+
+	std::string repr() {
+
+	}
+// };
+
 // DcmPrimFun {
     DcmPrimFun::DcmPrimFun() {
         cb = NULL;

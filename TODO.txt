@@ -1,19 +1,6 @@
-Alright, the old todo list was completed
-Here's a new one.
+Add error handling (Meanwhile adding better support for shadow classes)
+Add module support
 
-Implement control structures
-Implement classes and name spaces { _ } ; obj
-Add string words
-Implement arrays
-Implement error handling
-
-Split exec into a compiler and Interpretter::exec
-
-Debug lots.
-Ready for presentation !
-
-Improve readline functionality in dcmi.
-Add module and god plugin
 
 Prepare for distribution
     - Document like hell.

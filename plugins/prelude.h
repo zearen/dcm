@@ -38,6 +38,8 @@ void prelude_addStack(std::vector<NamedCB>& vec);
 
 void prelude_addSeq(std::vector<NamedCB>& vec);
 
+void prelude_addError(std::vector<NamedCB>& vec);
+
 class ExecRunner : public ExecCallback {
   public:
     ExecRunner();

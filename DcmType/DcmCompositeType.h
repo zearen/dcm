@@ -11,86 +11,105 @@
 
 namespace Dcm {
 class DcmArray : public DcmType {
-    protected:
-        int len;
-        DcmType ** vals; 
-    public:
-        DcmArray();
-        DcmArray(DcmArray& toCopy);
-        DcmArray(int size);
-        ~DcmArray();
-        bool equals(DcmType& dcm);
-        DcmType *copy();
-        TypeVal type();
-        static TypeVal typeVal();
-        std::string repr();
-        int length();
-        DcmType*& operator[] (int index) throw (DcmBoundsError*);
+  protected:
+	int len;
+	DcmType ** vals;
+  public:
+	DcmArray();
+	DcmArray(DcmArray& toCopy);
+	DcmArray(int size);
+	~DcmArray();
+	bool equals(DcmType& dcm);
+	DcmType *copy();
+	TypeVal type();
+	static TypeVal typeVal();
+	std::string repr();
+	int length();
+	DcmType*& operator[] (int index) throw (DcmBoundsError*);
 };
 
 class DcmNamespace : public DcmType, public Namespace {
-    public:
-        char id();
-        DcmType *restore();
-        bool equals(DcmType& dcm);
-        DcmType *copy();
-        TypeVal type();
-        static TypeVal typeVal();
-        std::string repr();
-        Namespace *getNamespace();
+  public:
+	char id();
+	DcmType *restore();
+	bool equals(DcmType& dcm);
+	DcmType *copy();
+	TypeVal type();
+	static TypeVal typeVal();
+	std::string repr();
+	Namespace *getNamespace();
 };
 
 class DcmClass : public DcmNamespace {
-    private:
-        DcmClass *dcmBase;
-    public:
-        char id();
-        DcmClass();
-        DcmClass(DcmClass& toCopy);
-        DcmClass(DcmClass *baseClass);
-        ~DcmClass();
-        bool equals(DcmType& dcm);
-        DcmType *copy();
-        DcmType *peek(std::string& sym);
-        DcmClass *base();
-        TypeVal type();
-        static TypeVal typeVal();
-        std::string repr();
+  private:
+	DcmClass *dcmBase;
+  public:
+	char id();
+	DcmClass();
+	DcmClass(DcmClass& toCopy);
+	DcmClass(DcmClass *baseClass);
+	~DcmClass();
+	bool equals(DcmType& dcm);
+	DcmType *copy();
+	DcmType *peek(std::string& sym);
+	DcmClass *base();
+	TypeVal type();
+	static TypeVal typeVal();
+	std::string repr();
+};
+
+class DcmLens : public DcmType {
+  private:
+	DcmType *dcmInner;
+  public:
+	DcmLens();
+	DcmLens(DcmLens& dcmLens);
+	DcmLens(DcmType* newDcmInner);
+	~DcmLens();
+
+	bool equals(DcmType& dcm);
+	DcmType *copy();
+	TypeVal type();
+	static TypeVal typeVal();
+	std::string repr();
+
+	virtual void get(DcmStack& stk)=0;
+	virtual void set(DcmStack& stk)=0;
 };
 
 class DcmPrimFun : public DcmType {
-    private:
-        Callback *cb;
-    public:
-        DcmPrimFun();
-        DcmPrimFun(DcmPrimFun& toCopy);
-        DcmPrimFun(Callback *action);
-        ~DcmPrimFun();
-        bool equals(DcmType& dcm);
-        DcmType *copy();
-        Callback *run(Interpretter *interpretter);
-        Callback *callback();
-        TypeVal type();
-        static TypeVal typeVal();
-        std::string repr();
+  private:
+	Callback *cb;
+  public:
+	DcmPrimFun();
+	DcmPrimFun(DcmPrimFun& toCopy);
+	DcmPrimFun(Callback *action);
+	~DcmPrimFun();
+	bool equals(DcmType& dcm);
+	DcmType *copy();
+	Callback *run(Interpretter *interpretter);
+	Callback *callback();
+	TypeVal type();
+	static TypeVal typeVal();
+	std::string repr();
 };
 
 class DcmExec : public DcmType, public std::vector<DcmType*> {
-    private:
-        // Total count of execs
-        static unsigned long count;
-        // Number for when exec was created
-        // Note:  Not garanteed to be unique !
-        unsigned long num;
-    public:
-        DcmExec();
-        DcmExec(DcmExec& toCopy);
-        ~DcmExec();
-        bool equals(DcmType& dcm);
-        DcmType *copy();
-        TypeVal type();
-        static TypeVal typeVal();
-        std::string repr();
+  private:
+	// Total count of execs
+	static unsigned long count;
+	// Number for when exec was created
+	// Note:  Not garanteed to be unique !
+	unsigned long num;
+  public:
+	DcmExec();
+	DcmExec(DcmExec& toCopy);
+	~DcmExec();
+	bool equals(DcmType& dcm);
+	DcmType *copy();
+	TypeVal type();
+	static TypeVal typeVal();
+	std::string repr();
 };
 }
 #endif
