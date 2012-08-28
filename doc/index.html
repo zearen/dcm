@@ -1,0 +1,32 @@
+<html>
+ <head>
+  <title>DCM v0.1 Documentation</title>
+ </head>
+ <body>
+  <h1>Basic info</h1>
+  Dcm is an interpretted, concatenative, embedded, object oriented, scripting language.  It borrows ideas from many different languages such as Python, Factor, and Javascript.  The name comes from the original intent of the language which was supposed to be a simple extention of the ubiquitous unix utility dc (which now ships with bc).  DCM was to mean dc improved, however the language has since diverged greatly, and with reason as can be seen below with a sample factorial program in each language.
+  <br />
+  <br />
+  <table>
+      <tr>
+          <td>dc:</td><td><code>[d1-d1&gt;f*]sf 6 lfx</code></td>
+      </tr>
+      <tr>
+          <td>DCM:</td><td><code>[ dup 1 - dup 0 &gt; fac [] if ex * ] $fac 6 fac ex</code></td>
+      </tr>
+  </table>
+  <h2>Why should I use DCM</h2>
+  The best answer to this is, &quot;It don't know&quote;.  The language was desiged to some very specific needs and wants I had for a project.  When I was begun work on this project, I could not find a project that met these requirements.  Some of the key high level requirements are listed below; if you need a mojority of them, then perhaps DCM is a good choice for you.
+
+  <ul>
+      <li>It shall be concatenative</li>
+      <li>It shall run quickly with a low memory footprint</li>
+      <li>It shall be design to be embedded into other C++ applications</li>
+      <li>It shall have exception handling</li>
+      <li>It shall have functional features</li>
+  </ul>
+  <h1>Resources</h1>
+  <a href="/tutorial/">Tutorial</a>
+  <a href="/plugins/">Plugins</a>
+ </body>
+</html>

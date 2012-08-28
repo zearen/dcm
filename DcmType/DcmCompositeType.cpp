@@ -219,13 +219,13 @@ using namespace Dcm;
 		return DcmLens::typeVal();
 	}
 
-	static TypeVal DcmLens::typeVal() {
+	TypeVal DcmLens::typeVal() {
 		static unsigned char tv[] { EXEC | 0x80 };
 		return tv;
 	}
 
-	std::string repr() {
-
+	std::string DcmLens::repr() {
+        return "";
 	}
 // };
 
