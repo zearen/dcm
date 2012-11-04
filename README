@@ -4,6 +4,8 @@ you, it's still rather rough around the edges.  To build, do a
 
 $ make dcmi
 
+You will need a gcc compiler with c++0x capabilities and the readline headers to build.
+
 Then you can play with the interpreter by running it with
 
 $ dcmi
