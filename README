@@ -1,0 +1,25 @@
+DCM is a pre-α Embedded, interpreted, concatenative, object oriented, 
+scripting language.  Feel free to clone and play with what I have, but I warn
+you, it's still rather rough around the edges.  To build, do a 
+
+$ make dcmi
+
+Then you can play with the interpreter by running it with
+
+$ dcmi
+
+You can load the examples with
+
+$ dcmi -l examples/ex.dcm
+
+Or simply execute them with
+
+$ dcmi -e examples/ex.dcm
+
+Unimplemented features:
+
+Lenses
+Exception handling
+Modules
+
+Documentation is in progress
