@@ -91,6 +91,7 @@ void interact(Interpretter& interpretter) {
             }
             catch (DcmError *err) {
                 cerr << err->repr() << endl;
+                del(err);
             }
             catch (InterpretterError err) {
                 cerr << err.what() << endl;
@@ -146,19 +147,34 @@ void runFile(Interpretter& interpretter, char* fn) {
     inFile.close();
 }
 
+void showHelp() {
+    cout << "Help\n";
+    cout << "  -l <script>    Run script before interacting\n";
+    cout << "  -e <script>    Run script and exit\n";
+    cout << "Any single flag shows this help\n";
+    cout << "No flag drops straight into the interpreter\n";
+}
+
 int main(int argc, char **argv) {
     Interpretter interpretter;
     interpretter.addPlugin(*mainPlugin());
     interpretter.addPlugin(*IO::ioPlugin());
     interpretter.addPlugin(*Prelude::preludePlugin());
     
+    if (argc == 2) {
+        showHelp();
+    }
     if (argc > 2) {
-        if (string(argv[1]) == "-f") {
+        if (string(argv[1]) == "-e") {
             runFile(interpretter, argv[2]);
         }
         else if (string(argv[1]) == "-l") {
             runFile(interpretter, argv[2]);
             interact(interpretter);
+        }
+        else {
+            cerr << "Invalid flag \"" << argv[1] << "\"\n";
+            showHelp();
         }
     }
     else {

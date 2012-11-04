@@ -1,0 +1,37 @@
+[ $n                           # Takes the top of the stack and pushes it to n
+  n 0 == n 1 == or             # Expression to determine if n = 0 or n = 1
+  [ @n del 1 ]                 # True case: Free n and return 1
+  [ n 1 - naive-fib            # False case: recursively call on n - 1
+    @n 2 - naive-fib           #             recursively call on n - 2 
+    +                          #             add the results
+  ] if ex                      # if condition, execute what's returned
+] def $naive-fib               # Raise to a function and store as naive-fib
+
+
+
+[ $n n 0 == n 1 == or          # Same as lines 1 - 2
+  [ @n del 1 ]                 # Same as line 3
+  [ 1 $fs 1 $fs                # Set the fs stack to 1 1
+    [ del                      # Ignore range parameter
+      [ $tmp tmp + @tmp rev ]  # Itereate the two, i.e. if fs = 3 5
+      ,fs with                 # fs 3 5 -> fs 3 tmp 5 -> fs 3 5 tmp 5
+                               # fs 8 tmp 5 -> fs 8 5 -> fs 5 8
+    ] 1 @n 1 - range           # Do this n - 1 times
+    [ rev del ] ,fs with @fs   # Free fs and yield the top value
+  ] if ex                      # if statement
+] def $fib0                    # Define as fib0
+
+[ $n                           # Store first arg as n
+  1 $fs 1 $fs                  # Initialize 
+  [ n 1 > ]                    # While condition: n > 1
+  [ [ $tmp tmp + @tmp rev ]    # See line 16
+    ,fs with                   # Run the exec as if fs were the main stack
+    [ 1 - ] ,n with            # Decrement n
+  ] while                      # while loop
+  @n del                       # Free n
+  [ rev del ] ,fs with @fs     # Free fs and yield top
+] def $fib1                    # Define as fib 1
+
+[ 10 rev ex print ]            # Run on 10 and print result
+( ^naive-fib ^fib0 ^fib1 )     # Peek unevaluated into array
+for                            # For loop
