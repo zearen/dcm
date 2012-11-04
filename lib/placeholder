@@ -1,0 +1,3 @@
+This file here is so that the lib/ directory comes with a git clone.
+
+Without this, there are build errors.
